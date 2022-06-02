@@ -1,3 +1,4 @@
 /agv_back_fastapi/.idea/
 /agv_back_fastapi/logs/
 /agv_back_fastapi/sql_app.db
+/agv_back_fastapi/test/

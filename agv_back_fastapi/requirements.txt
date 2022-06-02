@@ -1,0 +1,35 @@
+anyio @ file:///D:/bld/anyio_1652464116721/work/dist
+asgiref @ file:///home/conda/feedstock_root/build_artifacts/asgiref_1652752042988/work
+bcrypt==3.2.2
+cffi==1.15.0
+click @ file:///D:/bld/click_1651215430313/work
+colorama @ file:///home/conda/feedstock_root/build_artifacts/colorama_1602866480661/work
+cryptography==37.0.2
+dnspython==2.2.1
+ecdsa==0.17.0
+email-validator==1.2.1
+fastapi @ file:///home/conda/feedstock_root/build_artifacts/fastapi_1652577626630/work
+greenlet==1.1.2
+h11 @ file:///home/conda/feedstock_root/build_artifacts/h11_1652727116927/work
+idna @ file:///home/conda/feedstock_root/build_artifacts/idna_1642433548627/work
+jose==1.0.0
+llvmlite==0.37.0
+loguru @ file:///D:/bld/loguru_1649442981921/work
+numba==0.54.1
+orjson==3.6.8
+passlib==1.7.4
+pyasn1==0.4.8
+pycparser==2.21
+pydantic @ file:///D:/bld/pydantic_1653020951067/work
+python-jose==3.3.0
+python-multipart==0.0.5
+rsa==4.8
+six==1.16.0
+sniffio @ file:///D:/bld/sniffio_1648819365674/work
+SQLAlchemy==1.4.35
+sqlalchemy2-stubs==0.0.2a22
+sqlmodel==0.0.6
+starlette @ file:///home/conda/feedstock_root/build_artifacts/starlette-recipe_1650649298613/work
+typing_extensions @ file:///home/conda/feedstock_root/build_artifacts/typing_extensions_1650370875435/work
+uvicorn @ file:///D:/bld/uvicorn-split_1650301393998/work
+win32-setctime @ file:///home/conda/feedstock_root/build_artifacts/win32_setctime_1642883564726/work

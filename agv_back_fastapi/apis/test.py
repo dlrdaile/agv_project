@@ -8,7 +8,7 @@ from crud.user import UserCrud
 from schemas.user import UserIn
 from utils.custom_exc import UserNotExist
 from schemas.token import TokenInfo
-from models.users import User
+from models.user.users import Users
 from core.security import get_current_user
 from schemas.user import OutputUser
 test_api = APIRouter(tags=['test'])
@@ -24,5 +24,5 @@ async def hello_world(userin:UserIn):
         raise UserNotExist(err_desc=f"{userin.name}不存在")
 
 @test_api.get('/user')
-async def get_user_info(user:User = Depends(get_current_user)):
+async def get_user_info(user:Users = Depends(get_current_user)):
     return resp_200(data=OutputUser.from_orm(user))

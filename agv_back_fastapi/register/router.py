@@ -14,7 +14,7 @@ from apis.login import login_api
 
 def register_router(app: FastAPI):
     """ 注册路由 """
-    app.include_router(test_api,prefix="/test")
+    app.include_router(test_api,prefix="/api/test")
     # app.include_router(redis_check.router, prefix=settings.API_PREFIX, tags=["Redis"])  # Redis(不需要权限)
     #
     app.include_router(login_api, prefix=settings.API_PREFIX, tags=["Login"])  # Login(权限在每个接口上)

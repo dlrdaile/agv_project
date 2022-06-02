@@ -7,16 +7,17 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from core import create_access_token
 from crud.user import userCrud
-from schemas.token import Token
 from schemas.token import TokenInfo
 from utils.custom_exc import UserNotExist
-
+from schemas.login import Login
+from utils.resp_code import resp_200
 login_api = APIRouter()
 
 
-@login_api.post("/login",response_model=Token,summary="docs接口文档登录 && 登录接口")
+@login_api.post("/login",summary="docs接口文档登录 && 登录接口")
 async def login_access_token(
-        form_data: OAuth2PasswordRequestForm = Depends()
+        # form_data: OAuth2PasswordRequestForm = Depends()
+        form_data:Login
 ) :
     """ 兼容OAuth2的令牌登录，为接口文档的请求获取访问令牌 """
     current_user = userCrud.authenticate(form_data.username,form_data.password)
@@ -25,7 +26,7 @@ async def login_access_token(
         token = create_access_token(token_info.dict())
         # 这里'access_token'和'token_type'一定要写,否则get_current_user依赖拿不到token
         # 可添加字段(先修改schemas/token里面的Token返回模型)
-        return {"access_token" : token,"token_type" : "bearer"}
+        return resp_200(data={"token" : token,"token_type" : "bearer"})
     else :
         raise UserNotExist
 

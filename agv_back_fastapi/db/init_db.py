@@ -42,11 +42,12 @@ def init_data() :
         try :
             user = userCrud.get_by_name('admin')
             if user is None :
-                admin = User(name="admin",
-                             hashed_password=get_password_hash("123456"),
-                             email="965794928@qq.com",
-                             isAdmin=True
-                             )
+                admin = Users(name="admin",
+                              hashed_password=get_password_hash("123456"),
+                              email="965794928@qq.com",
+                              nickname = "小甜甜",
+                              isAdmin=True
+                              )
                 session.add(admin)
                 session.commit()
                 logger.info(f"成功初始化表数据!!!")

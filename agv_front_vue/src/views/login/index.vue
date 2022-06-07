@@ -35,7 +35,7 @@
           <keep-alive>
             <component
               :is="main_comp"
-              @compRegister="redirectRegister"
+              @redirectToLogin="redirectToLogin"
             />
           </keep-alive>
         </el-card>
@@ -63,7 +63,7 @@ export default {
     }
   },
   methods: {
-    redirectRegister() {
+    redirectToLogin() {
       this.main_comp = 'login'
       this.radio1 = 'login'
     },

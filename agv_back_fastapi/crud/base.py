@@ -52,8 +52,8 @@ class CRUDBase(Generic[ModelType,CreateSchemaType,UpdateSchemaType]) :
             sql = insert(self.model).values(insert_data)
             result = db.execute(sql)
             db.commit()
-        except Exception as e:
-            pass
+        except:
+            db.rollback()
         finally:
             db.close()
 
@@ -102,3 +102,9 @@ class CRUDBase(Generic[ModelType,CreateSchemaType,UpdateSchemaType]) :
         result = db.scalars(sql)
         db.close()  # 释放会话
         return result.all()
+
+    def get_all(self,db: Session = get_session()):
+        sql = select(self.model).order_by(self.model.id)
+        result = db.execute(sql).all()
+        db.close()
+        return result

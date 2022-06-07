@@ -13,6 +13,7 @@ from models import Users
 from schemas import UpdateUser,CreateUser
 from utils.custom_exc import ErrorUser
 
+
 class UserCrud(CRUDBase[Users,UpdateUser,CreateUser]) :
     def __init__(self) :
         super(UserCrud,self).__init__(Users)
@@ -26,7 +27,7 @@ class UserCrud(CRUDBase[Users,UpdateUser,CreateUser]) :
 
     def authenticate(self,username: str,password: str) -> Optional[Users] :
         """ 验证用户 """
-        user = self.get_by_name(name=username)
+        user = self.get_by_name(username)
         if not user :
             raise ErrorUser("用户不存在")
         if not verify_password(password,user.hashed_password) :

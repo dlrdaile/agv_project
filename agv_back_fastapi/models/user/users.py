@@ -23,7 +23,6 @@ class Users(SQLModel,table=True) :
     email: EmailStr = Field(index=True)
     phone: Optional[int] = Field(default=None)
 
-    address_id: Optional[int] = None
-    address_name: Optional[str] = None
-
+    address_id: Optional[int] = Field(default=None,foreign_key="city.union_id")
+    address:Optional["City"] = Relationship(back_populates="userList")
     userItems: List["UserItems"] = Relationship(back_populates="user")

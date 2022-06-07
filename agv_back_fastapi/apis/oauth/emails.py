@@ -13,7 +13,6 @@ from fastapi import (
 from fastapi_mail import FastMail,MessageSchema,ConnectionConfig
 from pydantic import EmailStr,BaseModel
 from sqlmodel import select,update
-from starlette.responses import JSONResponse
 
 from apis.oauth import oauth_api
 from core.logger import logger
@@ -33,6 +32,8 @@ class GetCodePath(str,Enum):
 class EmailSchema(BaseModel) :
     email: List[EmailStr]
 
+class NewPassword(BaseModel):
+    password:str
 
 class EmailValidForm(BaseModel) :
     email: EmailStr
@@ -78,7 +79,7 @@ async def valid_email(validData: EmailValidForm) :
     return email
 
 
-@oauth_api.post("/getcode/{path}")
+@oauth_api.get("/getcode/{path}")
 async def send_in_background(
         background_tasks: BackgroundTasks,
         email: EmailStr,
@@ -107,7 +108,7 @@ async def send_in_background(
         if result.rowcount == 0 :
             session.rollback()
             try :
-                valid_email = EmailValid(email=email,valid_code=pass_num)
+                valid_email = EmailValid(email=email,valid_code=pass_num,valid_time = time.time())
                 session.add(valid_email)
                 session.commit()
             except :
@@ -120,15 +121,15 @@ async def send_in_background(
         session.close()
     fm = FastMail(conf)
     background_tasks.add_task(fm.send_message,message)
-    return JSONResponse(status_code=200,content={"message" : "email has been sent"})
+    return resp_200(msg="邮箱发送成功")
 
 
 @oauth_api.post("/forget")
-async def send_in_background(*,email: EmailStr = Depends(valid_email),new_password: str) :
+async def send_in_background(*,email: EmailStr = Depends(valid_email),new_password: NewPassword) :
     session = get_session()
     try :
         sql = update(Users).where(Users.email == email).values({
-            "hashed_password" : get_password_hash(new_password)
+            "hashed_password" : get_password_hash(new_password.password)
         })
         session.exec(sql)
         session.commit()

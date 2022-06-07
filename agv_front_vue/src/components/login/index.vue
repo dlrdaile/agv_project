@@ -6,7 +6,6 @@
       status-icon
       :rules="rules"
       label-width="80px"
-      class="demo-ruleForm"
       style="margin-top: 80px"
       label-position="left"
     >

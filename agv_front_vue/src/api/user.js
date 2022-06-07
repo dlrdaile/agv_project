@@ -10,7 +10,7 @@ export function login(data) {
 
 export function getInfo(token) {
   return request({
-    url: '/user/userinfo',
+    url: '/commons/userinfo',
     method: 'get',
     params: { token }
   })
@@ -22,3 +22,20 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function register(data) {
+  return request({
+    url: '/oauth/register',
+    method: 'post',
+    data
+  })
+}
+
+export function forget(data) {
+  return request({
+    url: '/oauth/forget',
+    method: 'post',
+    data
+  })
+}
+

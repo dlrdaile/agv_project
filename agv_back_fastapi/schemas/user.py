@@ -2,9 +2,11 @@
 author:dlr123
 date:2022年05月31日
 """
-from typing import Optional
+from datetime import datetime
+from typing import Optional,List
+
+from pydantic import Field,EmailStr
 from sqlmodel import SQLModel
-from pydantic import BaseModel,Field,EmailStr
 
 
 class UserIn(SQLModel) :
@@ -12,15 +14,30 @@ class UserIn(SQLModel) :
     name: str = Field(...,max_length=10,min_length=3)
 
 
-class UpdateUser(UserIn):
-    password: str = Field(...,max_length=16,min_length=6)
+class UpdateUser(SQLModel) :
+    hashed_password: Optional[str] = Field(default=None,description="用户hash密码")
     email: Optional[EmailStr] = Field(default=None,description="用户邮箱")
+    isActive: Optional[bool] = None
+    last_active_time: Optional[datetime] = None
+    phone: Optional[int] = Field(default=None)
+    nickname: Optional[str] = Field(default=None,min_length=3,max_length=20)
+    address_id: Optional[int] = None
+    address_name: Optional[str] = None
 
 
-class CreateUser(UpdateUser) :
-    id: Optional[int] = Field(default=None)
-    isAdmin: bool = Field(default=False)
+class CreateUser(UpdateUser,UserIn) :
+    password: str
+    isActive: bool = False
+    nickname: str = Field(min_length=3,max_length=20)
+    address_id: int
+    address_name: str
+    email: EmailStr
+    create_time: datetime = datetime.now()
+    isAdmin: bool = False
+    code: str = Field(max_length=6)
 
-class OutputUser(UserIn):
+
+class OutputUser(UserIn) :
     email: Optional[EmailStr] = Field(default=None,description="用户邮箱")
     isAdmin: bool = Field(default=False)
+    roles: Optional[List[str]] = None

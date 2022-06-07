@@ -36,6 +36,10 @@ def drop_db() :
         engine.dispose()
 
 
+# def excute_sql():
+#     with Session(engine) as session:
+#         session.exec()
+
 def init_data() :
     """ 初始化表数据 """
     with Session(engine) as session :
@@ -54,3 +58,4 @@ def init_data() :
         except Exception as e :
             session.rollback()
             logger.error(f"初始化表数据失败!!! -- 错误信息如下:\n{e}")
+

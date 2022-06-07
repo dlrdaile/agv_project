@@ -19,4 +19,3 @@ class City(SQLModel,table=True) :
     name: str = Field(min_length=3,max_length=50,primary_key=True)
     province_id: Optional[int] = Field(default=None,foreign_key="provincial.id")
     province: Optional[Provincial] = Relationship(back_populates="cities")
-    users: List["Users"] = Relationship(back_populates="address")

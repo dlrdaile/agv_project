@@ -17,7 +17,7 @@ from schemas.token import TokenInfo
 
 ALGORITHM = "HS256"  # 加密算法
 pwd_context = CryptContext(schemes=["bcrypt"],deprecated="auto")  # 加密密码
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_PREFIX}/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_PREFIX}/test/login")
 
 
 def get_password_hash(password: str) -> str :

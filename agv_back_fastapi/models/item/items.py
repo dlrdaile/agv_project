@@ -29,7 +29,7 @@ class Items(SQLModel,table=True) :
     id: Optional[int] = Field(default=None,primary_key=True)
     name: str = Field(index=True,max_length=10)
     description: Optional[str] = None
-    isActive: bool = True
+    isActive: bool = False
     userItems: List["UserItems"] = Relationship(back_populates="item")
     process_links: List[ItemProcessLink] = Relationship(back_populates="item")
 

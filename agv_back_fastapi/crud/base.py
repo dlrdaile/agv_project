@@ -5,9 +5,11 @@
 # @desc : 封装数据库增删改查方法
 from typing import Any,Dict,Generic,List,Optional,Type,TypeVar,Union
 
-from sqlmodel import func,distinct,select,insert,update,desc,delete
 from sqlmodel import Session,SQLModel
+from sqlmodel import func,distinct,select,insert,update,desc,delete
+
 from db.session import get_session
+
 ModelType = TypeVar("ModelType",bound=SQLModel)
 CreateSchemaType = TypeVar("CreateSchemaType",bound=SQLModel)
 UpdateSchemaType = TypeVar("UpdateSchemaType",bound=SQLModel)
@@ -19,14 +21,14 @@ class CRUDBase(Generic[ModelType,CreateSchemaType,UpdateSchemaType]) :
     def __init__(self,model: Type[ModelType]) :
         self.model = model
 
-    def get(self,id: Any,db: Session=get_session()) -> Optional[ModelType] :
+    def get(self,id: Any,db: Session = get_session()) -> Optional[ModelType] :
         """ 通过 id 获取对象 """
         sql = select(self.model).where(self.model.id == id)
         result = db.scalar(sql)
         db.close()  # 释放会话
         return result
 
-    def get_multi(self,db: Session=get_session(),pageIndex: int = 1,pageSize: int = 10) -> List[ModelType] :
+    def get_multi(self,db: Session = get_session(),pageIndex: int = 1,pageSize: int = 10) -> List[ModelType] :
         """ 获取第 pageIndex 页的 pageSize 数据 """
         if pageIndex == -1 and pageSize == -1 :
             sql = select(self.model).order_by(desc(self.model.id))
@@ -36,32 +38,37 @@ class CRUDBase(Generic[ModelType,CreateSchemaType,UpdateSchemaType]) :
         db.close()  # 释放会话
         return result.all()
 
-    def get_number(self,db: Session=get_session()) -> int :
+    def get_number(self,db: Session = get_session()) -> int :
         """ 获取表的总条数 """
         sql = select(func.count(distinct(self.model.id)))
         result = db.scalar(sql)
         db.close()  # 释放会话
         return result
 
-    def create(self,obj_in: CreateSchemaType,db: Session=get_session()) -> int :
+    def create(self,obj_in: CreateSchemaType,db: Session = get_session()) -> int :
         """ 添加对象 """
-        sql = insert(self.model).values(obj_in.dict())
-        result = db.exec(sql)
-        db.commit()
-        return result.rowcount
+        try:
+            insert_data = self.model.from_orm(obj_in).dict()
+            sql = insert(self.model).values(insert_data)
+            result = db.execute(sql)
+            db.commit()
+        except Exception as e:
+            pass
+        finally:
+            db.close()
 
-    def update(self,db: Session,id: int,obj_in: Union[UpdateSchemaType,Dict[str,Any]]) -> int :
+    def update(self,name: str,obj_in: Union[UpdateSchemaType,Dict[str,Any]],db: Session = get_session()) -> int :
         """ 通过 id 更新对象 """
         if isinstance(obj_in,dict) :  # 判断对象是否为字典类型(更新部分字段)
             obj_data = obj_in
         else :
             obj_data = obj_in.dict()
-        sql = update(self.model).where(self.model.id == id).values(obj_data)
+        sql = update(self.model).where(self.model.name == name).values(obj_data)
         result = db.execute(sql)
         db.commit()
-        return len(result.all())
+        db.close()
 
-    async def remove(self,db: Session,id: int) -> int :
+    async def remove(self,id: int,db: Session = get_session()) -> int :
         """ 通过 id 删除对象 """
         sql = delete(self.model).where(self.model.id == id)
         result = db.execute(sql)
@@ -69,7 +76,7 @@ class CRUDBase(Generic[ModelType,CreateSchemaType,UpdateSchemaType]) :
         db.close()
         return result.rowcount
 
-    def remove_multi(self,id_list: list,db: Session=get_session()) :
+    def remove_multi(self,id_list: list,db: Session = get_session()) :
         """ 同时删除多个对象 """
         id_list = [int(i) for i in id_list]  # postgresql 字段类型限制
         sql = delete(self.model).where(self.model.id.in_(id_list))
@@ -78,15 +85,14 @@ class CRUDBase(Generic[ModelType,CreateSchemaType,UpdateSchemaType]) :
         db.close()
         return result.rowcount
 
-    def get_multi_relation(self,db: Session=get_session()) :
+    def get_multi_relation(self,db: Session = get_session()) :
         """ 获取关系字段 """
         sql = select(self.model.id,self.model.name).order_by(desc(self.model.id)).distinct()
         result = db.exec(sql)
         db.close()
         return result.all()
 
-
-    def sort(self,name: str,pageIndex: int = 1,pageSize: int = 10,db: Session=get_session()) -> List[ModelType] :
+    def sort(self,name: str,pageIndex: int = 1,pageSize: int = 10,db: Session = get_session()) -> List[ModelType] :
         """ 验证用户 """
         filed_name = self.model.__table__.c[name]
         if pageIndex == -1 and pageSize == -1 :
@@ -96,4 +102,3 @@ class CRUDBase(Generic[ModelType,CreateSchemaType,UpdateSchemaType]) :
         result = db.scalars(sql)
         db.close()  # 释放会话
         return result.all()
-

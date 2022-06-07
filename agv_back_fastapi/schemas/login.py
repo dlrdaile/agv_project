@@ -5,7 +5,6 @@
 # @desc : 登录模型
 from pydantic import BaseModel
 
-
 class Login(BaseModel):
     """ 登录模型 """
     username: str

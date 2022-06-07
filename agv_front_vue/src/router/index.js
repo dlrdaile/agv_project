@@ -59,6 +59,7 @@ export const asyncRoutes = [
     path: '/example',
     component: Layout,
     redirect: '/example/table',
+    alwaysShow: true,
     name: 'Example',
     meta: { title: 'Example', icon: 'el-icon-s-help', roles: ['admin', 'client'] },
     children: [

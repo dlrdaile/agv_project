@@ -22,15 +22,13 @@ class UpdateUser(SQLModel) :
     phone: Optional[int] = Field(default=None)
     nickname: Optional[str] = Field(default=None,min_length=3,max_length=20)
     address_id: Optional[int] = None
-    address_name: Optional[str] = None
 
 
 class CreateUser(UpdateUser,UserIn) :
     password: str
     isActive: bool = False
     nickname: str = Field(min_length=3,max_length=20)
-    address_id: int
-    address_name: str
+    address: List[int]
     email: EmailStr
     create_time: datetime = datetime.now()
     isAdmin: bool = False

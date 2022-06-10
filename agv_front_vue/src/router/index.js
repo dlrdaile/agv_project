@@ -67,13 +67,28 @@ export const asyncRoutes = [
         path: 'table',
         name: 'Table',
         component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table', roles: ['client'] }
+        meta: { title: '综合订单统计表', icon: 'table', roles: ['client'] }
       },
       {
         path: 'tree',
         name: 'Tree',
         component: () => import('@/views/tree/index'),
         meta: { title: 'Tree', icon: 'tree', roles: ['admin'] }
+      },
+      {
+        path: 'goodsList',
+        name: 'goodsList',
+        component: () => import('@/views/goodsList/index'),
+        meta: { title: '商品管理', icon: 'tree', roles: ['client'] }
+
+      },
+
+      {
+        path: 'goodsList/add',
+        name: 'add',
+        component: () => import('@/views/goodsList/add'),
+        hidden: true
+
       }
     ]
   },

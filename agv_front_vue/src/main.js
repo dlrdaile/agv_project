@@ -15,6 +15,9 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+import { setToken } from '@/utils/auth'
+
+setToken('12345678')
 
 /**
  * If you don't want to use mock-server

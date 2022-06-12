@@ -1,131 +1,113 @@
-from enum import Enum
-from typing import List,Optional
+#
+# # this is just to unconfuse pycharm
+# try:
+#     from cv2 import cv2
+# except ImportError:
+#     try :
+#         import cv2.__init__ as cv2
+#     except ImportError :
+#         pass
+# import uvicorn
+# from fastapi import FastAPI,Request
+# from fastapi.responses import StreamingResponse
+# from fastapi.templating import Jinja2Templates
+# camera = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+# app = FastAPI()
+# templates = Jinja2Templates(directory=r"D:\Code\WEB\project_dir\agv_project\agv_back_fastapi\test\template")
+#
+# async def gen_frames() :
+#     while True :
+#         success,frame = camera.read()
+#         if not success :
+#             continue
+#         else :
+#             ret,buffer = cv2.imencode('.jpg',frame)
+#             frame = buffer.tobytes()
+#             yield (b'--frame\r\n'
+#                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+#
+#
+# @app.get('/')
+# def index(request: Request) :
+#     return templates.TemplateResponse("index.html",{"request" : request})
+#
+#
+# @app.get('/video_feed')
+# async def video_feed() :
+#     return StreamingResponse(gen_frames(),media_type='multipart/x-mixed-replace; boundary=frame')
+#
+# @app.get('/close')
+# async def close_video():
+#     camera.release()
+# if __name__ == '__main__' :
+#     uvicorn.run(app,host='127.0.0.1',port=8000,debug=True)
+import cv2
+import numpy as np
+import uvicorn
+from fastapi import FastAPI,Request,UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
+from pydantic import BaseModel
+from pathlib import Path
 
-from sqlmodel import Field,Relationship,Session,SQLModel,create_engine,select
+from starlette.responses import StreamingResponse
 
-
-class DemoEnum(int,Enum) :
-    a = 0
-    b = 1
-    c = 2
-
-
-class HeroTeamLink(SQLModel,table=True) :
-    team_id: Optional[int] = Field(
-        default=None,foreign_key="team.id",primary_key=True
-    )
-    hero_id: Optional[int] = Field(
-        default=None,foreign_key="hero.id",primary_key=True
-    )
-    is_training: bool = False
-
-    team: "Team" = Relationship(back_populates="hero_links")
-    hero: "Hero" = Relationship(back_populates="team_links")
-
-
-class Team(SQLModel,table=True) :
-    id: Optional[int] = Field(default=None,primary_key=True)
-    name: str = Field(index=True)
-    headquarters: str
-    demo: DemoEnum = 0
-    hero_links: List[HeroTeamLink] = Relationship(back_populates="team")
-
-
-class Hero(SQLModel,table=True) :
-    id: Optional[int] = Field(default=None,primary_key=True)
-    name: str = Field(index=True)
-    secret_name: str
-    age: Optional[int] = Field(default=None,index=True)
-
-    team_links: List[HeroTeamLink] = Relationship(back_populates="hero")
-
-
-sqlite_file_name = "database.db"
-sqlite_url = f"sqlite:///{sqlite_file_name}"
-
-engine = create_engine(sqlite_url,echo=True)
-
-
-def create_db_and_tables() :
-    SQLModel.metadata.drop_all(engine)
-    SQLModel.metadata.create_all(engine)
-
-
-def create_heroes() :
-    with Session(engine) as session :
-        team_preventers = Team(name="Preventers",headquarters="Sharp Tower",demo=3)
-        team_z_force = Team(name="Z-Force",headquarters="Sister Margaret’s Bar")
-
-        hero_deadpond = Hero(
-            name="Deadpond",
-            secret_name="Dive Wilson",
-        )
-        hero_rusty_man = Hero(
-            name="Rusty-Man",
-            secret_name="Tommy Sharp",
-            age=48,
-        )
-        hero_spider_boy = Hero(
-            name="Spider-Boy",
-            secret_name="Pedro Parqueador",
-        )
-        deadpond_team_z_link = HeroTeamLink(team=team_z_force,hero=hero_deadpond)
-        deadpond_preventers_link = HeroTeamLink(
-            team=team_preventers,hero=hero_deadpond,is_training=True
-        )
-        spider_boy_preventers_link = HeroTeamLink(
-            team=team_preventers,hero=hero_spider_boy,is_training=True
-        )
-        rusty_man_preventers_link = HeroTeamLink(
-            team=team_preventers,hero=hero_rusty_man
-        )
-
-        session.add(deadpond_team_z_link)
-        session.add(deadpond_preventers_link)
-        session.add(spider_boy_preventers_link)
-        session.add(rusty_man_preventers_link)
-        session.commit()
-
-        for link in team_z_force.hero_links :
-            print("Z-Force hero:",link.hero,"is training:",link.is_training)
-
-        for link in team_preventers.hero_links :
-            print("Preventers hero:",link.hero,"is training:",link.is_training)
+app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=("*",),
+    allow_headers=("*",),
+)
 
 
-def update_heroes() :
-    with Session(engine) as session :
-        hero_spider_boy = session.exec(
-            select(Hero).where(Hero.name == "Spider-Boy")
-        ).one()
-        team_z_force = session.exec(select(Team).where(Team.name == "Z-Force")).one()
-
-        spider_boy_z_force_link = HeroTeamLink(
-            team=team_z_force,hero=hero_spider_boy,is_training=True
-        )
-        team_z_force.hero_links.append(spider_boy_z_force_link)
-        session.add(team_z_force)
-        session.commit()
-
-        print("Updated Spider-Boy's Teams:",hero_spider_boy.team_links)
-        print("Z-Force heroes:",team_z_force.hero_links)
-
-        for link in hero_spider_boy.team_links :
-            if link.team.name == "Preventers" :
-                link.is_training = False
-
-        session.add(hero_spider_boy)
-        session.commit()
-
-        for link in hero_spider_boy.team_links :
-            print("Spider-Boy team:",link.team,"is training:",link.is_training)
+# camera = cv2.VideoCapture(0,cv2.CAP_DSHOW)
+# templates = Jinja2Templates(directory=r"D:\Code\WEB\project_dir\agv_project\agv_back_fastapi\test\template")
+#
+#
+# @app.get('/')
+# def index(request: Request) :
+#     return templates.TemplateResponse("index.html",{"request" : request})
+#
+#
+# @app.websocket("/ws")
+# async def get_stream(websocket: WebSocket) :
+#     await websocket.accept()
+#     try :
+#         while True :
+#             success,frame = camera.read()
+#             if not success :
+#                 break
+#             else :
+#                 ret,buffer = cv2.imencode('.jpg',frame)
+#                 await websocket.send_bytes(buffer.tobytes())
+#     except WebSocketDisconnect :
+#         print("Client disconnected")
+class MyData(BaseModel) :
+    hello: str
 
 
-def main() :
-    create_db_and_tables()
-    create_heroes()
-    update_heroes()
+@app.post('/uploadfiles/')
+async def get_upload_url(*,uploadFiles: list[UploadFile],req: Request) :
+    content = uploadFiles[0].file.read()
+    filepath = Path(uploadFiles[0].filename)
+    img = cv2.imdecode(np.frombuffer(content,np.uint8),cv2.IMREAD_COLOR)
+    if not filepath.exists():
+        filepath.write_bytes(content)
+    ret,buffer = cv2.imencode(filepath.suffix,img)
+    frame = buffer.tobytes()
+    # def iter():
+    #     yield from (b'--frame\r\n'
+    #                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+    # return StreamingResponse(iter(),media_type='multipart/x-mixed-replace; boundary=frame')
+    return {'code':200}
 
 
-if __name__ == "__main__" :
-    main()
+@app.options('/uploadfiles/')
+def justify() :
+    return HTMLResponse(status_code=200)
+
+
+if __name__ == '__main__' :
+    uvicorn.run('main_test:app',host='127.0.0.1',port=8000,reload=True)

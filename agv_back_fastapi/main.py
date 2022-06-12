@@ -30,7 +30,7 @@ def create_app():
 async def startup():
     create_app()  # 加载注册中心
     app.state.engine = init_db(isdrop=True)  # 初始化表
-    init_data()  # 初始化数据
+    await init_data()  # 初始化数据
 
 @app.on_event("shutdown")
 async def shutdown():

@@ -23,7 +23,8 @@ class Equipment(DevicePositon,table=True) :
         设备和工序间为多对多的关系
     """
     id: Optional[int] = Field(default=None,primary_key=True)
-    name: str
+    name: str = Field(index=True)
+    description: Optional[str] = None
     equipStatus: EquipmentStatus = 0
     process: List["Process"] = Relationship(back_populates="equipment",link_model=ProcessEquipmentLink)
     tasks_links: List[TaskEquipmentLink] = Relationship(back_populates="equipment")

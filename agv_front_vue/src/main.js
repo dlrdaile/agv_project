@@ -15,14 +15,11 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
-import { setToken } from '@/utils/auth'
 
 import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
-
-setToken('12345678')
 
 /**
  * If you don't want to use mock-server

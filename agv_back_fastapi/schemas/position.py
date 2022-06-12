@@ -11,10 +11,7 @@ class Position(SQLModel) :
 
 
 class Orientation(SQLModel) :
-    x: float = 0
-    y: float = 0
-    w: float = 0
-    z: float
+    yaw:float
 
 
 class DevicePositon(Position,Orientation) :

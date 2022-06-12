@@ -18,8 +18,6 @@
         <el-step title="完成" />
       </el-steps>
       <!--tab栏区域-->
-
-
       <el-form ref="addFormRef" :model="addForm" :rules="addFormRules" label-width="100px">
         <el-tabs v-model="activeIndex" :tab-position="'left'" @tab-click="tabClicked">
           <el-tab-pane label="基本信息" name="0">
@@ -51,7 +49,12 @@
                 <el-col :span="6">
                   <!-- <el-input v-model="addForm.goods_processes.value" /> -->
                   <el-select v-model="addForm.goods_processes[index]" class="filter-item" placeholder="请选择">
-                    <el-option v-for="item in manyProcesses" :key="item.processes_id" :label="item.processes_name" :value="item.processes_id" />
+                    <el-option
+                      v-for="item in manyProcesses"
+                      :key="item.processes_id"
+                      :label="item.processes_name"
+                      :value="item.processes_id"
+                    />
                   </el-select>
                 </el-col>
                 <el-col :span="4">
@@ -66,20 +69,23 @@
           <el-tab-pane label="零件图片" name="2">
             <!--action 表示图片要上传到的后台API地址（根地址加upload）-->
             <el-upload
-              :action="uploadURL"
+              class="upload-demo"
+              drag
+              :action="baseUrl+'/client/items/add'"
+              list-type="picture-card"
               :on-preview="handlePreview"
-              :on-remove="handleRemove"
-              list-type="picture"
               :headers="headerObj"
               :on-success="handleSuccess"
+              :auto-upload="false"
             >
-              <el-button size="small" type="primary">点击上传</el-button>
-              <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
+              <i class="el-icon-upload" />
+              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
             </el-upload>
           </el-tab-pane>
           <el-tab-pane label="零件描述" name="3">
             <!--富文本编辑器-->
-            <quill-editor v-model="addForm.goods_introduce"></quill-editor>
+            <quill-editor v-model="addForm.goods_introduce" />
             <!--添加商品的按钮-->
             <el-button type="primary" class="btnAdd" @click="add">添加零件</el-button>
           </el-tab-pane>
@@ -103,6 +109,8 @@ export default {
   data() {
     return {
       activeIndex: '0',
+      // 请求的根路径
+      baseUrl: process.env.VUE_APP_BASE_API,
       // 添加表单
       addForm: {
         // 名字
@@ -113,8 +121,6 @@ export default {
         goods_weight: 0,
         // 工序的数组
         goods_processes: [{ value: '' }],
-        // 图片的数组
-        pics: [],
         // 商品的详情描述
         goods_introduce: ''
       },
@@ -139,19 +145,15 @@ export default {
         { processes_id: '2', processes_name: '工序2' },
         { processes_id: '3', processes_name: '工序3' }
       ],
-      // 后台服务器根地址加upload
-      uploadURL: '地址（后台服务器根地址加上/upload） ',
       // 图片上传组件headers请求头对象
       headerObj: {
-        Authorization: window.sessionStorage.getItem('token')
+        Authorization: `Bearer ${this.$store.getters.token}`
       },
       // 图片的URL路径
       previewPath: '',
       previewVisible: false
-
     }
   },
-  created() {},
   methods: {
     // 用于在点击标签页之后发送请求
     async tabClicked() {
@@ -208,15 +210,15 @@ export default {
     add() {
       // console.log(this.addForm)
       this.$refs.addFormRef.validate(async valid => {
-        if(!valid) {
+        if (!valid) {
           return this.$message.error('请填写必要的表单项目！')
         }
         // 执行添加的业务逻辑
-        const {data: res} = await this.$http.post('goods',addForm)
-        
+        const { data: res } = await this.$http.post('goods', this.addForm)
+
         // 成功返回的是201
 
-        if(res.meta.status !== 201 ) {
+        if (res.meta.status !== 201) {
           return this.$message.error('添加零件失败！')
         }
 

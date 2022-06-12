@@ -14,7 +14,7 @@ class ItemProcessLink(SQLModel,table=True) :
     process_id: Optional[int] = Field(
         default=None,foreign_key="process.id",primary_key=True
     )
-    order: int
+    order: int = Field(default=None,primary_key=True)
     item: "Items" = Relationship(back_populates="process_links")
     process: "Process" = Relationship(back_populates="item_links")
 

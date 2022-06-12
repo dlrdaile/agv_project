@@ -18,6 +18,7 @@ def register_router(app: FastAPI):
     #
     app.include_router(oauth_api, prefix=settings.API_PREFIX, tags=["Oauth"])  # Login(权限在每个接口上)
     app.include_router(commons_api, prefix=settings.API_PREFIX, tags=["Common"])  # Login(权限在每个接口上)
+    app.include_router(client_api,prefix=settings.API_PREFIX,tags=['Client'])
     #
     # app.include_router(dashboard.router, prefix=settings.API_PREFIX, tags=["Dashboard"],
     #                    dependencies=[Security(get_current_user, scopes=[])])  # Dashboard(不需要权限,但需要登录)

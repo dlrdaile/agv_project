@@ -25,5 +25,12 @@
         </library>
       </libraries>
     </data-source>
+    <data-source source="LOCAL" name="@192.168.10.47" uuid="0f290e2d-f137-49b7-a22b-230d1181f9bb">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://192.168.10.47:3306</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

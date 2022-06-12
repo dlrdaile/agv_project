@@ -26,7 +26,7 @@
         <el-table-column type="index" />
         <el-table-column label="零件名称" prop="goods_name" />
         <el-table-column label="零件价格（元）" prop="goods_price" />
-        <el-table-column label="工序" prop="goods_process" />
+        <el-table-column label="工序" prop="goods_processes" />
         <el-table-column label="创建时间" prop="add_time" />
         <el-table-column label="操作">
           <template slot-scope="scope">

@@ -17,6 +17,11 @@ import '@/icons' // icon
 import '@/permission' // permission control
 import { setToken } from '@/utils/auth'
 
+import VueQuillEditor from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
 setToken('12345678')
 
 /**
@@ -36,6 +41,7 @@ if (process.env.NODE_ENV === 'production') {
 // Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 Vue.use(ElementUI)
+Vue.use(VueQuillEditor)
 
 Vue.config.productionTip = false
 

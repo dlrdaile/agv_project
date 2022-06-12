@@ -12,29 +12,28 @@
       <!--步骤条区-->
       <el-steps :space="200" :active="activeIndex - 0" finish-status="success" align-center>
         <el-step title="基本信息" />
-        <el-step title="商品工序" />
-        <el-step title="商品图片" />
-        <el-step title="商品描述" />
+        <el-step title="零件工序" />
+        <el-step title="零件图片" />
+        <el-step title="零件描述" />
         <el-step title="完成" />
       </el-steps>
       <!--tab栏区域-->
+
+
       <el-form ref="addFormRef" :model="addForm" :rules="addFormRules" label-width="100px">
         <el-tabs v-model="activeIndex" :tab-position="'left'" @tab-click="tabClicked">
           <el-tab-pane label="基本信息" name="0">
-            <el-form-item label="商品名称" prop="goods_name">
+            <el-form-item label="零件名称" prop="goods_name">
               <el-input v-model="addForm.goods_name" style="width: 300px" />
             </el-form-item>
-            <el-form-item label="商品价格" prop="goods_price">
+            <el-form-item label="零件价格" prop="goods_price">
               <el-input v-model="addForm.goods_price" type="number" style="width: 300px" />
             </el-form-item>
-            <el-form-item label="商品重量" prop="goods_weight">
+            <el-form-item label="零件重量" prop="goods_weight">
               <el-input v-model="addForm.goods_weight" type="number" style="width: 300px" />
             </el-form-item>
-            <el-form-item label="商品数量" prop="goods_number">
-              <el-input v-model="addForm.goods_number" type="number" style="width: 300px" />
-            </el-form-item>
           </el-tab-pane>
-          <el-tab-pane label="商品工序" name="1">
+          <el-tab-pane label="零件工序" name="1">
             <el-alert
               title="请完成工序的添加"
               type="warning"
@@ -64,7 +63,7 @@
               <el-button type="primary" @click="addProcess">新增工序</el-button>
             </el-form-item>
           </el-tab-pane>
-          <el-tab-pane label="商品图片" name="2">
+          <el-tab-pane label="零件图片" name="2">
             <!--action 表示图片要上传到的后台API地址（根地址加upload）-->
             <el-upload
               :action="uploadURL"
@@ -78,9 +77,11 @@
               <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
             </el-upload>
           </el-tab-pane>
-          <el-tab-pane label="商品内容" name="3">
+          <el-tab-pane label="零件描述" name="3">
             <!--富文本编辑器-->
             <quill-editor v-model="addForm.goods_introduce"></quill-editor>
+            <!--添加商品的按钮-->
+            <el-button type="primary" class="btnAdd" @click="add">添加零件</el-button>
           </el-tab-pane>
         </el-tabs>
 
@@ -104,10 +105,13 @@ export default {
       activeIndex: '0',
       // 添加表单
       addForm: {
+        // 名字
         goods_name: '',
+        // 价格
         goods_price: 0,
+        // 重量
         goods_weight: 0,
-        goods_number: 0,
+        // 工序的数组
         goods_processes: [{ value: '' }],
         // 图片的数组
         pics: [],
@@ -124,10 +128,7 @@ export default {
         goods_weight: [
           { required: true, message: '请输入商品重量', trigger: 'blur' }
         ],
-        goods_number: [
-          { required: true, message: '请输入商品数量', trigger: 'blur' }
-        ],
-        goods_processe: [
+        goods_processes: [
           { required: true, message: '请选择产品工序', trigger: 'blur' }
         ]
 
@@ -139,7 +140,7 @@ export default {
         { processes_id: '3', processes_name: '工序3' }
       ],
       // 后台服务器根地址加upload
-      uploadURL: '     ',
+      uploadURL: '地址（后台服务器根地址加上/upload） ',
       // 图片上传组件headers请求头对象
       headerObj: {
         Authorization: window.sessionStorage.getItem('token')
@@ -202,10 +203,34 @@ export default {
       // 2.将图片信息对象，push到pics上
       this.addForm.pics.push(picInfo)
       console.log(this.addForm)
+    },
+    // 添加商品
+    add() {
+      // console.log(this.addForm)
+      this.$refs.addFormRef.validate(async valid => {
+        if(!valid) {
+          return this.$message.error('请填写必要的表单项目！')
+        }
+        // 执行添加的业务逻辑
+        const {data: res} = await this.$http.post('goods',addForm)
+        
+        // 成功返回的是201
+
+        if(res.meta.status !== 201 ) {
+          return this.$message.error('添加零件失败！')
+        }
+
+        this.$message.success('添加零件成功')
+        // 跳转到商品列表
+        this.$router.push('/example/goodsList')
+      })
     }
   }
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
+.btnAdd {
+  margin-top: 15px;
+}
 </style>

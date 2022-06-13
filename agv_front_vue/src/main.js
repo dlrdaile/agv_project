@@ -20,7 +20,10 @@ import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
-
+import { setToken } from '@/utils/auth'
+const token = 12321
+setToken(token)
+store.commit('user/SET_TOKEN', token)
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

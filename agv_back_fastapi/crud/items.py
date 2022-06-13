@@ -4,8 +4,8 @@ date:2022年06月13日
 """
 from typing import Optional,List
 
-from sqlalchemy import desc
-from sqlmodel import select,Session,or_
+from sqlalchemy import desc,and_
+from sqlmodel import select,Session,or_,func
 
 from crud.base import CRUDBase
 from db.session import get_session
@@ -48,24 +48,23 @@ class ItemCrud(CRUDBase[Items,UpdateItem,CreateItem]) :
 
     def process_query(self,query: str,sql,user: Users) :
         if query == 'admin' :
-            if user.isAdmin :
-                sql = sql.where(self.model.Provider == 'admin')
-            else :
-                sql = sql.where(self.model.Provider == 'admin')
+            sql = sql.where(self.model.Provider == 'admin')
         elif query == 'third' :
             if user.isAdmin :
                 sql = sql.where(self.model.Provider != 'admin')
             else :
-                sql = sql.where(self.model.Provider != 'admin')
+                sql = sql.where(and_(self.model.Provider != 'admin',self.model.user_id != user.id))
         elif query == 'self' :
             sql = sql.where(self.model.user_id == user.id)
         return sql
 
-    def get_count(self,user: Users,db: Session = get_session()) -> int :
+    def get_count(self,user: Users,query:str ,db: Session = get_session()) -> int :
         if user.isAdmin :
-            count = db.query(self.model).count()
+            sql = select(func.count(self.model.id))
         else :
-            count = db.query(self.model).filter(or_(self.model.isPublic,user.id == self.model.user_id)).count()
+            sql = select(func.count(self.model.id)).where(or_(self.model.isPublic,user.id == self.model.user_id))
+        sql = self.process_query(query,sql,user)
+        count = db.exec(sql).first()
         db.close()
         return count
 

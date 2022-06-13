@@ -5,7 +5,6 @@ date:2022年05月31日
 import datetime
 
 from fastapi import Depends
-from fastapi.security import OAuth2PasswordRequestForm
 
 from apis.oauth import oauth_api
 from core import create_access_token
@@ -15,9 +14,9 @@ from crud.user import userCrud
 from models import Users
 from schemas.login import Login
 from schemas.token import TokenInfo
-from utils.custom_exc import UserNotExist
-from utils.resp_code import resp_200,resp_500
 from schemas.user import UpdateUser
+from utils.resp_code import resp_200,resp_500
+
 
 @oauth_api.post("/login",summary="docs接口文档登录 && 登录接口")
 async def login_access_token(
@@ -38,7 +37,6 @@ async def login_access_token(
         return resp_500(msg=f'数据库连接失败！')
     return resp_200(data={"token" : token,"token_type" : "bearer"})
     # return {"access_token": token, "token_type": "bearer"}
-
 
 
 @oauth_api.post('/logout')

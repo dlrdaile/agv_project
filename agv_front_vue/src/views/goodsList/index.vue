@@ -50,7 +50,6 @@
   </div>
 </template>
 <script>
-import { info } from 'console'
 
 export default {
   data() {

@@ -14,20 +14,35 @@ class BaseItem(SQLModel) :
 class CreateItem(SQLModel) :
     name: str
     description: Optional[str] = None
-    isPublic: bool = True
-    Provider: str = 'admin'
+    image_path: Optional[str] = None
+    isPublic: bool
+    Provider: str
     price: float
     weight: float
-    # goods_processes:list[]
-
+    user_id: int
 
 class UpdateItem(SQLModel) :
-    pass
 
-
-class DeleteItem(SQLModel) :
-    pass
+    name:Optional[str] = None
+    description: Optional[str] = None
+    isPublic: Optional[bool] = None
+    Provider: Optional[str] = None
+    price: Optional[float] = None
+    weight: Optional[float] = None
+    image_path: Optional[str] = None
 
 
 class OutputItems(SQLModel) :
-    pass
+    id:int
+    name: str
+    description: Optional[str] = None
+    image_path: Optional[str] = None
+    isPublic: bool
+    Provider: str
+    price: float
+    weight: float
+
+class QueryInItems(SQLModel):
+    query :str
+    pagenum: int
+    pagesize:int

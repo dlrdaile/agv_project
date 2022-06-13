@@ -4,7 +4,6 @@ date:2022年06月12日
 """
 import uuid
 from pathlib import Path
-from typing import List
 
 from fastapi import APIRouter,Request,UploadFile,Depends
 
@@ -52,11 +51,28 @@ async def add_item(req: Request,file: UploadFile,user: Users = Depends(get_curre
 
 @items_api.post('/getitems')
 async def get_items(*,user: Users = Depends(get_current_user),query_data: QueryInItems) :
-    try:
+    try :
         items = itemCrud.get_multi(query_data.query,user,pageIndex=query_data.pagenum,pageSize=query_data.pagesize)
         output_items = [OutputItems.from_orm(item) for item in items]
         total = itemCrud.get_count(user)
-    except Exception as e:
+    except Exception as e :
         logger.error(f'获取商品列表时数据库查询错误，原因是{e}')
         return resp_500(msg='数据库查询错误')
     return resp_200(data=dict(goodslist=output_items,total=total),msg='获得商品数据成功')
+
+
+@items_api.delete('/deleteitem')
+async def delete_item(*,user: Users = Depends(get_current_user),item_id: int) :
+    item = itemCrud.get(item_id)
+    if item.user_id != user.id :
+        resp_400(msg='没有删除该商品的权限')
+    else :
+        try :
+            num = itemCrud.remove(item_id)
+            if num != 0 :
+                resp_200(msg="删除成功")
+            else :
+                resp_400(msg="该商品不存在")
+        except Exception as e :
+            logger.error(f'商品删除错误,因为：{e}')
+            return resp_500(msg="数据库操作错误")

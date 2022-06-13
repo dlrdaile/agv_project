@@ -68,7 +68,7 @@ class CRUDBase(Generic[ModelType,CreateSchemaType,UpdateSchemaType]) :
         db.commit()
         db.close()
 
-    async def remove(self,id: int,db: Session = get_session()) -> int :
+    def remove(self,id: int,db: Session = get_session()) -> int :
         """ 通过 id 删除对象 """
         sql = delete(self.model).where(self.model.id == id)
         result = db.execute(sql)

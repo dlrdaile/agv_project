@@ -22,7 +22,7 @@
         </el-col>
       </el-row>
       <!--表格区域-->
-      <el-table :data="goodslist" border stripe>
+      <!-- <el-table :data="goodslist" border stripe>
         <el-table-column type="index" />
         <el-table-column label="零件名称" prop="goods_name" />
         <el-table-column label="零件价格（元）" prop="goods_price" />
@@ -34,7 +34,67 @@
             <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeById(scope.row.goods_id)" />
           </template>
         </el-table-column>
-      </el-table>
+      </el-table> -->
+      <el-table
+    :data="getgoodsList"
+    border
+    style="width: 100%">
+    <el-table-column type="expand">
+      <template slot-scope="props">
+        <el-form label-position="left" inline class="demo-table-expand">
+          <el-form-item label="零件ID">
+            <span>{{ props.row.goods_id }}</span>
+          </el-form-item>
+          <el-form-item label="零件名称">
+            <span>{{ props.row.goods_name }}</span>
+          </el-form-item>
+          <el-form-item label="零件价格（元）">
+            <span>{{ props.row.goods_price }}</span>
+          </el-form-item>
+          <!-- // 是否为第三方零件 -->
+          <!-- <el-form-item label="零件类型">
+            <span>{{ props.row.goods_status }}</span>
+          </el-form-item> -->
+          <el-form-item label="创建者">
+            <span>{{ props.row.goods_creator }}</span>
+          </el-form-item>
+          <el-form-item label="所需工序">
+            <span>{{ props.row.goods_processes }}</span>
+          </el-form-item>
+          <el-form-item label="商品描述">
+            <span>{{ props.row.desc }}</span>
+          </el-form-item>
+        </el-form>
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="零件ID"
+      prop="goods_id">
+    </el-table-column>
+    <el-table-column
+      label="零件名称"
+      prop="goods_name">
+    </el-table-column>
+    <el-table-column
+      label="零件价格"
+      prop="goods_price">
+    </el-table-column>
+    <!-- <el-table-column
+      label="零件类型"
+      prop="goods_status">
+    </el-table-column> -->
+    <el-table-column
+      label="创建者"
+      prop="goods_creator">
+    </el-table-column>
+    <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button type="primary" icon="el-icon-edit" size="mini" />
+            <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeById(scope.row.goods_id)" />
+            <el-button type="primary" icon="el-icon-picture">图片预览</el-button>
+          </template>
+        </el-table-column>
+  </el-table>
       <!--分页区-->
       <el-pagination
         :current-page="queryInfo.pagenum"
@@ -121,4 +181,16 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
+  }
 </style>

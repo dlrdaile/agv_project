@@ -35,6 +35,7 @@ class UpdateItem(SQLModel) :
 class OutputItems(SQLModel) :
     id:int
     name: str
+    user_id:int
     description: Optional[str] = None
     image_path: Optional[str] = None
     isPublic: bool

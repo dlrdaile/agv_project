@@ -36,6 +36,7 @@ class CreateUser(UpdateUser,UserIn) :
 
 
 class OutputUser(UserIn) :
+    id: int
     email: Optional[EmailStr] = Field(default=None,description="用户邮箱")
     roles: Optional[List[str]] = None
     phone: Optional[int] = Field(default=None)

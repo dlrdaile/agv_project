@@ -116,7 +116,7 @@ def init_items() :
                 # if req.status_code == 200 :
                 #     json_data = req.json()
                 #     image_path = json_data['imgurl']
-                image_path = 'https://picsum.photos/300'
+                image_path = 'https://picsum.photos/200'
                 item = Items(
                              name=f'商品{i + 1}',
                              description=fake.text(max_nb_chars=100,ext_word_list=None),

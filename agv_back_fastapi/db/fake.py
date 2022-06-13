@@ -76,7 +76,7 @@ def create_fake_items() :
                 user: Users = session.query(Users).get(user_id)
                 user_name = user.nickname
                 for i in range(item_num) :
-                    image_path = 'https://picsum.photos/300'
+                    image_path = 'https://picsum.photos/200'
                     item = Items(
                                  name=f'{user_name}的商品{i + 1}',
                                  description=fake_ch.text(max_nb_chars=100,ext_word_list=None),

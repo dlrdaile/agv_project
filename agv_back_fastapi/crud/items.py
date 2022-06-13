@@ -11,7 +11,7 @@ from crud.base import CRUDBase
 from db.session import get_session
 from models import Users
 from models.item.items import Items
-from schemas.items import CreateItem,UpdateItem,OutputItems
+from schemas.items import CreateItem,UpdateItem
 
 
 class ItemCrud(CRUDBase[Items,UpdateItem,CreateItem]) :

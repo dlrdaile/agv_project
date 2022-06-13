@@ -5,9 +5,7 @@ date:2022年06月12日
 import datetime
 import random
 
-import numpy as np
 from faker import Faker
-
 from core.logger import logger
 from core.security import get_password_hash
 from crud.user import userCrud
@@ -16,8 +14,9 @@ from models.item.items import Items
 from models.item.links import ItemProcessLink
 from models.item.process import Process
 from models.user import Users
+from .fake import create_fake
 from .session import get_session
-
+from utils.random_choose import choose_process
 fake = Faker(locale='zh_CN')
 
 
@@ -26,7 +25,8 @@ def init_user() :
         try :
             user = userCrud.get_by_name('admin')
             if user is None :
-                adminInfo = Users(name='admin',
+                adminInfo = Users(id=1,
+                                  name='admin',
                                   hashed_password=get_password_hash('123456'),
                                   create_time=datetime.datetime.now(),
                                   isAdmin=True,
@@ -101,17 +101,6 @@ def init_equipment() :
             logger.info('设备数据初始化成功')
 
 
-def choose_process(min_num,max_num,process_num) :
-    process_array = np.arange(process_num) + 1
-    choose_list = np.random.choice(process_array,random.randint(min_num,max_num),
-                                   replace=True)
-    temp = choose_list[:-1] - choose_list[1 :]
-    temp = choose_list[np.argwhere(temp != 0).flatten()].tolist()
-    temp.append(choose_list[-1])
-    if len(temp) < min_num :
-        temp = choose_process(min_num,max_num,process_num)
-    return temp
-
 
 def init_items() :
     init_item_num = 5
@@ -128,17 +117,18 @@ def init_items() :
                 #     json_data = req.json()
                 #     image_path = json_data['imgurl']
                 image_path = 'https://picsum.photos/300'
-                item = Items(id=i + 1,
+                item = Items(
                              name=f'商品{i + 1}',
                              description=fake.text(max_nb_chars=100,ext_word_list=None),
                              image_path=image_path,
                              price=random.randint(100,500),
-                             weight=random.randint(1,10))
+                             weight=random.randint(1,10),
+                             user_id=1)
                 process_queue_ls = choose_process(min_process_num,max_process_num,process_num)
                 for order,process_id in enumerate(process_queue_ls) :
-                    item_process_link = ItemProcessLink(item_id=i + 1,
-                                                        process_id=process_id,
+                    item_process_link = ItemProcessLink(process_id=process_id,
                                                         order=order)
+                    item.process_links.append(item_process_link)
                     item_process_link_ls.append(item_process_link)
                 item_ls.append(item)
             session.add_all(item_ls)
@@ -149,8 +139,6 @@ def init_items() :
             logger.error(f'商品数据初始化失败,因为：{e}')
         else :
             logger.info('商品数据初始化成功')
-
-    pass
 
 
 def init_map_data() :
@@ -177,3 +165,4 @@ async def init_data() :
     init_process()
     init_equipment()
     init_items()
+    await create_fake()

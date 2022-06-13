@@ -26,5 +26,5 @@ class Tasks(SQLModel,table=True) :
     status: TaskStatus = TaskStatus.WAITING
     start_time: datetime = datetime.now()
     end_time: Optional[datetime] = None
-    userItems: Optional["UserItems"] = Relationship(back_populates="task")
+    UserOrders: Optional["UserOrder"] = Relationship(back_populates="task")
     equipment_links: List["TaskEquipmentLink"] = Relationship(back_populates="task")

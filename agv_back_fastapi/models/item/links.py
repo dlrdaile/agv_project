@@ -2,7 +2,7 @@
 author:dlr123
 date:2022年06月02日
 """
-from typing import Optional
+from typing import Optional,List
 
 from sqlmodel import SQLModel,Field,Relationship
 

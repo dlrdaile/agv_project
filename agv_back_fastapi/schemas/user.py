@@ -20,14 +20,14 @@ class UpdateUser(SQLModel) :
     isActive: Optional[bool] = None
     last_active_time: Optional[datetime] = None
     phone: Optional[int] = Field(default=None)
-    nickname: Optional[str] = Field(default=None,min_length=3,max_length=20)
+    nickname: Optional[str] = None
     address_id: Optional[int] = None
 
 
 class CreateUser(UpdateUser,UserIn) :
     password: str
     isActive: bool = False
-    nickname: str = Field(min_length=3,max_length=20)
+    nickname: str
     address: List[int]
     email: EmailStr
     create_time: datetime = datetime.now()
@@ -37,5 +37,8 @@ class CreateUser(UpdateUser,UserIn) :
 
 class OutputUser(UserIn) :
     email: Optional[EmailStr] = Field(default=None,description="用户邮箱")
-    isAdmin: bool = Field(default=False)
     roles: Optional[List[str]] = None
+    phone: Optional[int] = Field(default=None)
+    address_id: Optional[int] = None
+    nickname: str
+    create_time: datetime

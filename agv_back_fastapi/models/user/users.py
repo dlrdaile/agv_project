@@ -19,10 +19,11 @@ class Users(SQLModel,table=True) :
     last_active_time: Optional[datetime] = None
     # 用户信息
     isAdmin: bool = Field(default=False)
-    nickname: str = Field(min_length=3,max_length=20)
+    nickname: str
     email: EmailStr = Field(index=True)
     phone: Optional[int] = Field(default=None)
 
     address_id: Optional[int] = Field(default=None,foreign_key="city.union_id")
     address:Optional["City"] = Relationship(back_populates="userList")
-    userItems: List["UserItems"] = Relationship(back_populates="user")
+    selfItems:List["Items"] = Relationship(back_populates="user")
+    UserOrders: List["UserOrder"] = Relationship(back_populates="user")

@@ -74,12 +74,6 @@ export const asyncRoutes = [
         meta: { title: '综合订单统计表', icon: 'table', roles: ['client'] }
       },
       {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree', roles: ['admin'] }
-      },
-      {
         path: 'goodsList',
         name: 'goodsList',
         component: () => import('@/views/goodsList/index'),

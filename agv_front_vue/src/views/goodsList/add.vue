@@ -15,7 +15,6 @@
         <el-step title="零件工序" />
         <el-step title="零件图片" />
         <el-step title="零件描述" />
-        <el-step title="完成" />
       </el-steps>
       <!--tab栏区域-->
       <el-form ref="addFormRef" :model="addForm" :rules="addFormRules" label-width="100px">
@@ -51,9 +50,9 @@
                   <el-select v-model="addForm.goods_processes[index]" class="filter-item" placeholder="请选择">
                     <el-option
                       v-for="item in manyProcesses"
-                      :key="item.processes_id"
-                      :label="item.processes_name"
-                      :value="item.processes_id"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.id"
                     />
                   </el-select>
                 </el-col>
@@ -62,21 +61,22 @@
                 </el-col>
               </el-row>
             </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="addProcess">新增工序</el-button>
-            </el-form-item>
+            <el-col :offset="5">
+              <el-button type="primary" size="medium" @click="addProcess">新增工序</el-button>
+            </el-col>
           </el-tab-pane>
           <el-tab-pane label="零件图片" name="2">
-            <!--action 表示图片要上传到的后台API地址（根地址加upload）-->
             <el-upload
+              ref="upload"
               class="upload-demo"
               drag
               :action="baseUrl+'/client/items/add'"
-              list-type="picture-card"
-              :on-preview="handlePreview"
               :headers="headerObj"
-              :on-success="handleSuccess"
               :auto-upload="false"
+              :on-success="handleSuccess"
+              :on-error="handleError"
+              list-type="picture"
+              :data="UploadGoodData"
             >
               <i class="el-icon-upload" />
               <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -87,24 +87,30 @@
             <!--富文本编辑器-->
             <quill-editor v-model="addForm.goods_introduce" />
             <!--添加商品的按钮-->
-            <el-button type="primary" class="btnAdd" @click="add">添加零件</el-button>
+            <el-row>
+              <el-col :span="6">
+                <el-switch
+                  v-model="addForm.goods_isPublish"
+                  active-text="公开"
+                  inactive-text="不公开"
+                />
+              </el-col>
+              <el-col :span="6">
+                <el-button type="primary" class="btnAdd" @click="addItem">添加零件</el-button>
+
+              </el-col>
+            </el-row>
+
           </el-tab-pane>
         </el-tabs>
-
       </el-form>
     </el-card>
-    <!--图片预览-->
-    <el-dialog
-      title="图片预览"
-      :visible.sync="previewVisible"
-      width="50%"
-    >
-      <img :src="previewPath" alt="" width="100%">
-    </el-dialog>
   </div>
 </template>
 
 <script>
+import { getProcessList } from '@/api/process'
+
 export default {
   data() {
     return {
@@ -122,7 +128,9 @@ export default {
         // 工序的数组
         goods_processes: [{ value: '' }],
         // 商品的详情描述
-        goods_introduce: ''
+        goods_introduce: '',
+        // 商品是否发布
+        goods_isPublish: false
       },
       addFormRules: {
         goods_name: [
@@ -140,11 +148,7 @@ export default {
 
       },
       // 加工工序数据  定义请求内容为processes_id和processes_name
-      manyProcesses: [
-        { processes_id: '1', processes_name: '工序1' },
-        { processes_id: '2', processes_name: '工序2' },
-        { processes_id: '3', processes_name: '工序3' }
-      ],
+      manyProcesses: [],
       // 图片上传组件headers请求头对象
       headerObj: {
         Authorization: `Bearer ${this.$store.getters.token}`
@@ -154,19 +158,26 @@ export default {
       previewVisible: false
     }
   },
+  computed: {
+    UploadGoodData() {
+      const data = {
+        name: this.addForm.goods_name,
+        description: this.addForm.goods_introduce,
+        isPublic: this.addForm.goods_isPublish,
+        Provider: this.$store.getters.userInfo.nickname,
+        price: this.addForm.goods_price,
+        weight: this.addForm.goods_weight,
+        Processes: this.addForm.goods_processes
+      }
+      return data
+    }
+  },
   methods: {
     // 用于在点击标签页之后发送请求
     async tabClicked() {
-      // console.log(this.activeIndex)
       if (this.activeIndex === '1') {
-        const { data: res } = this.$http.get('工序所在路径')
-        // 定义请求内容为processes_id和processes_name
-        if (res.meta.status !== 200) {
-          return this.$message.error('获取动态参数列表失败')
-        }
-        console.log(res.data)
-        // 将接受的数据赋值到manyProcesses数组中
-        this.manyProcesses = res.data
+        const { data: res } = await getProcessList()
+        this.manyProcesses = res
       }
     },
     removeProcess(item) {
@@ -181,50 +192,24 @@ export default {
         key: Date.now()
       })
     },
-    // 处理图片预览效果
-    handlePreview(file) {
-      console.log(file)
-      this.previewPath = file.response.data.url
-      this.previewVisible = true
-    },
-    // 处理移除图片的操作
-    handleRemove(file) {
-      // 1.获取将要删除的图片的临时路径
-      const filePath = file.response.data.tmp_path
-      // 2.从pics数组中找到这个图片对应的索引
-      const i = this.addForm.pics.findIndex(x => x.pic === filePath)
-      // 3.调用数组的splice方法，将图片信息对象从pics中移除
-      this.addForm.pics.splice(i, 1)
-      console.log(this.addForm)
-    },
     // 监听图片上传成功的事件
     handleSuccess(response) {
       console.log(response)
-      // 1.拼接得到一个图片信息对象
-      const picInfo = { pic: response.data.tmp_path }
-      // 2.将图片信息对象，push到pics上
-      this.addForm.pics.push(picInfo)
-      console.log(this.addForm)
+      this.$message.success('零件添加成功！')
+      this.$router.push('/example/goodsList')
+    },
+    handleError(err) {
+      this.$message.error('零件添加失败！')
+      console.log(err)
     },
     // 添加商品
-    add() {
+    addItem() {
       // console.log(this.addForm)
       this.$refs.addFormRef.validate(async valid => {
         if (!valid) {
           return this.$message.error('请填写必要的表单项目！')
-        }
-        // 执行添加的业务逻辑
-        const { data: res } = await this.$http.post('goods', this.addForm)
-
-        // 成功返回的是201
-
-        if (res.meta.status !== 201) {
-          return this.$message.error('添加零件失败！')
-        }
-
-        this.$message.success('添加零件成功')
-        // 跳转到商品列表
-        this.$router.push('/example/goodsList')
+        }// 跳转到商品列表
+        this.$refs.upload.submit()
       })
     }
   }

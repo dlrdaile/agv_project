@@ -40,6 +40,10 @@ class UserCrud(CRUDBase[Users,UpdateUser,CreateUser]) :
         db.close()
         return result
 
+    def get_id_by_name(self,name: str,db: Session = get_session()) -> Optional[int] :
+        result = self.get_by_name(name,db)
+        return result.id
+
 
 userCrud = UserCrud()
 if __name__ == "__main__" :

@@ -6,6 +6,7 @@
 import secrets
 from typing import Union, List
 from pydantic import BaseSettings, AnyHttpUrl
+import os
 
 project_desc = """
     🎉 管理员接口汇总 🎉
@@ -18,6 +19,7 @@ project_desc = """
 class Settings(BaseSettings):
     PROJECT_DESC: str = project_desc  # 描述
     PROJECT_VERSION: Union[int, str] = 1.0  # 版本
+    PROJECT_ROOT_PATH: str = os.path.abspath('./')
     BASE_URL: AnyHttpUrl = "http://127.0.0.1:8000"  # 开发环境
 
     API_PREFIX: str = "/api"  # 接口前缀

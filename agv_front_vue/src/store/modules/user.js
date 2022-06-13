@@ -1,21 +1,18 @@
-import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getInfo, login, logout } from '@/api/user'
+import { getToken, removeToken, setToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
 const state = {
   token: getToken(),
   name: '',
-  avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-  introduction: '',
-  roles: []
+  avatar: '',
+  roles: [],
+  userInfo: {}
 }
 
 const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
-  },
-  SET_INTRODUCTION: (state, introduction) => {
-    state.introduction = introduction
   },
   SET_NAME: (state, name) => {
     state.name = name
@@ -25,6 +22,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_USERINFO: (state, userInfo) => {
+    state.userInfo = userInfo
   }
 }
 
@@ -54,7 +54,7 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { roles, name, avatar, introduction } = data
+        const { roles, name } = data
 
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
@@ -63,8 +63,8 @@ const actions = {
 
         commit('SET_ROLES', roles)
         commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        commit('SET_INTRODUCTION', introduction)
+        commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
+        commit('SET_USERINFO', data)
         resolve(data)
       }).catch(error => {
         reject(error)

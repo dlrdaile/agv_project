@@ -110,7 +110,6 @@
   </div>
 </template>
 <script>
-import { info } from 'console'
 
 export default {
   data() {
@@ -180,7 +179,7 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .demo-table-expand {
     font-size: 0;
   }

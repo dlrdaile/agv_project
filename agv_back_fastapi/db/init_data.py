@@ -19,7 +19,6 @@ from .session import get_session
 from utils.random_choose import choose_process
 fake = Faker(locale='zh_CN')
 
-
 def init_user() :
     with get_session() as session :
         try :
@@ -28,7 +27,7 @@ def init_user() :
                 adminInfo = Users(id=1,
                                   name='admin',
                                   hashed_password=get_password_hash('123456'),
-                                  create_time=datetime.datetime.now(),
+                                  create_time=datetime.datetime.now() - datetime.timedelta(2000),
                                   isAdmin=True,
                                   nickname='admin',
                                   email='965794928@qq.com',
@@ -117,12 +116,14 @@ def init_items() :
                 #     json_data = req.json()
                 #     image_path = json_data['imgurl']
                 image_path = 'https://picsum.photos/200'
-                item = Items(
-                             name=f'商品{i + 1}',
+                admin_user:Users = session.query(Users).get(1)
+                fake_time = admin_user.create_time
+                item = Items(name=f'商品{i + 1}',
                              description=fake.text(max_nb_chars=100,ext_word_list=None),
                              image_path=image_path,
                              price=random.randint(100,500),
                              weight=random.randint(1,10),
+                             create_time= fake_time,
                              user_id=1)
                 process_queue_ls = choose_process(min_process_num,max_process_num,process_num)
                 for order,process_id in enumerate(process_queue_ls) :

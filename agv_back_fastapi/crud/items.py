@@ -33,10 +33,10 @@ class ItemCrud(CRUDBase[Items,UpdateItem,CreateItem]) :
                   pageIndex: int = 1,
                   pageSize: int = 10) -> List[Items] :
         if user.isAdmin :
-            sql = select(self.model).order_by(desc(self.model.id))
+            sql = select(self.model)
         else :
             sql = select(self.model).where(or_(self.model.isPublic,
-                                               self.model.user_id == user.id))
+                                               self.model.user_id == user.id)).where(self.model.IsShowToClient)
         sql = self.process_query(query,sql,user)
         if not (pageIndex == -1 and pageSize == -1) :
             sql = sql.offset((pageIndex - 1)*pageSize).limit(pageSize)
@@ -62,7 +62,7 @@ class ItemCrud(CRUDBase[Items,UpdateItem,CreateItem]) :
         if user.isAdmin :
             sql = select(func.count(self.model.id))
         else :
-            sql = select(func.count(self.model.id)).where(or_(self.model.isPublic,user.id == self.model.user_id))
+            sql = select(func.count(self.model.id)).where(or_(self.model.isPublic,user.id == self.model.user_id)).where(self.model.IsShowToClient)
         sql = self.process_query(query,sql,user)
         count = db.exec(sql).first()
         db.close()

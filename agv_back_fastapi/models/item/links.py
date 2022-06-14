@@ -35,6 +35,6 @@ class TaskEquipmentLink(SQLModel,table=True) :
     equipment_id: Optional[int] = Field(
         default=None,foreign_key="equipment.id",primary_key=True
     )
-    order: int
+    order: int = Field(default=None,primary_key=True)
     task: "Tasks" = Relationship(back_populates="equipment_links")
     equipment: "Equipment" = Relationship(back_populates="tasks_links")

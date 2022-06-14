@@ -52,11 +52,11 @@
           <span>{{ row.type }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="用户" width="110px" align="center">
+      <el-table-column label="用户" width="110px" align="center">
         <template slot-scope="{row}">
           <span class="link-type" @click="handleFetchPv(row.auther)">{{ row.author }}</span>
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <!-- <el-table-column v-if="showReviewer" label="审查员" width="110px" align="center">
         <template slot-scope="{row}">
           <span style="color:red;">{{ row.reviewer }}</span>
@@ -74,38 +74,35 @@
         <template slot-scope="{row}">
           <!-- <span v-if="row.status.isEditing">
           button</span> -->
-          <span v-if="row.status !='发布'">
-            <el-button type="primary" size="mini">编辑中</el-button>
-          </span>
-          <span v-else-if="!row.status.isEditing && row.status.OrderStatus == 0">
+          <span v-if="row.status.OrderStatus == 0">
             <el-button type="primary" size="mini" disabled>未处理</el-button>
           </span>
-          <span v-else-if="!row.status.isEditing && row.status.OrderStatus == 1">
+          <span v-else-if="row.status.OrderStatus == 1">
             <el-button type="primary" size="mini" disabled>订单进行中</el-button>
           </span>
-          <span v-else-if="!row.status.isEditing && row.status.OrderStatus == 2">
+          <span v-else-if="row.status.OrderStatus == 2">
             <el-button type="primary" size="mini" @click="opendetails">被拒绝</el-button>
           </span>
-          <span v-else-if="!row.status.isEditing && row.status.OrderStatus == 3">
+          <span v-else-if="row.status.OrderStatus == 3">
             <el-button type="primary" size="mini" disabled>订单完成</el-button>
           </span>
-          <span v-else-if="!row.status.isEditing && row.status.OrderStatus == 4">
+          <span v-else-if="!row.status.OrderStatus == 4">
             <el-button type="primary" size="mini" @click="opendetails">订单失败</el-button> <!--点击之后显示对话框-->
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="处理" align="center" width="260" class-name="small-padding fixed-width">
+      <el-table-column label="处理" align="center" width="300" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <el-button :disabled="row.status =='发布'" type="primary" size="mini" @click="handleUpdate(row)">
             编辑
           </el-button>
-          <el-button v-if="row.status!='发布'" size="mini" type="success" @click="handleModifyStatus(row,'发布')">
-            发布
+          <el-button size="mini" type="success" @click="orderReceive(row)">
+            接受
           </el-button>
-          <el-button v-if="row.status!='草稿'" size="mini" type="warning" @click="handleModifyStatus(row,'草稿')">
-            撤回
+          <el-button size="mini" type="warning" @click="dialogWarnVisible =true">
+            拒绝
           </el-button>
-          <el-button v-if="row.status!='删除'" :disabled="row.status =='发布'" size="mini" type="danger" @click="handleDelete(row,$index)">
+          <el-button size="mini" type="danger" @click="handleDelete(row,$index)">
             删除
           </el-button>
         </template>
@@ -181,7 +178,7 @@
       </div>
     </el-dialog>
 
-    <!-- <el-dialog :visible.sync="dialogPvVisible" title="用户信息">
+    <el-dialog :visible.sync="dialogPvVisible" title="用户信息">
       <el-descriptions>
         <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
         <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
@@ -194,18 +191,37 @@
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogPvVisible = false">确认</el-button>
       </span>
-    </el-dialog> -->
+    </el-dialog>
+    <!--这个dialog用于添加警告信息-->
+    <el-dialog
+      title="拒绝原因"
+      :visible.sync="dialogWarnVisible"
+    >
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+        <el-form-item label="拒绝原因">
+          <el-input v-model="temp.rejectReason" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">
+          取消
+        </el-button>
+        <el-button type="primary" @click="orderReject(row)">
+          确认
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { fetchList, createArticle, updateArticle } from '@/api/article'
+import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 const calendarTypeOptions = [
-  { key: 'ldingjain 1' },
+  { key: 'lingjain 1' },
   { key: 'lingjian 2' },
   { key: 'lingjian 3' },
   { key: 'lingjain 4' }
@@ -218,7 +234,7 @@ export default {
     statusFilter(status) {
       const statusMap = {
         发布: 'success',
-        草稿: 'warning',
+        草稿: 'info',
         删除: 'danger'
       }
       return statusMap[status]
@@ -242,7 +258,7 @@ export default {
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
       sortOptions: [{ label: 'ID 升序', key: '+id' }, { label: 'ID 降序', key: '-id' }],
-      statusOptions: ['发布', '草稿'],
+      statusOptions: ['发布', '草稿', '删除'],
       showReviewer: false,
       temp: {
         id: undefined,
@@ -254,15 +270,17 @@ export default {
         processes: [{
           value: ''
         }],
-        status: '发布'
+        status: '发布',
+        rejectReason: ''
       },
+      dialogPvVisible: false,
+      dialogWarnVisible: false,
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
         update: '编辑订单窗口',
         create: '创建订单窗口'
       },
-      //   dialogPvVisible: false,
       pvData: [],
       rules: {
         type: [{ required: true, message: '请输入类型', trigger: 'change' }],
@@ -276,17 +294,17 @@ export default {
     this.getList()
   },
   methods: {
-    // 这里用弹窗展示被拒绝或者失败原因，this.list.
-    opendetails() {
-      this.$alert(this.list, '标题名称', {
-        confirmButtonText: '确定',
-        callback: action => {
-          this.$message({
-            type: 'info',
-            message: `action: ${action}`
-          })
-        }
+    // 拒绝订单函数(提交拒绝内容，更改订单完成情况）
+    orderReject(row) {
+      row.status.OrderStatus = 2
+    },
+    // 订单接受函数
+    orderReceive(row) {
+      this.$message({
+        message: '接受成功',
+        type: 'success'
       })
+      row.status.OrderStatus = 1
     },
     // removeProcess(item1) {
     //   var index1 = this.temp.processes.indexOf(item1)
@@ -415,26 +433,26 @@ export default {
     handleClick(tab, event) {
       console.log(tab, event)
     },
-    // handleFetchPv(pv) {
-    //   fetchPv(pv).then(response => {
-    //     this.pvData = response.data.pvData
-    //     this.dialogPvVisible = true
-    //   })
-    // },
-    // handleDownload() {
-    //   this.downloadLoading = true
-    //   import('@/vendor/Export2Excel').then(excel => {
-    //     const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
-    //     const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
-    //     const data = this.formatJson(filterVal)
-    //     excel.export_json_to_excel({
-    //       header: tHeader,
-    //       data,
-    //       filename: 'table-list'
-    //     })
-    //     this.downloadLoading = false
-    //   })
-    // },
+    handleFetchPv(pv) {
+      fetchPv(pv).then(response => {
+        this.pvData = response.data.pvData
+        this.dialogPvVisible = true
+      })
+    },
+    handleDownload() {
+      this.downloadLoading = true
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
+        const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
+        const data = this.formatJson(filterVal)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: 'table-list'
+        })
+        this.downloadLoading = false
+      })
+    },
     formatJson(filterVal) {
       return this.list.map(v => filterVal.map(j => {
         if (j === 'timestamp') {

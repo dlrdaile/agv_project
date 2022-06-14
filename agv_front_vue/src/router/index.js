@@ -80,13 +80,20 @@ export const asyncRoutes = [
         meta: { title: '商品管理', icon: 'tree', roles: ['client'] }
 
       },
-      // {
-      //   path: 'order',
-      //   name: 'order',
-      //   component: () => import('@/views/order/index'),
-      //   meta: { title: '订单管理', icon: 'tree', roles: ['client'] }
+      {
+        path: 'order',
+        name: 'order',
+        component: () => import('@/views/order/index'),
+        meta: { title: '订单管理', icon: 'tree', roles: ['client'] }
 
-      // },
+      },
+      {
+        path: 'userOrder',
+        name: 'userOrde',
+        component: () => import('@/views/userOrde/index'),
+        meta: { title: '订单管理', icon: 'tree', roles: ['admin'] }
+
+      },
 
       {
         path: 'goodsList/add',

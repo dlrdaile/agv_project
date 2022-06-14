@@ -75,6 +75,11 @@
           label="创建者"
           prop="Provider"
         />
+        <!-- 新增工序流程一栏 -->
+        <el-table-colum label="工序流程">
+            <el-button type="primary" size="mini" @click="dialogPsVisible = true">查看</el-button>
+        </el-table-colum>
+        
         <el-table-column label="操作" min-width="80px">
           <template v-slot="scope">
             <el-button type="primary" icon="el-icon-edit" size="mini" :disabled="scope.row.isCanEdit" />
@@ -105,6 +110,23 @@
     <el-dialog :visible.sync="dialogVisible">
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
+
+    <!-- 工序展示用el-descriptions组件，要求element@2.15.6以上 -->
+    <el-dialog :visible.sync="dialogPsVisible" title="产品工序">
+    <el-descriptions>
+      <!--注意是Processes-->
+        <el-descriptions-item 
+        v-for="(item,index) in this.goodslist.Processes" 
+        :key="index"
+        :label="'工序' + (index+1)"
+        >
+        {{ Processes[index].value}}
+        </el-descriptions-item>
+        <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogPsVisible = false">确认</el-button>
+      </span>
+    </el-descriptions>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -113,6 +135,8 @@ import { deleteItem, getItemList } from '@/api/items'
 export default {
   data() {
     return {
+      // 工序对话框受显现
+      dialogPsVisible: false,
       // 查询对象
       queryInfo: {
         query: '', // 查询参数

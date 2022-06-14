@@ -29,10 +29,10 @@ class Items(SQLModel,table=True) :
     name: str = Field(index=True,max_length=10)
     description: Optional[str] = None
     image_path: Optional[str] = None
-
+    create_time: datetime = Field(default=datetime.now())  # 商品创建时间
     isPublic: bool = True
     Provider: str = 'admin'
-
+    IsShowToClient:bool = True
     price: float
     weight: float
     user_id: Optional[int] = Field(default=None,foreign_key="users.id")
@@ -52,10 +52,13 @@ class UserOrder(SQLModel,table=True) :
     create_time: datetime = Field(default=datetime.now())  # 表单提交时间
     start_time: Optional[datetime] = Field(default=None)  # 表单开始调度时间
     end_time: Optional[datetime] = Field(default=None)  # 表单结束时间
+
     description: Optional[str] = None  # 对该订单进行描述
+    reject_or_fail_reason:Optional[str] = None
+    IsShowToClient:bool = True
     user_id: Optional[int] = Field(default=None,foreign_key="users.id")
     item_id: Optional[int] = Field(default=None,foreign_key="items.id")
     task_id: Optional[int] = Field(default=None,foreign_key="tasks.id")
     item: Optional[Items] = Relationship(back_populates="UserOrders")
     user: Optional[Users] = Relationship(back_populates="UserOrders")
-    task: Optional[Tasks] = Relationship(back_populates="UserOrders")
+    task: Optional[Tasks] = Relationship(back_populates="UserOrder")

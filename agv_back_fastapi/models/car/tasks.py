@@ -23,8 +23,10 @@ class Tasks(SQLModel,table=True) :
         任务序列
     """
     id: Optional[int] = Field(default=None,primary_key=True)
+    description: Optional[str] = None
+    fail_reason:Optional[str] = None
     status: TaskStatus = TaskStatus.WAITING
     start_time: datetime = datetime.now()
     end_time: Optional[datetime] = None
-    UserOrders: Optional["UserOrder"] = Relationship(back_populates="task")
+    UserOrder: Optional["UserOrder"] = Relationship(back_populates="task")
     equipment_links: List["TaskEquipmentLink"] = Relationship(back_populates="task")

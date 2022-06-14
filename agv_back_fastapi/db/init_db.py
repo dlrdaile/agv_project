@@ -4,7 +4,6 @@
 # @Author : zxiaosi
 # @desc : 创建与删除所有表, 初始化数据
 from sqlmodel import SQLModel
-
 from core.logger import logger
 from db import engine
 

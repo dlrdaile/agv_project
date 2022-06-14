@@ -35,7 +35,7 @@ class Settings(BaseSettings):
     # DATABASE_URI: str = "sqlite+aiosqlite:///./sql_app.db?check_same_thread=False"  # Sqlite(异步)
     # DATABASE_URI: str = "mysql+asyncmy://root:123456@localhost:3306/elective_system?charset=utf8"  # MySQL(异步)
     # DATABASE_URI: str = "postgresql+asyncpg://postgres:123456@localhost:5432/postgres"  # PostgreSQL(异步)
-    DATABASE_ECHO: bool = True  # 是否打印数据库日志 (可看到创建表、表数据增删改查的信息)
+    DATABASE_ECHO: bool = False  # 是否打印数据库日志 (可看到创建表、表数据增删改查的信息)
 
     LOGGER_DIR: str = "logs"  # 日志文件夹名
     LOGGER_NAME: str = '{time:YYYY-MM-DD_HH-mm-ss}.log'  # 日志文件名 (时间格式)

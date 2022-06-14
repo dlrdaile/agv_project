@@ -4,7 +4,7 @@
 # @Author : zxiaosi
 # @desc : 安全配置 https://fastapi.tiangolo.com/zh/advanced/security/oauth2-scopes/#global-view
 from datetime import datetime,timedelta
-from typing import Any,Union,Optional
+from typing import Union,Optional
 
 from fastapi import Depends,HTTPException,Header,status
 from fastapi.security import OAuth2PasswordBearer
@@ -12,8 +12,8 @@ from jose import jwt,JWTError
 from passlib.context import CryptContext
 
 from core import settings
-from utils import AccessTokenFail
 from schemas.token import TokenInfo
+from utils import AccessTokenFail
 
 ALGORITHM = "HS256"  # 加密算法
 pwd_context = CryptContext(schemes=["bcrypt"],deprecated="auto")  # 加密密码
@@ -64,7 +64,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) :
         headers={"WWW-Authenticate" : "Bearer"},
     )
     try :
-        tokeninfo:TokenInfo = await check_jwt_token(token)
+        tokeninfo: TokenInfo = await check_jwt_token(token)
         username: str = tokeninfo.name
         id = tokeninfo.id
         if username is None :
@@ -75,6 +75,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) :
     user = userCrud.get(id)
     if user is None :
         raise credentials_exception
+    userCrud.update(user.name,{'last_active_time' : datetime.now()})
     return user
 
 

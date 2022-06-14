@@ -2,6 +2,7 @@
 author:dlr123
 date:2022年06月12日
 """
+from datetime import datetime
 from typing import Optional
 
 from sqlmodel import SQLModel
@@ -20,6 +21,7 @@ class CreateItem(SQLModel) :
     price: float
     weight: float
     user_id: int
+    create_time: datetime
 
 class UpdateItem(SQLModel) :
 
@@ -38,6 +40,7 @@ class OutputItems(SQLModel) :
     user_id:int
     description: Optional[str] = None
     image_path: Optional[str] = None
+    create_time: datetime
     isPublic: bool
     Provider: str
     price: float

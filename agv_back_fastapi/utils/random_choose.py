@@ -6,7 +6,6 @@ import random
 
 import numpy as np
 
-
 def choose_process(min_num,max_num,process_num) :
     process_array = np.arange(process_num) + 1
     choose_list = np.random.choice(process_array,random.randint(min_num,max_num),

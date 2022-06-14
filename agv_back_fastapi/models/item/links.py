@@ -2,9 +2,17 @@
 author:dlr123
 date:2022年06月02日
 """
-from typing import Optional,List
+from enum import Enum
+from typing import Optional
 
 from sqlmodel import SQLModel,Field,Relationship
+
+
+class SubTaskStatus(int,Enum) :
+    WAITING = 0
+    ACTIVE = 1
+    SUCCEEDED = 2
+    FAIL = 3
 
 
 class ItemProcessLink(SQLModel,table=True) :
@@ -35,6 +43,7 @@ class TaskEquipmentLink(SQLModel,table=True) :
     equipment_id: Optional[int] = Field(
         default=None,foreign_key="equipment.id",primary_key=True
     )
-    order: int
+    order: int = Field(default=None,primary_key=True)
+    status:SubTaskStatus = SubTaskStatus.WAITING
     task: "Tasks" = Relationship(back_populates="equipment_links")
     equipment: "Equipment" = Relationship(back_populates="tasks_links")

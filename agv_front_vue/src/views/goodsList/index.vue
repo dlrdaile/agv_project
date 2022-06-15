@@ -76,12 +76,15 @@
           prop="Provider"
         />
         <!-- 新增工序流程一栏 -->
-        <el-table-colum label="工序流程">
-            <el-button type="primary" size="mini" @click="dialogPsVisible = true">查看</el-button>
-        </el-table-colum>
-        
-        <el-table-column label="操作" min-width="80px">
+        <el-table-column label="工序流程" width="80px" align="center">
           <template v-slot="scope">
+            <el-button type="primary" size="mini" @click="showProcess(scope.row.id)">查看</el-button>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="操作" min-width="120px">
+          <template v-slot="scope">
+            <!--            <el-button type="primary" size="mini" @click="dialogPsVisible = true">查看</el-button>-->
             <el-button type="primary" icon="el-icon-edit" size="mini" :disabled="scope.row.isCanEdit" />
             <el-button
               type="danger"
@@ -113,24 +116,24 @@
 
     <!-- 工序展示用el-descriptions组件，要求element@2.15.6以上 -->
     <el-dialog :visible.sync="dialogPsVisible" title="产品工序">
-    <el-descriptions>
-      <!--注意是Processes-->
-        <el-descriptions-item 
-        v-for="(item,index) in this.goodslist.Processes" 
-        :key="index"
-        :label="'工序' + (index+1)"
+      <el-descriptions>
+        <!--注意是Processes-->
+        <el-descriptions-item
+          v-for="(item,index) in showProcessList"
+          :key="index"
+          :label="'工序' + (index+1)"
         >
-        {{ Processes[index].value}}
+          {{ item }}
         </el-descriptions-item>
-        <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogPsVisible = false">确认</el-button>
-      </span>
-    </el-descriptions>
+        <!--        <span slot="footer" class="dialog-footer">-->
+        <!--          <el-button type="primary" @click="dialogPsVisible = false">确认</el-button>-->
+        <!--        </span>-->
+      </el-descriptions>
     </el-dialog>
   </div>
 </template>
 <script>
-import { deleteItem, getItemList } from '@/api/items'
+import { deleteItem, getItemList, getItemProcess } from '@/api/items'
 
 export default {
   data() {
@@ -152,7 +155,8 @@ export default {
         { label: '自定义商品', key: 'self' },
         { label: '第三方商品', key: 'third' }],
       dialogVisible: false,
-      dialogImageUrl: ''
+      dialogImageUrl: '',
+      showProcessList: []
     }
   },
   created() {
@@ -170,14 +174,18 @@ export default {
       this.goodslist.map(v => {
         v.isCanEdit = true
         v.isCanDelete = true
-        if (v.Provider === 'admin') {
-          v.kind = '官方商品'
-        } else if (v.user_id === that.$store.getters.userInfo.id) {
+        // if (v.Provider === 'admin') {
+        //   v.kind = '官方商品'
+        // } else if (v.user_id === that.$store.getters.userInfo.id) {
+        //   v.isCanEdit = false
+        //   v.isCanDelete = false
+        //   v.kind = '自定义商品'
+        // } else {
+        //   v.kind = '第三方商品'
+        // }
+        if (v.user_id === that.$store.getters.userInfo.id) {
           v.isCanEdit = false
           v.isCanDelete = false
-          v.kind = '自定义商品'
-        } else {
-          v.kind = '第三方商品'
         }
         return v
       })
@@ -211,6 +219,11 @@ export default {
     },
     goAddpage() {
       this.$router.push('/example/goodsList/add')
+    },
+    async showProcess(item_id) {
+      this.dialogPsVisible = true
+      const { data: res } = await getItemProcess(this.$store.getters.roles[0], item_id)
+      this.showProcessList = res
     }
   }
 }

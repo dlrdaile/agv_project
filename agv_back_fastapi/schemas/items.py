@@ -40,11 +40,16 @@ class OutputItems(SQLModel) :
     user_id:int
     description: Optional[str] = None
     image_path: Optional[str] = None
+    kind:Optional[str] = None
     create_time: datetime
     isPublic: bool
     Provider: str
     price: float
     weight: float
+
+class SearchItems(SQLModel):
+    id:int
+    name: str
 
 class QueryInItems(SQLModel):
     query :str

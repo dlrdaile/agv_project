@@ -57,7 +57,7 @@ insert into City(id,name,province_id) values(8,'承德市',5)
 insert into City(id,name,province_id) values(9,'沧州市',5)
 insert into City(id,name,province_id) values(10,'廊坊市',5)
 insert into City(id,name,province_id) values(11,'衡水市',5)
---select * from City(id,name,province_id) where pid=5 order by cid
+--select * from City(id,name,province_id) where pid=5 adminOrder by cid
 ----------------------------------------------------------------
 --6山西省 11个城市
 insert into City(id,name,province_id) values(1,'太原市',6)
@@ -71,7 +71,7 @@ insert into City(id,name,province_id) values(8,'运城市',6)
 insert into City(id,name,province_id) values(9,'忻州市',6)
 insert into City(id,name,province_id) values(10,'临汾市',6)
 insert into City(id,name,province_id) values(11,'吕梁市',6)
---select * from City(id,name,province_id) where pid=6 order by cid
+--select * from City(id,name,province_id) where pid=6 adminOrder by cid
 ----------------------------------------------------------------
 --7台湾省(台湾本岛和澎湖共设7市、16县，其中台北市和高雄市为“院辖市”，直属“行政院”，其余属台湾省；市下设区，县下设市（县辖市）、镇、乡，合称区市镇乡。)
 insert into City(id,name,province_id) values(1,'台北市',7)
@@ -97,7 +97,7 @@ insert into City(id,name,province_id) values(20,'屏东县',7)
 insert into City(id,name,province_id) values(21,'澎湖县',7)
 insert into City(id,name,province_id) values(22,'台东县',7)
 insert into City(id,name,province_id) values(23,'花莲县',7)
---select * from City(id,name,province_id) where pid=7 order by cid
+--select * from City(id,name,province_id) where pid=7 adminOrder by cid
 ----------------------------------------------------------------
 --8辽宁省 14个地级市
 insert into City(id,name,province_id) values(1,'沈阳市',8)
@@ -114,7 +114,7 @@ insert into City(id,name,province_id) values(11,'盘锦市',8)
 insert into City(id,name,province_id) values(12,'铁岭市',8)
 insert into City(id,name,province_id) values(13,'朝阳市',8)
 insert into City(id,name,province_id) values(14,'葫芦岛市',8)
---select * from City(id,name,province_id) where pid=8 order by cid
+--select * from City(id,name,province_id) where pid=8 adminOrder by cid
 ----------------------------------------------------------------
 --9吉林省(2006年，辖：8个地级市、1个自治州；20个市辖区、20个县级市、17个县、3个自治县。)
 insert into City(id,name,province_id) values(1,'长春市',9)
@@ -126,7 +126,7 @@ insert into City(id,name,province_id) values(6,'白山市',9)
 insert into City(id,name,province_id) values(7,'松原市',9)
 insert into City(id,name,province_id) values(8,'白城市',9)
 insert into City(id,name,province_id) values(9,'延边朝鲜族自治州',9)
---select * from City(id,name,province_id) where pid=9 order by cid
+--select * from City(id,name,province_id) where pid=9 adminOrder by cid
 ----------------------------------------------------------------
 --10黑龙江省(2006年，辖：12地级市、1地区；64市辖区、18县级市、45县、1自治县)
 insert into City(id,name,province_id) values(1,'哈尔滨市',10)
@@ -142,7 +142,7 @@ insert into City(id,name,province_id) values(10,'七台河市',10)
 insert into City(id,name,province_id) values(11,'黑 河 市',10)
 insert into City(id,name,province_id) values(12,'绥 化 市',10)
 insert into City(id,name,province_id) values(13,'大兴安岭地区',10)
---select * from City(id,name,province_id) where pid=10 order by cid
+--select * from City(id,name,province_id) where pid=10 adminOrder by cid
 ----------------------------------------------------------------
 --11江苏省(2005年辖：13个地级市；54个市辖区、27个县级市、25个县)
 insert into City(id,name,province_id) values(1,'南京市',11)
@@ -158,7 +158,7 @@ insert into City(id,name,province_id) values(10,'扬州市',11)
 insert into City(id,name,province_id) values(11,'镇江市',11)
 insert into City(id,name,province_id) values(12,'泰州市',11)
 insert into City(id,name,province_id) values(13,'宿迁市',11)
---select * from City(id,name,province_id) where pid=11 order by cid
+--select * from City(id,name,province_id) where pid=11 adminOrder by cid
 ----------------------------------------------------------------
 --12浙江省(2006年，辖：11个地级市；32个市辖区、22个县级市、35个县、1个自治县。)
 insert into City(id,name,province_id) values(1,'杭州市',12)
@@ -172,7 +172,7 @@ insert into City(id,name,province_id) values(8,'衢州市',12)
 insert into City(id,name,province_id) values(9,'舟山市',12)
 insert into City(id,name,province_id) values(10,'台州市',12)
 insert into City(id,name,province_id) values(11,'丽水市',12)
---select * from City(id,name,province_id) where pid=12 order by cid
+--select * from City(id,name,province_id) where pid=12 adminOrder by cid
 ----------------------------------------------------------------
 --13安徽省(2005年辖：17个地级市；44个市辖区、5县个级市、56个县。)
 insert into City(id,name,province_id) values(1,'合肥市',13)
@@ -192,7 +192,7 @@ insert into City(id,name,province_id) values(14,'六安市',13)
 insert into City(id,name,province_id) values(15,'亳州市',13)
 insert into City(id,name,province_id) values(16,'池州市',13)
 insert into City(id,name,province_id) values(17,'宣城市',13)
---select * from City(id,name,province_id) where pid=13 order by cid
+--select * from City(id,name,province_id) where pid=13 adminOrder by cid
 ----------------------------------------------------------------
 --14福建省(2006年辖：9个地级市；26个市辖区、14个县级市、45个县。)
 insert into City(id,name,province_id) values(1,'福州市',14)
@@ -204,7 +204,7 @@ insert into City(id,name,province_id) values(6,'漳州市',14)
 insert into City(id,name,province_id) values(7,'南平市',14)
 insert into City(id,name,province_id) values(8,'龙岩市',14)
 insert into City(id,name,province_id) values(9,'宁德市',14)
---select * from City(id,name,province_id) where pid=14 order by cid
+--select * from City(id,name,province_id) where pid=14 adminOrder by cid
 ----------------------------------------------------------------
 --15江西省(2006年全省辖：11个地级市；19个市辖区、10个县级市、70个县。)
 insert into City(id,name,province_id) values(1,'南昌市',15)
@@ -218,7 +218,7 @@ insert into City(id,name,province_id) values(8,'吉安市',15)
 insert into City(id,name,province_id) values(9,'宜春市',15)
 insert into City(id,name,province_id) values(10,'抚州市',15)
 insert into City(id,name,province_id) values(11,'上饶市',15)
---select * from City(id,name,province_id) where pid=15 order by cid
+--select * from City(id,name,province_id) where pid=15 adminOrder by cid
 ----------------------------------------------------------------
 --16山东省(2005年，辖：17个地级市；49个市辖区、31个县级市、60个县。)
 insert into City(id,name,province_id) values(1,'济南市',16)
@@ -238,7 +238,7 @@ insert into City(id,name,province_id) values(14,'德州市',16)
 insert into City(id,name,province_id) values(15,'聊城市',16)
 insert into City(id,name,province_id) values(16,'滨州市',16)
 insert into City(id,name,province_id) values(17,'菏泽市',16)
---select * from City(id,name,province_id) where pid=16 order by cid
+--select * from City(id,name,province_id) where pid=16 adminOrder by cid
 ----------------------------------------------------------------
 --17河南省 17个地级市
 insert into City(id,name,province_id) values(1,'郑州市',17)
@@ -259,7 +259,7 @@ insert into City(id,name,province_id) values(15,'信阳市',17)
 insert into City(id,name,province_id) values(16,'周口市',17)
 insert into City(id,name,province_id) values(17,'驻马店市',17)
 insert into City(id,name,province_id) values(18,'济源市',17)
---select * from City(id,name,province_id) where pid=17 order by cid
+--select * from City(id,name,province_id) where pid=17 adminOrder by cid
 ----------------------------------------------------------------
 --18湖北省（截至2005年12月31日，全省辖13个地级单位（12个地级市、1个自治州）；102县级单位（38个市辖区、24个县级市、37个县、2个自治县、1个林区），共有1220个乡级单位（277个街道、733个镇、210个乡）。）
 insert into City(id,name,province_id) values(1,'武汉市',18)
@@ -279,7 +279,7 @@ insert into City(id,name,province_id) values(14,'天门市',18)
 insert into City(id,name,province_id) values(15,'潜江市',18)
 insert into City(id,name,province_id) values(16,'神农架林区',18)
 insert into City(id,name,province_id) values(17,'恩施土家族苗族自治州',18)
---select * from City(id,name,province_id) where pid=18 order by cid
+--select * from City(id,name,province_id) where pid=18 adminOrder by cid
 ----------------------------------------------------------------
 --19湖南省（2005年辖：13个地级市、1个自治州；34个市辖区、16个县级市、65个县、7个自治县。）
 insert into City(id,name,province_id) values(1,'长沙市',19)
@@ -296,7 +296,7 @@ insert into City(id,name,province_id) values(11,'永州市',19)
 insert into City(id,name,province_id) values(12,'怀化市',19)
 insert into City(id,name,province_id) values(13,'娄底市',19)
 insert into City(id,name,province_id) values(14,'湘西土家族苗族自治州',19)
---select * from City(id,name,province_id) where pid=19 order by cid
+--select * from City(id,name,province_id) where pid=19 adminOrder by cid
 ----------------------------------------------------------------
 --20广东省（截至2005年12月31日，广东省辖：21个地级市，54个市辖区、23个县级市、41个县、3个自治县，429个街道办事处、1145个镇、4个乡、7个民族乡。）
 insert into City(id,name,province_id) values(1,'广州市',20)
@@ -320,7 +320,7 @@ insert into City(id,name,province_id) values(18,'中山市',20)
 insert into City(id,name,province_id) values(19,'潮州市',20)
 insert into City(id,name,province_id) values(20,'揭阳市',20)
 insert into City(id,name,province_id) values(21,'云浮市',20)
---select * from City(id,name,province_id) where pid=20 order by cid
+--select * from City(id,name,province_id) where pid=20 adminOrder by cid
 ----------------------------------------------------------------
 --21甘肃省 12个地级市、2个自治州
 insert into City(id,name,province_id) values(1,'兰州市',21)
@@ -337,7 +337,7 @@ insert into City(id,name,province_id) values(11,'定西市',21)
 insert into City(id,name,province_id) values(12,'陇南市',21)
 insert into City(id,name,province_id) values(13,'临夏回族自治州',21)
 insert into City(id,name,province_id) values(14,'甘南藏族自治州',21)
---select * from City(id,name,province_id) where pid=21 order by cid
+--select * from City(id,name,province_id) where pid=21 adminOrder by cid
 ----------------------------------------------------------------
 --22四川省18个地级市、3个自治州
 insert into City(id,name,province_id) values(1,'成都市',22)
@@ -361,7 +361,7 @@ insert into City(id,name,province_id) values(18,'资阳市',22)
 insert into City(id,name,province_id) values(19,'阿坝藏族羌族自治州',22)
 insert into City(id,name,province_id) values(20,'甘孜藏族自治州',22)
 insert into City(id,name,province_id) values(21,'凉山彝族自治州',22)
---select * from City(id,name,province_id) where pid=22 order by cid
+--select * from City(id,name,province_id) where pid=22 adminOrder by cid
 ----------------------------------------------------------------
 --23贵州省(2006年辖：4个地级市、2个地区、3个自治州；10个市辖区、9个县级市、56个县、11个自治县、2个特区。)
 insert into City(id,name,province_id) values(1,'贵阳市',23)
@@ -373,7 +373,7 @@ insert into City(id,name,province_id) values(6,'毕节地区',23)
 insert into City(id,name,province_id) values(7,'黔西南布依族苗族自治州',23)
 insert into City(id,name,province_id) values(8,'黔东南苗族侗族自治州',23)
 insert into City(id,name,province_id) values(9,'黔南布依族苗族自治州',23)
---select * from City(id,name,province_id) where pid=23 order by cid
+--select * from City(id,name,province_id) where pid=23 adminOrder by cid
 ----------------------------------------------------------------
 --24海南省全省有2个地级市，6个县级市，4个县，6个民族自治县，4个市辖区，1个办事处（西南中沙群岛办事处 ，县级）。)
 insert into City(id,name,province_id) values(1,'海口市',24)
@@ -394,7 +394,7 @@ insert into City(id,name,province_id) values(15,'乐东黎族自治县',24)
 insert into City(id,name,province_id) values(16,'陵水黎族自治县',24)
 insert into City(id,name,province_id) values(17,'保亭黎族苗族自治县',24)
 insert into City(id,name,province_id) values(18,'琼中黎族苗族自治县',24)
---select * from City(id,name,province_id) where pid=24 order by cid
+--select * from City(id,name,province_id) where pid=24 adminOrder by cid
 ----------------------------------------------------------------
 --25云南省(2006年辖：8个地级市、8个自治州；12个市辖区、9个县级市、79个县、29个自治县。)
 insert into City(id,name,province_id) values(1,'昆明市',25)
@@ -413,7 +413,7 @@ insert into City(id,name,province_id) values(13,'大理白族自治州',25)
 insert into City(id,name,province_id) values(14,'德宏傣族景颇族自治州',25)
 insert into City(id,name,province_id) values(15,'怒江傈傈族自治州',25)
 insert into City(id,name,province_id) values(16,'迪庆藏族自治州',25)
---select * from City(id,name,province_id) where pid=25 order by cid
+--select * from City(id,name,province_id) where pid=25 adminOrder by cid
 ----------------------------------------------------------------
 --26青海省(2006年辖：1个地级市、1个地区、6个自治州；4个市辖区、2个县级市、30个县、7个自治县。)
 insert into City(id,name,province_id) values(1,'西宁市',26)
@@ -424,7 +424,7 @@ insert into City(id,name,province_id) values(5,'海南藏族自治州',26)
 insert into City(id,name,province_id) values(6,'果洛藏族自治州',26)
 insert into City(id,name,province_id) values(7,'玉树藏族自治州',26)
 insert into City(id,name,province_id) values(8,'海西蒙古族藏族自治州',26)
---select * from City(id,name,province_id) where pid=26 order by cid
+--select * from City(id,name,province_id) where pid=26 adminOrder by cid
 ----------------------------------------------------------------
 --27陕西省(2006年辖：10个地级市；24个市辖区、3个县级市、80个县。)
 insert into City(id,name,province_id) values(1,'西安市',27)
@@ -437,7 +437,7 @@ insert into City(id,name,province_id) values(7,'汉中市',27)
 insert into City(id,name,province_id) values(8,'榆林市',27)
 insert into City(id,name,province_id) values(9,'安康市',27)
 insert into City(id,name,province_id) values(10,'商洛市',27)
---select * from City(id,name,province_id) where pid=27 order by cid
+--select * from City(id,name,province_id) where pid=27 adminOrder by cid
 ----------------------------------------------------------------
 --28广西壮族自治区(2005年辖：14个地级市；34个市辖区、7个县级市、56个县、12个自治县。)
 insert into City(id,name,province_id) values(1,'南宁市',28)
@@ -454,7 +454,7 @@ insert into City(id,name,province_id) values(11,'贺州市',28)
 insert into City(id,name,province_id) values(12,'河池市',28)
 insert into City(id,name,province_id) values(13,'来宾市',28)
 insert into City(id,name,province_id) values(14,'崇左市',28)
---select * from City(id,name,province_id) where pid=28 order by cid
+--select * from City(id,name,province_id) where pid=28 adminOrder by cid
 ----------------------------------------------------------------
 --29西藏自治区(2005年辖：1个地级市、6个地区；1个市辖区、1个县级市、71个县。)
 insert into City(id,name,province_id) values(1,'拉萨市',29)
@@ -464,7 +464,7 @@ insert into City(id,name,province_id) values(4,'山南地区',29)
 insert into City(id,name,province_id) values(5,'日喀则地区',29)
 insert into City(id,name,province_id) values(6,'阿里地区',29)
 insert into City(id,name,province_id) values(7,'林芝地区',29)
---select * from City(id,name,province_id) where pid=29 order by cid
+--select * from City(id,name,province_id) where pid=29 adminOrder by cid
 ----------------------------------------------------------------
 --30宁夏回族自治区
 insert into City(id,name,province_id) values(1,'银川市',30)
@@ -472,7 +472,7 @@ insert into City(id,name,province_id) values(2,'石嘴山市',30)
 insert into City(id,name,province_id) values(3,'吴忠市',30)
 insert into City(id,name,province_id) values(4,'固原市',30)
 insert into City(id,name,province_id) values(5,'中卫市',30)
---select * from City(id,name,province_id) where pid=30 order by cid
+--select * from City(id,name,province_id) where pid=30 adminOrder by cid
 ----------------------------------------------------------------
 --31新疆维吾尔自治区(2005年辖：2个地级市、7个地区、5个自治州；11个市辖区、20个县级市、62个县、6个自治县)
 insert into City(id,name,province_id) values(1,'乌鲁木齐市',31)
@@ -497,7 +497,7 @@ insert into City(id,name,province_id) values(19,'奎屯市',31)
 insert into City(id,name,province_id) values(20,'塔城市',31)
 insert into City(id,name,province_id) values(21,'乌苏市',31)
 insert into City(id,name,province_id) values(22,'阿勒泰市',31)
---select * from City(id,name,province_id) where pid=31 order by cid
+--select * from City(id,name,province_id) where pid=31 adminOrder by cid
 ----------------------------------------------------------------
 --32内蒙古自治区(2006年，辖：9个地级市、3个盟；21个市辖区、11个县级市、17个县、49个旗、3个自治旗。)
 insert into City(id,name,province_id) values(1,'呼和浩特市',32)
@@ -512,11 +512,11 @@ insert into City(id,name,province_id) values(9,'乌兰察布市',32)
 insert into City(id,name,province_id) values(10,'锡林郭勒盟',32)
 insert into City(id,name,province_id) values(11,'兴安盟',32)
 insert into City(id,name,province_id) values(12,'阿拉善盟',32)
---select * from City(id,name,province_id) where pid=32 order by
+--select * from City(id,name,province_id) where pid=32 adminOrder by
 ----------------------------------------------------------------
 --33澳门特别行政区
 insert into City(id,name,province_id) values(1,'澳门特别行政区',33)
---select * from City(id,name,province_id) where pid=33 order by cid
+--select * from City(id,name,province_id) where pid=33 adminOrder by cid
 ----------------------------------------------------------------
 --34香港特别行政区
 insert into City(id,name,province_id) values(1,'香港特别行政区',34)

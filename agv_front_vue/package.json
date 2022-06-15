@@ -17,7 +17,7 @@
     "axios": "0.18.1",
     "console": "^0.7.2",
     "core-js": "3.6.5",
-    "element-ui": "2.13.2",
+    "element-ui": "^2.15.9",
     "file-saver": "^2.0.5",
     "js-cookie": "2.2.0",
     "normalize.css": "7.0.0",

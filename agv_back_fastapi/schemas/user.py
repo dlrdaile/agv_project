@@ -11,7 +11,7 @@ from sqlmodel import SQLModel
 
 class UserIn(SQLModel) :
     """ 共享模型字段 """
-    name: str = Field(...,max_length=10,min_length=3)
+    name: str
 
 
 class UpdateUser(SQLModel) :

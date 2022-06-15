@@ -70,7 +70,7 @@
               ref="upload"
               class="upload-demo"
               drag
-              :action="baseUrl+'/client/items/add'"
+              :action="baseUrl+'/client/items/create'"
               :headers="headerObj"
               :auto-upload="false"
               :on-success="handleSuccess"

@@ -122,7 +122,7 @@ def create_fake_user_orders() :
         try :
             clients: list[Users] = session.query(Users).filter(not_(Users.isAdmin)).all()
             for client in clients :
-                sql = select(Items).where(Items.create_time >= client.create_time).where(or_(Items.isPublic,
+                sql = select(Items).where(Items.create_time <= client.create_time).where(or_(Items.isPublic,
                                                                                              Items.user_id == client.id))
                 can_use_items = session.exec(sql).all()
                 order_num = random.randint(min_order_num,max_order_num)

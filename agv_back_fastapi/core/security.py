@@ -53,8 +53,8 @@ async def check_jwt_token(token: Optional[str] = Header(...)) -> Union[str,Token
     try :
         payload = jwt.decode(token=token,key=settings.SECRET_KEY,algorithms=[ALGORITHM])
         return TokenInfo(**payload)
-    except Exception as e :  # jwt.JWTError, jwt.ExpiredSignatureError, AttributeError
-        raise AccessTokenFail(f'token已过期! -- {e}')
+    except :  # jwt.JWTError, jwt.ExpiredSignatureError, AttributeError
+        raise AccessTokenFail(f'token已过期!')
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme)) :

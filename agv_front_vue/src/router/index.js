@@ -84,9 +84,17 @@ export const asyncRoutes = [
         path: 'order',
         name: 'adminOrder',
         component: () => import('@/views/adminOrder/index'),
-        meta: { title: '订单管理', icon: 'tree', roles: ['admint'] }
+        meta: { title: '订单管理', icon: 'tree', roles: ['admin'] }
 
       },
+      {
+        path: 'equipments',
+        name: 'equipments',
+        component: () => import('@/views/equipments/index'),
+        meta: { title: '设备管理', icon: 'tree', roles: ['admin'] }
+
+      },
+
       {
         path: 'order',
         name: 'clientOrder',

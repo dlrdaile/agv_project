@@ -4,7 +4,7 @@ date:2022年06月07日
 """
 from fastapi import APIRouter,Depends
 from sqlmodel import select
-
+from typing import Optional
 from core.logger import logger
 from core.security import get_current_user
 from db import get_session
@@ -12,14 +12,31 @@ from models.item.process import Process
 from models.user.address import Provincial
 from models.user.users import Users
 from schemas.user import OutputUser
-from utils.resp_code import resp_200,resp_500
+from utils.resp_code import resp_200,resp_500,resp_400
+from utils.custom_exc import UserNotExist,PermissionNotEnough
 
 commons_api = APIRouter(prefix="/commons")
 
 
 @commons_api.get('/userinfo')
-async def get_user_info(user: Users = Depends(get_current_user)) :
-    data = OutputUser.from_orm(user)
+async def get_user_info(user: Users = Depends(get_current_user),user_id:Optional[int]=None) :
+    if user_id is not None:
+        if user.isAdmin:
+            with get_session() as session:
+                try:
+                    client_info = session.query(Users).get(user_id)
+                    if client_info is not None:
+                        data = OutputUser.from_orm(client_info)
+                    else:
+                        raise UserNotExist("请求的用户不存在")
+                except Exception as e:
+                    session.rollback()
+                    logger.error(f'用户信息获取失败,因为：{e}')
+                    raise e
+        else:
+            raise PermissionNotEnough("你没有访问其他用户信息的权限")
+    else:
+        data = OutputUser.from_orm(user)
     data.roles = ["admin",] if user.isAdmin else ["client",]
     return resp_200(data=data)
 

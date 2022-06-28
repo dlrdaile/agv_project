@@ -2,6 +2,17 @@
   <div class="app-container">
     <div class="filter-container">
       <!--      搜索区-->
+      <!--      通过ID排序-->
+      <el-select v-model="listQuery.desc" disabled style="width: 140px" class="filter-item" @change="handleFilter">
+        <el-option
+          v-for="item in sortOptions"
+          :key="item.key"
+          :label="item.label"
+          :value="item.key"
+          clearable
+          @change="handleFilter"
+        />
+      </el-select>
       <!--      通过零件搜索-->
       <el-select
         v-model="listQuery.item_id"
@@ -12,6 +23,7 @@
         filterable
         multiple
         collapse-tags
+        @change="handleFilter"
       >
         <el-option-group
           v-for="(group,key) in item_list"
@@ -26,27 +38,35 @@
           />
         </el-option-group>
       </el-select>
-      <!--      通过ID排序-->
-      <el-select v-model="listQuery.desc" style="width: 140px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
-      </el-select>
       <!--      通过编辑状态筛选-->
-      <el-select v-model="listQuery.editState" style="width: 140px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in editStatusOptions" :key="item.key" :label="item.label" :value="item.key" />
+      <el-select
+        v-model="listQuery.editState"
+        placeholder="编辑状态"
+        clearable
+        style="width: 140px"
+        class="filter-item"
+        multiple
+        @change="handleFilter"
+      >
+        <el-option
+          v-for="item in editStatusOptions"
+          :key="item.key"
+          :label="item.label"
+          :value="item.key"
+          @change="handleFilter"
+        />
       </el-select>
       <!--      通过零件处理状态搜索-->
       <el-select
         v-model="listQuery.orderState"
         multiple
+        placeholder="订单状态"
         style="width: 140px"
         class="filter-item"
         @change="handleFilter"
       >
         <el-option v-for="item in orderStatusOption" :key="item.key" :label="item.label" :value="item.key" />
       </el-select>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
-        搜索
-      </el-button>
       <el-button
         class="filter-item"
         style="margin-left: 10px;"
@@ -112,23 +132,21 @@
               round
               :type="processStatus(row.status)[0]"
               size="mini"
-            >{{ processStatus(row.status)[1] }}<el-popover
-              v-if="processStatus(row.status)[0] === 'danger'"
-              placement="top-start"
-              title="错误原因"
-              width="200"
-              trigger="hover"
-              :content="row.reject_or_fail_reason"
-            ><i class="el-icon-s-opportunity el-icon--right" />
-            </el-popover>
+            >{{ processStatus(row.status)[1] }}
+              <el-tooltip class="item" effect="dark" :content="row.reject_or_fail_reason" placement="top-start">
+                <i
+                  v-if="row.status === 2 || row.status === 4"
+                  class="el-icon-bell"
+                />
+              </el-tooltip>
             </el-button>
           </span>
         </template>
       </el-table-column>
       <el-table-column label="处理" align="center" min-width="260px" class-name="small-padding fixed-width">
         <template v-slot="{row}">
-          <el-button :disabled="!row.isEditing" type="primary" size="mini" @click="handleUpdate(row)">
-            编辑
+          <el-button type="primary" size="mini" @click="handleUpdate(row)">
+            {{ row.isEditing ? "编辑" : "查看" }}
           </el-button>
           <el-button v-if="row.isEditing" size="mini" type="success" @click="handleModifyStatus(row,'发布')">
             发布
@@ -172,10 +190,20 @@
         style="width: 400px; margin-left:50px;"
       >
         <el-form-item label="订单名" prop="name">
-          <el-input v-model="addOrderForm.name" />
+          <el-input
+            v-model="addOrderForm.name"
+            :disabled="dialogStatus==='check'"
+          />
         </el-form-item>
         <el-form-item label="选择商品" prop="item_id">
-          <el-select v-model="addOrderForm.item_id" class="filter-item" placeholder="请选择" clearable filterable>
+          <el-select
+            v-model="addOrderForm.item_id"
+            :disabled="dialogStatus==='check'"
+            class="filter-item"
+            placeholder="请选择"
+            clearable
+            filterable
+          >
             <el-option-group
               v-for="(group,key) in item_list"
               :key="key"
@@ -191,14 +219,24 @@
           </el-select>
         </el-form-item>
         <el-form-item label="备注信息" prop="description">
-          <el-input v-model="addOrderForm.description" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入" />
+          <el-input
+            v-model="addOrderForm.description"
+            :disabled="dialogStatus==='check'"
+            :autosize="{ minRows: 2, maxRows: 4}"
+            type="textarea"
+            placeholder="请输入"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">
+        <el-button :v-if="dialogStatus!=='check'" @click="dialogFormVisible = false">
           取消
         </el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
+        <el-button
+          :v-if="dialogStatus!=='check'"
+          type="primary"
+          @click="dialogStatus==='create'?createData():updateData()"
+        >
           确认
         </el-button>
       </div>
@@ -240,7 +278,7 @@ export default {
         limit: 10,
         item_id: [],
         desc: true,
-        editState: null,
+        editState: [],
         orderState: []
       },
       item_list: [],
@@ -305,7 +343,7 @@ export default {
       return result
     },
     async getItemList() {
-      const { data: res } = await getItemListForSearch('client')
+      const { data: res } = await getItemListForSearch()
       this.item_list = res.goodslist
       this.total_num_items = res.total
     },
@@ -319,7 +357,6 @@ export default {
       this.listLoading = false
     },
     handleFilter() {
-      this.listQuery.page = 1
       this.getOrderList()
     },
     async handleModifyStatus(row, source) {
@@ -337,7 +374,7 @@ export default {
           break
       }
       await updateOrder(update_data)
-      this.getOrderList()
+      await this.getOrderList()
     },
     sortChange(data) {
       const { prop, order } = data
@@ -391,7 +428,7 @@ export default {
     },
     handleUpdate(row) {
       this.addOrderForm = Object.assign({}, row) // copy obj
-      this.dialogStatus = 'update'
+      this.dialogStatus = row.isEditing ? 'update' : 'check'
       this.dialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()

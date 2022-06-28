@@ -1,6 +1,8 @@
 import request from '@/utils/request'
+import store from '@/store'
+const roles = store.getters.roles[0]
 
-export function getItemList(roles, data) {
+export function getItemList(data) {
   return request({
     url: roles + '/items/getitems',
     method: 'post',
@@ -8,14 +10,14 @@ export function getItemList(roles, data) {
   })
 }
 
-export function getItemListForSearch(roles) {
+export function getItemListForSearch() {
   return request({
     url: roles + '/items/getitems',
     method: 'get'
   })
 }
 
-export function deleteItem(roles, item_id) {
+export function deleteItem(item_id) {
   return request({
     url: roles + '/items/delete',
     method: 'delete',
@@ -25,7 +27,7 @@ export function deleteItem(roles, item_id) {
   })
 }
 
-export function getItemProcess(roles, item_id) {
+export function getItemProcess(item_id) {
   return request({
     url: roles + '/items/getitemprocess',
     method: 'get',
@@ -35,7 +37,7 @@ export function getItemProcess(roles, item_id) {
   })
 }
 
-export function updateItem(roles, data) {
+export function updateItem(data) {
   return request({
     url: roles + '/items/update',
     method: 'post',

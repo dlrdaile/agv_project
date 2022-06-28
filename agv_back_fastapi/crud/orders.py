@@ -3,7 +3,7 @@ author:dlr123
 date:2022年06月15日
 """
 
-from sqlalchemy import desc,delete,update
+from sqlalchemy import desc,delete,update,not_
 from sqlmodel import select,Session,func
 
 from crud.base import CRUDBase
@@ -13,14 +13,13 @@ from models.item.items import UserOrder
 from schemas.orders import CreateOrder,UpdateOrder
 from schemas.orders import QueryOrder
 
-
 class OrderCrud(CRUDBase[UserOrder,UpdateOrder,CreateOrder]) :
     def __init__(self) :
         super(OrderCrud,self).__init__(UserOrder)
 
     def query_data(self,user: Users,query: QueryOrder) :
         if user.isAdmin :
-            sql = select(self.model)
+            sql = select(self.model).where(not_(self.model.isEditing))
         else :
             sql = select(self.model).where(user.id == self.model.user_id).where(self.model.IsShowToClient)
         sql = self.filter_order(sql,query)
@@ -28,10 +27,16 @@ class OrderCrud(CRUDBase[UserOrder,UpdateOrder,CreateOrder]) :
         pageSize = query.limit
         if not (pageIndex == -1 and pageSize == -1) :
             sql = sql.offset((pageIndex - 1)*pageSize).limit(pageSize)
-        if query.desc :
-            sql = sql.order_by(desc(self.model.id))
-        else :
-            sql = sql.order_by(self.model.id)
+        if query.desc is not None:
+            if query.desc :
+                sql = sql.order_by(desc(self.model.id))
+            else :
+                sql = sql.order_by(self.model.id)
+        if query.timeDesc is not None:
+            if query.timeDesc:
+                sql = sql.order_by(self.model.create_time.desc())
+            else:
+                sql = sql.order_by(self.model.create_time)
         return sql
 
     def filter_order(self,sql,query: QueryOrder) :
@@ -43,11 +48,13 @@ class OrderCrud(CRUDBase[UserOrder,UpdateOrder,CreateOrder]) :
             sql = sql.where(self.model.status.in_(query.orderState))
         if query.isShowToClient :
             sql = sql.where(self.model.IsShowToClient == query.isShowToClient)
+        if query.user_id :
+            sql = sql.where(self.model.user_id.in_(query.user_id))
         return sql
 
     def get_count(self,user: Users,query: QueryOrder) :
         if user.isAdmin :
-            sql = select(func.count(self.model.id))
+            sql = select(func.count(self.model.id)).where(not_(self.model.isEditing))
         else :
             sql = select(func.count(self.model.id)).where(user.id == self.model.user_id).where(
                 self.model.IsShowToClient)

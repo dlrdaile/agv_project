@@ -169,7 +169,7 @@ export default {
     },
     async getgoodsList() {
       const that = this
-      const { data: res } = await getItemList(this.$store.getters.roles[0], this.queryInfo)
+      const { data: res } = await getItemList(this.queryInfo)
       this.goodslist = res.goodslist
       this.goodslist.map(v => {
         v.isCanEdit = true
@@ -213,7 +213,7 @@ export default {
         return this.$message.info('已取消删除')
       }
 
-      await deleteItem(this.$store.getters.roles[0], id)
+      await deleteItem(id)
       this.$message.success('删除成功')
       await this.getgoodsList()
     },
@@ -222,7 +222,7 @@ export default {
     },
     async showProcess(item_id) {
       this.dialogPsVisible = true
-      const { data: res } = await getItemProcess(this.$store.getters.roles[0], item_id)
+      const { data: res } = await getItemProcess(item_id)
       this.showProcessList = res
     }
   }

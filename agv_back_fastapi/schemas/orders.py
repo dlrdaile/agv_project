@@ -20,10 +20,12 @@ class QueryOrder(SQLModel) :
     page:int = 1
     limit:int = 10
     desc: Optional[bool] = False
+    timeDesc: Optional[bool] = False
     item_id: Optional[list[int]] = None
     editState: Optional[bool] = None
     orderState: Optional[list[OrderStatus]] = None
     isShowToClient: Optional[bool] = None
+    user_id: Optional[list[int]] = None
 
 
 class UpdateOrder(SQLModel) :

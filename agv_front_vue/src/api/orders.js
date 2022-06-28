@@ -1,7 +1,6 @@
 import request from '@/utils/request'
-
-const order_base_path = '/client/adminOrder'
-
+import store from '@/store'
+const order_base_path = '/' + store.getters.roles[0] + '/order'
 export function createOrder(data) {
   return request({
     url: order_base_path + '/create',

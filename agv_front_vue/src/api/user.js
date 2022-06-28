@@ -8,11 +8,11 @@ export function login(data) {
   })
 }
 
-export function getInfo(token) {
+export function getInfo(user_id) {
   return request({
     url: '/commons/userinfo',
     method: 'get',
-    params: { token }
+    params: { user_id }
   })
 }
 
@@ -39,5 +39,10 @@ export function forget(data) {
   })
 }
 
-
+export function getUserListForSearch() {
+  return request({
+    url: '/admin/user/getuserlist',
+    method: 'get'
+  })
+}
 

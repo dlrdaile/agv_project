@@ -2,6 +2,10 @@
   <div class="app-container">
     <div class="filter-container">
       <!--      搜索区-->
+      <!--      通过ID排序-->
+      <el-select v-model="listQuery.desc" style="width: 140px" class="filter-item" @change="handleFilter">
+        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
+      </el-select>
       <!--      通过零件搜索-->
       <el-select
         v-model="listQuery.item_id"
@@ -12,6 +16,7 @@
         filterable
         multiple
         collapse-tags
+        @change="handleFilter"
       >
         <el-option-group
           v-for="(group,key) in item_list"
@@ -26,13 +31,24 @@
           />
         </el-option-group>
       </el-select>
-      <!--      通过ID排序-->
-      <el-select v-model="listQuery.desc" style="width: 140px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
-      </el-select>
-      <!--      通过编辑状态筛选-->
-      <el-select v-model="listQuery.editState" style="width: 140px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in editStatusOptions" :key="item.key" :label="item.label" :value="item.key" />
+      <!--      通过用户名筛选-->
+      <el-select
+        v-model="listQuery.user_id"
+        placeholder="用户名"
+        clearable
+        class="filter-item"
+        style="width: 130px"
+        filterable
+        multiple
+        collapse-tags
+        @change="handleFilter"
+      >
+        <el-option
+          v-for="item in user_list"
+          :key="item.id"
+          :label="item.name"
+          :value="item.id"
+        />
       </el-select>
       <!--      通过零件处理状态搜索-->
       <el-select
@@ -44,9 +60,9 @@
       >
         <el-option v-for="item in orderStatusOption" :key="item.key" :label="item.label" :value="item.key" />
       </el-select>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
-        搜索
-      </el-button>
+      <!--      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">-->
+      <!--        搜索-->
+      <!--      </el-button>-->
       <el-button
         class="filter-item"
         style="margin-left: 10px;"
@@ -78,13 +94,16 @@
         align="center"
         width="80"
       >
+        <!--        <template v-slot="{$index}">-->
+        <!--          <span>{{ getOrderId($index) }}</span>-->
+        <!--        </template>        -->
         <template v-slot="{row}">
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" width="150px" align="center">
+      <el-table-column label="创建时间" prop="time" sortable="custom" width="150px" align="center">
         <template v-slot="{row}">
-          <span>{{ row.create_time }}</span>
+          <span>{{ parseTime(row.create_time) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="订单名" min-width="80px" align="center">
@@ -99,14 +118,7 @@
       </el-table-column>
       <el-table-column label="用户" width="80" align="center">
         <template v-slot="{row}">
-          <span class="link-type" @click="handlegetUserData(row.user_name)">{{ row.user_name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="编辑状态" class-name="status-col" align="center">
-        <template v-slot="{row}">
-          <el-tag :type="row.isEditing | statusTagLabel">
-            {{ row.isEditing | statusFilter }}
-          </el-tag>
+          <span class="link-type" @click="handlegetUserData(row.user_id)">{{ row.user_name }}</span>
         </template>
       </el-table-column>
       <!-- 判断订单状态，当为非草稿状态时，渲染已完成等 -->
@@ -202,15 +214,16 @@
 
     <!--拒绝对话框-->
     <el-dialog
-    title="拒绝订单原因"
-    :visible.sync="dialogRejectVisible"
-    width="30%">
+      title="拒绝订单原因"
+      :visible.sync="dialogRejectVisible"
+      width="30%"
+    >
       <el-input
-      type="textarea"
-      :rows="2"
-      placeholder="请输入拒绝原因"
-      v-model="rejectReason">
-      </el-input>
+        v-model="rejectReason"
+        type="textarea"
+        :rows="2"
+        placeholder="请输入拒绝原因"
+      />
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogRejectVisible = false">取 消</el-button>
         <el-button type="primary" @click="handleReject(row)">确 定</el-button>
@@ -219,7 +232,7 @@
     <!--用户信息对话框-->
     <el-dialog :visible.sync="dialogUserVisible" title="用户信息">
       <el-descriptions>
-        <el-descriptions-item label="用户名">{{this.userData.}}</el-descriptions-item>
+        <el-descriptions-item label="用户名">{{ userData.name }}</el-descriptions-item>
         <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
         <el-descriptions-item label="居住地">苏州市</el-descriptions-item>
         <el-descriptions-item label="备注">
@@ -239,23 +252,13 @@ import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination'
 import { getItemListForSearch } from '@/api/items'
-import { createOrder, deleteOrder, getOrderList, updateOrder } from '@/api/orders' // secondary package based on el-pagination
+import { createOrder, deleteOrder, getOrderList, updateOrder } from '@/api/orders'
+import { getInfo, getUserListForSearch } from '@/api/user' // secondary package based on el-pagination
 
 export default {
   name: 'ComplexTable',
   components: { Pagination },
   directives: { waves },
-  filters: {
-    statusFilter(status) {
-      return status ? '草稿' : '已发布'
-    },
-    statusTagLabel(status) {
-      return status ? 'info' : 'success'
-    },
-    parseTime(value) {
-      return parseTime(Date(value), '{y}-{m}-{d} {h}:{i}')
-    }
-  },
   data() {
     return {
       tableKey: 0,
@@ -268,13 +271,14 @@ export default {
         page: 1,
         limit: 10,
         item_id: [],
-        desc: true,
-        editState: null,
-        orderState: []
+        desc: null,
+        user_id: [],
+        orderState: [],
+        timeDesc: null
       },
       item_list: [],
+      user_list: [],
       sortOptions: [{ label: 'ID 降序', key: true }, { label: 'ID 升序', key: false }],
-      editStatusOptions: [{ label: '发布', key: false }, { label: '草稿', key: true }],
       orderStatusOption: [{ label: '待处理', key: 0 }, { label: '正在处理', key: 1 },
         { label: '被拒绝', key: 2 }, { label: '完成交易', key: 3 }, { label: '交易失败', key: 4 }],
       showReviewer: false,
@@ -302,10 +306,20 @@ export default {
     }
   },
   created() {
-    this.getItemList()
+    this.getQueryList()
     this.getOrderList()
   },
   methods: {
+    parseTime(value) {
+      return parseTime(Date.parse(value), '{y}-{m}-{d} {h}:{i}')
+    },
+    getOrderId(index) {
+      let id = index + 1 + (this.listQuery.page - 1) * this.listQuery.limit
+      if (this.listQuery.desc) {
+        id = this.total - id + 1
+      }
+      return id
+    },
     processStatus(status) {
       const result = []
       switch (status) {
@@ -337,16 +351,11 @@ export default {
     },
     // 获得用户信息的函数未定义
 
-
-
-    async handlegetUserData(user_name) {
-      dialogUserVisible = true
-      const ( data: res) = await getUserData(user_name)
-      this.userData =
+    async handlegetUserData(user_id) {
+      this.dialogUserVisible = true
+      const { data: res } = await getInfo(user_id)
+      this.userData = res
     },
-
-
-
 
     // 后台接受订单
     async handleAccept(row) {
@@ -363,27 +372,28 @@ export default {
         id: row.id
       }
       update_data.status = 2
-      update_data.reject_or_fail_reason = rejectReason
+      update_data.reject_or_fail_reason = this.rejectReason
       await updateOrder(update_data)
       this.getOrderList
     },
 
-    async getItemList() {
-      const { data: res } = await getItemListForSearch('client')
+    async getQueryList() {
+      const { data: res } = await getItemListForSearch()
       this.item_list = res.goodslist
       this.total_num_items = res.total
+      const { data: user_res } = await getUserListForSearch()
+      this.user_list = user_res
     },
     async getOrderList() {
       this.listLoading = true
       const { data: res } = await getOrderList(this.listQuery)
-      console.log(res)
       this.userOrderList = res.orderlist
       this.total = res.total
       // Just to simulate the time of the request
       this.listLoading = false
     },
     handleFilter() {
-      this.listQuery.page = 1
+      // this.listQuery.page = 1
       this.getOrderList()
     },
     async handleModifyStatus(row, source) {
@@ -407,15 +417,28 @@ export default {
       const { prop, order } = data
       if (prop === 'id') {
         this.sortByID(order)
+      } else if (prop === 'time') {
+        this.sortByTime(order)
       }
+      this.handleFilter()
     },
     sortByID(order) {
       if (order === 'ascending') {
         this.listQuery.desc = false
-      } else {
+      } else if (order === 'descending') {
         this.listQuery.desc = true
+      } else {
+        this.listQuery.desc = null
       }
-      this.handleFilter()
+    },
+    sortByTime(order) {
+      if (order === 'ascending') {
+        this.listQuery.timeDesc = false
+      } else if (order === 'descending') {
+        this.listQuery.timeDesc = true
+      } else {
+        this.listQuery.timeDesc = null
+      }
     },
     resetAddFormData() {
       this.addOrderForm = {
@@ -484,10 +507,6 @@ export default {
       await deleteOrder(row.id)
       this.$message.success('删除成功！')
       await this.getOrderList()
-    },
-    getSortClass: function() {
-      const sort = this.listQuery.desc
-      return sort ? 'descending' : 'ascending'
     }
   }
 }

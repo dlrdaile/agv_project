@@ -53,7 +53,9 @@ async def get_order_list(query_data: QueryOrder,user: Users = Depends(get_curren
             for result in results :
                 output_order = OutputOrder.from_orm(result)
                 output_order.item_name = result.item.name
-                order_list.append(output_order)
+                output_order_dict = output_order.dict()
+                output_order_dict['user_name'] = result.user.name
+                order_list.append(output_order_dict)
             output_data = {'orderlist' : order_list,'total' : total}
             return resp_200(data=jsonable_encoder(output_data),msg='获取订单数据成功')
         except Exception as e :
@@ -62,7 +64,7 @@ async def get_order_list(query_data: QueryOrder,user: Users = Depends(get_curren
 
 
 @order_api.delete('/delete')
-def delete_order(*,order_id: int,user: Users = Depends(get_current_user)) :
+async def delete_order(*,order_id: int,user: Users = Depends(get_current_user)) :
     issucess,reason = orderCrud.delete_order(user,order_id)
     if issucess :
         return resp_200(msg='删除成功')

@@ -305,7 +305,7 @@ export default {
       return result
     },
     async getItemList() {
-      const { data: res } = await getItemListForSearch('client')
+      const { data: res } = await getItemListForSearch()
       this.item_list = res.goodslist
       this.total_num_items = res.total
     },

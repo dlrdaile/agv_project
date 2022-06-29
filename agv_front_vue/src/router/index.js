@@ -102,6 +102,13 @@ export const asyncRoutes = [
         meta: { title: '订单管理', icon: 'tree', roles: ['client'] }
 
       },
+      {
+        path: 'dispatch',
+        name: 'dispatch',
+        component: () => import('@/views/dispatch/index'),
+        meta: { title: '订单管理', icon: 'tree', roles: ['admin'] }
+
+      },
 
       {
         path: 'goodsList/add',

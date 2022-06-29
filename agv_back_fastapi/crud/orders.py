@@ -90,6 +90,7 @@ class OrderCrud(CRUDBase[UserOrder,UpdateOrder,CreateOrder]) :
             if update_data.isEditing:
                 order:UserOrder = db.query(self.model).get(update_data.id)
                 if order.status != OrderStatus.NotProcessed:
+                    db.close()
                     return None
         obj_data = update_data.dict(exclude={'id',},exclude_none=True)
         sql = update(self.model).where(self.model.id == update_data.id).values(obj_data)

@@ -91,7 +91,7 @@ export const asyncRoutes = [
         path: 'equipments',
         name: 'equipments',
         component: () => import('@/views/equipments/index'),
-        meta: { title: '设备管理', icon: 'tree', roles: ['admin'] }
+        meta: { title: '设备管理', icon: 'el-icon-s-shop', roles: ['admin'] }
 
       },
 
@@ -99,14 +99,14 @@ export const asyncRoutes = [
         path: 'order',
         name: 'clientOrder',
         component: () => import('@/views/clientOrder/index'),
-        meta: { title: '订单管理', icon: 'tree', roles: ['client'] }
+        meta: { title: '订单管理', icon: 'el-icon-s-order', roles: ['client'] }
 
       },
       {
         path: 'dispatch',
         name: 'dispatch',
         component: () => import('@/views/dispatch/index'),
-        meta: { title: '订单管理', icon: 'tree', roles: ['admin'] }
+        meta: { title: '订单调度', icon: 'tree', roles: ['admin'] }
 
       },
 
@@ -115,6 +115,13 @@ export const asyncRoutes = [
         name: 'add',
         component: () => import('@/views/goodsList/add'),
         hidden: true
+
+      },
+      {
+        path: 'user',
+        name: 'user',
+        component: () => import('@/views/user/index'),
+        meta: { title: '用户管理', icon: 'el-icon-s-custom', roles: ['admin'] }
 
       }
     ]

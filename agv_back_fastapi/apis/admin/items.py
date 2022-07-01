@@ -4,10 +4,8 @@ date:2022年06月12日
 """
 import uuid
 from pathlib import Path
-from typing import Optional
 
 from fastapi import APIRouter,Request,UploadFile,Depends
-from sqlalchemy import or_,and_
 
 from core.config import settings
 from core.logger import logger
@@ -22,14 +20,16 @@ from utils.resp_code import resp_200,resp_500,resp_400
 
 items_api = APIRouter(prefix='/items')
 
-async def get_all_items(user: Users = Depends(get_current_user)):
-    with get_session() as session:
-        try:
-            all_items = session.query(Items).filter(and_(Items.IsShowToClient,or_(Items.user_id == user.id,Items.isPublic))).all()
-        except Exception as e:
+
+async def get_all_items(user: Users = Depends(get_current_user)) :
+    with get_session() as session :
+        try :
+            all_items = session.query(Items).all()
+        except Exception as e :
             logger.error(f'获取全部数据失败，原因是{e}')
             return resp_500(msg='数据库查询错误')
         return all_items
+
 
 @items_api.post('/create')
 async def add_item(req: Request,file: UploadFile,user: Users = Depends(get_current_user)) :
@@ -75,44 +75,41 @@ async def get_items(*,user: Users = Depends(get_current_user),query_data: QueryI
         output_items = [OutputItems.from_orm(item) for item in items]
         for output_item in output_items :
             if output_item.Provider == 'admin' :
-                output_item.kind = '官方商品'
-            elif output_item.user_id == user.id :
-                output_item.kind = '自定义商品'
+                output_item.kind = '官方定义商品'
             else :
-                output_item.kind = '第三方商品'
+                output_item.kind = '客户定义商品'
+                output_item.kind = '客户定义商品'
         total = itemCrud.get_count(user,query_data.query)
     except Exception as e :
         logger.error(f'获取商品列表时数据库查询错误，原因是{e}')
         return resp_500(msg='数据库查询错误')
     return resp_200(data=dict(goodslist=output_items,total=total),msg='获得商品数据成功')
 
+
 @items_api.get('/getitems')
-async def get_items_for_search(all_items:list[Items] = Depends(get_all_items),user: Users = Depends(get_current_user)):
-    kinds = ['官方商品','自定义商品','第三方商品']
-    search_items = {kind:[] for kind in kinds}
+async def get_items_for_search(all_items: list[Items] = Depends(get_all_items),
+                               user: Users = Depends(get_current_user)) :
+    kinds = ['官方定义商品','客户定义商品']
+    search_items = {kind : [] for kind in kinds}
     for item in all_items :
         search_item = SearchItems.from_orm(item)
         if item.Provider == 'admin' :
-            search_items['官方商品'].append(search_item.dict())
-        elif item.user_id == user.id :
-            search_items['自定义商品'].append(search_item.dict())
+            search_items['官方定义商品'].append(search_item.dict())
         else :
-            search_items['第三方商品'].append(search_item.dict())
+            search_items['客户定义商品'].append(search_item.dict())
     return resp_200(data=dict(goodslist=search_items,total=len(all_items)),msg='获得商品数据成功')
+
 
 @items_api.delete('/delete')
 async def delete_item(*,user: Users = Depends(get_current_user),item_id: int) :
     with get_session() as session :
         try :
             item = session.query(Items).get(item_id)
-            if item.user_id != user.id :
-                res = resp_400(msg='没有删除该商品的权限')
-            else :
-                item.IsShowToClient = False
-                session.add(item)
-                session.commit()
-                res = resp_200(msg="商品删除成功")
+            session.delete(item)
+            session.commit()
+            res = resp_200(msg="商品删除成功")
         except Exception as e :
+            session.rollback()
             logger.error(f'商品删除错误,因为：{e}')
             res = resp_500(msg="数据库操作错误")
     return res

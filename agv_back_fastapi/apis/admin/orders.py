@@ -2,6 +2,7 @@
 author:dlr123
 date:2022年06月14日
 """
+import datetime
 
 from fastapi import APIRouter,Depends
 from fastapi.encoders import jsonable_encoder
@@ -23,6 +24,7 @@ def create_order(*,create_data: CreateOrder,user: Users = Depends(get_current_us
     with get_session() as session:
         try:
             order = UserOrder.from_orm(create_data)
+            order.create_time = datetime.datetime.now()
             session.add(order)
             session.commit()
             return resp_200(msg="订单创建成功")
@@ -52,7 +54,8 @@ async def get_order_list(query_data: QueryOrder,user: Users = Depends(get_curren
             order_list = []
             for result in results :
                 output_order = OutputOrder.from_orm(result)
-                output_order.item_name = result.item.name
+                if result.item is not None:
+                    output_order.item_name = result.item.name
                 output_order_dict = output_order.dict()
                 output_order_dict['user_name'] = result.user.name
                 order_list.append(output_order_dict)

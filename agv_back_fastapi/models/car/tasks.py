@@ -29,4 +29,6 @@ class Tasks(SQLModel,table=True) :
     start_time: datetime = datetime.now()
     end_time: Optional[datetime] = None
     UserOrder: Optional["UserOrder"] = Relationship(back_populates="task")
-    equipment_links: List["TaskEquipmentLink"] = Relationship(back_populates="task")
+    equipment_links: List["TaskEquipmentLink"] = Relationship(back_populates="task",
+                                                              sa_relationship_kwargs=dict(cascade="save-update, merge, "
+                                                                                            "delete, delete-orphan"))

@@ -60,7 +60,7 @@ class OutputOrder(SQLModel) :
     description: str
     isEditing: bool
     status: OrderStatus
-    item_id: int
+    item_id: Optional[int]
     IsShowToClient:bool
     user_id: int
     item_name: Optional[str] = None

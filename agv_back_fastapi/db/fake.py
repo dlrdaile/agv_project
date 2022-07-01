@@ -152,7 +152,7 @@ def create_fake_user_orders() :
 
                         time_delta3 = datetime.now() - user_order.start_time
                         user_order.end_time = user_order.start_time + fake_ch.time_delta(time_delta3)
-                    elif user_order.status == OrderStatus.Reject or user_order.status == OrderStatus.Fail :
+                    if user_order.status == OrderStatus.Reject or user_order.status == OrderStatus.Fail :
                         user_order.reject_or_fail_reason = fake_ch.text(max_nb_chars=30,ext_word_list=None)
                     order_list.append(user_order)
                 create_user_num += 1

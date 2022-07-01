@@ -45,6 +45,6 @@ async def user_logout(user: Users = Depends(get_current_user)) :
         update_data = UpdateUser(isActive=False,last_active_time=datetime.datetime.now())
         userCrud.update(user.name,update_data.dict(exclude_none=True))
     except Exception as e :
-        logger.error(f'数据库连接失败！-- {e}')
-        return resp_500(msg=f'数据库连接失败！')
+        logger.error(f'数据库连接失败-- {e}')
+        return resp_500(msg=f'数据库连接失败!')
     return resp_200(msg="登出成功！")

@@ -41,5 +41,8 @@ class OutputUser(UserIn) :
     roles: Optional[List[str]] = None
     phone: Optional[int] = Field(default=None)
     address_id: Optional[int] = None
+    # address: Optional[str] = None
     nickname: str
     create_time: datetime
+    last_active_time: Optional[datetime] = None
+    isActive: bool = False

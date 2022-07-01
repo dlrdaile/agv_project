@@ -68,17 +68,16 @@ export const asyncRoutes = [
     meta: { title: 'Example', icon: 'el-icon-s-help', roles: ['admin', 'client'] },
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: '综合订单统计表', icon: 'table', roles: ['client'] }
+        path: 'goodsList',
+        name: 'clientGoodsList',
+        component: () => import('@/views/clientGoodsList/index'),
+        meta: { title: '商品管理', icon: 'tree', roles: ['client'] }
       },
       {
         path: 'goodsList',
-        name: 'goodsList',
-        component: () => import('@/views/goodsList/index'),
-        meta: { title: '商品管理', icon: 'tree', roles: ['client'] }
-
+        name: 'adminGoodsList',
+        component: () => import('@/views/adminGoodsList/index'),
+        meta: { title: '商品管理', icon: 'tree', roles: ['admin'] }
       },
       {
         path: 'order',
@@ -106,14 +105,22 @@ export const asyncRoutes = [
         path: 'dispatch',
         name: 'dispatch',
         component: () => import('@/views/dispatch/index'),
-        meta: { title: '订单调度', icon: 'tree', roles: ['admin'] }
+        meta: { title: '任务管理', icon: 'tree', roles: ['admin'] }
 
       },
 
       {
         path: 'goodsList/add',
         name: 'add',
-        component: () => import('@/views/goodsList/add'),
+        component: () => import('@/views/clientGoodsList/add'),
+        meta: { roles: ['client'] },
+        hidden: true
+      },
+      {
+        path: 'goodsList/add',
+        name: 'add',
+        component: () => import('@/views/adminGoodsList/add'),
+        meta: { roles: ['admin'] },
         hidden: true
 
       },

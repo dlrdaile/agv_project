@@ -196,7 +196,7 @@ export default {
     handleSuccess(response) {
       console.log(response)
       this.$message.success('零件添加成功！')
-      this.$router.push('/example/goodsList')
+      this.$router.push('/goodsList/index')
     },
     handleError(err) {
       this.$message.error('零件添加失败！')

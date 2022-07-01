@@ -218,7 +218,7 @@ export default {
       await this.getgoodsList()
     },
     goAddpage() {
-      this.$router.push('/example/goodsList/add')
+      this.$router.push('/goodsList/add')
     },
     async showProcess(item_id) {
       this.dialogPsVisible = true

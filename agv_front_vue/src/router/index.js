@@ -52,7 +52,7 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: '主页面', icon: 'dashboard' }
     }]
   }
   // 404 page must be placed at the end !!!
@@ -60,76 +60,107 @@ export const constantRoutes = [
 
 export const asyncRoutes = [
   {
-    path: '/example',
+    path: '/goodsList',
     component: Layout,
-    redirect: '/example/table',
-    alwaysShow: true,
-    name: 'Example',
-    meta: { title: 'Example', icon: 'el-icon-s-help', roles: ['admin', 'client'] },
+    redirect: '/goodList/index',
     children: [
       {
-        path: 'goodsList',
+        path: 'index',
         name: 'clientGoodsList',
         component: () => import('@/views/clientGoodsList/index'),
         meta: { title: '商品管理', icon: 'tree', roles: ['client'] }
       },
       {
-        path: 'goodsList',
+        path: 'add',
+        name: 'add',
+        component: () => import('@/views/clientGoodsList/add'),
+        meta: { roles: ['client'] },
+        hidden: true
+      }
+    ]
+  },
+  {
+    path: '/goodsList',
+    component: Layout,
+    redirect: '/goodList/index',
+    children: [
+      {
+        path: 'index',
         name: 'adminGoodsList',
         component: () => import('@/views/adminGoodsList/index'),
         meta: { title: '商品管理', icon: 'tree', roles: ['admin'] }
       },
       {
-        path: 'order',
-        name: 'adminOrder',
-        component: () => import('@/views/adminOrder/index'),
-        meta: { title: '订单管理', icon: 'tree', roles: ['admin'] }
-
-      },
-      {
-        path: 'equipments',
-        name: 'equipments',
-        component: () => import('@/views/equipments/index'),
-        meta: { title: '设备管理', icon: 'el-icon-s-shop', roles: ['admin'] }
-
-      },
-
-      {
-        path: 'order',
-        name: 'clientOrder',
-        component: () => import('@/views/clientOrder/index'),
-        meta: { title: '订单管理', icon: 'el-icon-s-order', roles: ['client'] }
-
-      },
-      {
-        path: 'dispatch',
-        name: 'dispatch',
-        component: () => import('@/views/dispatch/index'),
-        meta: { title: '任务管理', icon: 'tree', roles: ['admin'] }
-
-      },
-
-      {
-        path: 'goodsList/add',
-        name: 'add',
-        component: () => import('@/views/clientGoodsList/add'),
-        meta: { roles: ['client'] },
-        hidden: true
-      },
-      {
-        path: 'goodsList/add',
+        path: 'add',
         name: 'add',
         component: () => import('@/views/adminGoodsList/add'),
         meta: { roles: ['admin'] },
         hidden: true
-
-      },
+      }
+    ]
+  },
+  {
+    path: '/order',
+    component: Layout,
+    redirect: '/order/index',
+    children: [
       {
-        path: 'user',
+        path: 'index',
+        name: 'adminOrder',
+        component: () => import('@/views/adminOrder/index'),
+        meta: { title: '订单管理', icon: 'tree', roles: ['admin'] }
+      }
+    ]
+  },
+  {
+    path: '/order',
+    component: Layout,
+    redirect: '/order/index',
+    children: [
+      {
+        path: 'index',
+        name: 'clientOrder',
+        component: () => import('@/views/clientOrder/index'),
+        meta: { title: '订单管理', icon: 'el-icon-s-order', roles: ['client'] }
+      }
+    ]
+  },
+  {
+    path: '/equipments',
+    component: Layout,
+    redirect: '/equipments/index',
+    children: [
+      {
+        path: 'index',
+        name: 'equipments',
+        component: () => import('@/views/equipments/index'),
+        meta: { title: '设备管理', icon: 'el-icon-s-shop', roles: ['admin'] }
+      }
+    ]
+  },
+  {
+    path: '/dispatch',
+    component: Layout,
+    redirect: '/dispatch/index',
+    children: [
+      {
+        path: 'index',
+        name: 'dispatch',
+        component: () => import('@/views/dispatch/index'),
+        meta: { title: '任务管理', icon: 'tree', roles: ['admin'] }
+      }
+    ]
+  },
+  {
+    path: '/user',
+    component: Layout,
+    redirect: '/user/index',
+    children: [
+      {
+        path: 'index',
         name: 'user',
         component: () => import('@/views/user/index'),
         meta: { title: '用户管理', icon: 'el-icon-s-custom', roles: ['admin'] }
-
       }
     ]
   },

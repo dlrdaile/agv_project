@@ -102,9 +102,19 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" width="150px" align="center">
+      <el-table-column label="创建时间" width="150px" prop="time" sortable="custom" align="center">
         <template v-slot="{row}">
-          <span>{{ row.create_time }}</span>
+          <span>{{ parseTime(row.create_time) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="任务开始时间" prop="start_time" width="150px" align="center">
+        <template v-slot="{row}">
+          <span>{{ parseTime(row.start_time) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="任务结束时间" prop="end_time" width="150px" align="center">
+        <template v-slot="{row}">
+          <span>{{ parseTime(row.end_time) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="订单名" min-width="80px" align="center">
@@ -261,9 +271,6 @@ export default {
     },
     statusTagLabel(status) {
       return status ? 'info' : 'success'
-    },
-    parseTime(value) {
-      return parseTime(Date(value), '{y}-{m}-{d} {h}:{i}')
     }
   },
   data() {
@@ -277,7 +284,8 @@ export default {
         page: 1,
         limit: 10,
         item_id: [],
-        desc: true,
+        desc: null,
+        timeDesc: null,
         editState: [],
         orderState: []
       },
@@ -347,6 +355,9 @@ export default {
       this.item_list = res.goodslist
       this.total_num_items = res.total
     },
+    parseTime(value) {
+      return parseTime(Date.parse(value), '{y}-{m}-{d} {h}:{i}')
+    },
     async getOrderList() {
       this.listLoading = true
       const { data: res } = await getOrderList(this.listQuery)
@@ -380,7 +391,10 @@ export default {
       const { prop, order } = data
       if (prop === 'id') {
         this.sortByID(order)
+      } else if (prop === 'time') {
+        this.sortByTime(order)
       }
+      this.handleFilter()
     },
     sortByID(order) {
       if (order === 'ascending') {
@@ -389,6 +403,15 @@ export default {
         this.listQuery.desc = true
       }
       this.handleFilter()
+    },
+    sortByTime(order) {
+      if (order === 'ascending') {
+        this.listQuery.timeDesc = false
+      } else if (order === 'descending') {
+        this.listQuery.timeDesc = true
+      } else {
+        this.listQuery.timeDesc = null
+      }
     },
     resetAddFormData() {
       this.addOrderForm = {

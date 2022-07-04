@@ -130,9 +130,9 @@ async def get_item_process(*,user: Users = Depends(get_current_user),item_id: in
                 process_links = sorted(process_links,key=lambda x : x.order)
                 process_ls = []
                 for process_link in process_links :
-                    process_ls.append(process_link.process.name)
-                res = resp_200(data=process_ls,msg="商品删除成功")
+                    process_ls.append(process_link.process.dict())
+                res = resp_200(data=process_ls,msg="获取商品工序成功")
         except Exception as e :
-            logger.error(f'商品删除错误,因为：{e}')
+            logger.error(f'获取商品工序失败,因为：{e}')
             res = resp_500(msg="数据库操作错误")
     return res

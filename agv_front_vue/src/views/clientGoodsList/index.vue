@@ -40,16 +40,16 @@
                 <span>{{ props.row.weight + '千克' }}</span>
               </el-form-item>
               <!-- // 是否为第三方零件 -->
-              <el-form-item label="零件类型">
+              <el-form-item label="零件类型:">
                 <span>{{ props.row.kind }}</span>
               </el-form-item>
               <el-form-item label="创建者:">
                 <span>{{ props.row.Provider }}</span>
               </el-form-item>
-              <!--              <el-form-item label="所需工序">-->
-              <!--                <span>{{ props.row.goods_processes }}</span>-->
-              <!--              </el-form-item>-->
-              <el-form-item label="商品描述">
+              <el-form-item label="创建时间:">
+                <span>{{ parseTime(props.row.create_time) }}</span>
+              </el-form-item>
+              <el-form-item label="商品描述:">
                 <span>{{ props.row.description }}</span>
               </el-form-item>
             </el-form>
@@ -123,7 +123,9 @@
           :key="index"
           :label="'工序' + (index+1)"
         >
-          {{ item }}
+          <el-tooltip class="item" effect="dark" :content="item.description" placement="top-start">
+            <el-tag size="medium">{{ item.name }}</el-tag>
+          </el-tooltip>
         </el-descriptions-item>
         <!--        <span slot="footer" class="dialog-footer">-->
         <!--          <el-button type="primary" @click="dialogPsVisible = false">确认</el-button>-->
@@ -134,6 +136,7 @@
 </template>
 <script>
 import { deleteItem, getItemList, getItemProcess } from '@/api/items'
+import { parseTime } from '@/utils'
 
 export default {
   data() {
@@ -163,6 +166,9 @@ export default {
     this.getgoodsList()
   },
   methods: {
+    parseTime(value) {
+      return parseTime(Date.parse(value), '{y}-{m}-{d} {h}:{i}')
+    },
     showImage(img_path) {
       this.dialogImageUrl = 'https://www.dmoe.cc/random.php'
       this.dialogVisible = true

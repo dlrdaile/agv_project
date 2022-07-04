@@ -105,6 +105,16 @@
           <span>{{ parseTime(row.create_time) }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="任务开始时间" prop="start_time" width="150px" align="center">
+        <template v-slot="{row}">
+          <span>{{ parseTime(row.start_time) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="任务结束时间" prop="end_time" width="150px" align="center">
+        <template v-slot="{row}">
+          <span>{{ parseTime(row.end_time) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="订单名" min-width="80px" align="center">
         <template v-slot="{row}">
           <span>{{ row.name }}</span>
@@ -371,9 +381,9 @@ export default {
       // Just to simulate the time of the request
       this.listLoading = false
     },
-    handleFilter() {
+    async handleFilter() {
       // this.listQuery.page = 1
-      this.getOrderList()
+      await this.getOrderList()
     },
     async handleModifyStatus(row, source) {
       const update_data = {
@@ -390,7 +400,7 @@ export default {
           break
       }
       await updateOrder(update_data)
-      this.getOrderList()
+      await this.getOrderList()
     },
     sortChange(data) {
       const { prop, order } = data

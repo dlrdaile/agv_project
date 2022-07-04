@@ -144,6 +144,8 @@
 <script>
 // import { getItemProcess } from '@/api/items'
 
+import { getItemProcess } from '@/api/items'
+
 export default {
   data() {
     return {

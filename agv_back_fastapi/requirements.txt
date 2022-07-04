@@ -1,3 +1,4 @@
+APScheduler==3.9.1
 Faker==13.12.0
 fastapi==0.78.0
 fastapi_mail==1.0.9
@@ -10,5 +11,6 @@ pydantic==1.9.1
 python_jose==3.3.0
 SQLAlchemy==1.4.35
 sqlmodel==0.0.6
-starlette==0.17.1
+starlette==0.19.1
 uvicorn==0.17.6
+websockets==10.3

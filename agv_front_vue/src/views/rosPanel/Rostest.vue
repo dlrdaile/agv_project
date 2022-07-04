@@ -20,9 +20,9 @@
 </template>
 
 <script>
-import Battery from '@/components/rosStatus/Battery.vue'
-import VueNipple from '@/components/RosCtrl/Nipple.vue'
-import RosPanel from '@/views/rosPanel/index'
+import Battery from '@/components/rosCompoent/rosStatus/Battery.vue'
+import VueNipple from '@/components/rosCompoent/RosCtrl/Nipple.vue'
+import RosPanel from '@/views/rosPanel/component/MainBodyComponent/RosSceneArea'
 export default {
   components: {
     Battery,

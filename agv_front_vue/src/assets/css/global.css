@@ -1,5 +1,23 @@
+/*全局样式部分！！！！*/
 * {
     margin: 0;
     padding: 0;
+    list-style-type: none;
+    outline: none;
+    box-sizing: border-box;
 }
-
+html {
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.2em;
+    background-color: #f1f1f1;
+    margin: 0;
+    padding: 0;
+}
+a {
+    color: #343440;
+    text-decoration: none;
+}

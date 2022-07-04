@@ -20,6 +20,10 @@ import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
+
+import dataV from '@jiaminghi/data-view'
+import * as echarts from 'echarts'
+import geoJson from '@/assets/json/china.json'
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -38,7 +42,10 @@ if (process.env.NODE_ENV === 'production') {
 // 如果想要中文版 element-ui，按如下方式声明
 Vue.use(ElementUI)
 Vue.use(VueQuillEditor)
+Vue.use(dataV)
+echarts.registerMap('china', geoJson)
 Vue.config.productionTip = false
+Vue.prototype.$echarts = echarts
 
 new Vue({
   el: '#app',

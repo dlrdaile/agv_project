@@ -1,27 +1,26 @@
 <template>
-  <div id="app" class="app-container">
-    <battery />
+  <div class="test-container">
     <ros-panel />
-    <vue-nipple
-      v-if="refresh"
-      :color="color"
-      :max-number-of-nipples="maxNumberOfNipples"
-      :multitouch="multitouch"
-      :mode="mode"
-      class-name="nipple1"
-      :dynamic-page="dynamicPage"
-      :follow="follow"
-      :size="size"
-      style="background-color: lightgreen; height: 200px"
-      :lock-x="true"
-      @move="added"
-    />
+    <!--    <vue-nipple-->
+    <!--      v-if="refresh"-->
+    <!--      :color="color"-->
+    <!--      :max-number-of-nipples="maxNumberOfNipples"-->
+    <!--      :multitouch="multitouch"-->
+    <!--      :mode="mode"-->
+    <!--      class-name="nipple1"-->
+    <!--      :dynamic-page="dynamicPage"-->
+    <!--      :follow="follow"-->
+    <!--      :size="size"-->
+    <!--      style="background-color: lightgreen; height: 200px"-->
+    <!--      :lock-x="true"-->
+    <!--      @move="added"-->
+    <!--    />-->
   </div>
 </template>
 
 <script>
-import Battery from '@/components/rosStatus/Battery.vue'
-import VueNipple from '@/components/RosCtrl/Nipple.vue'
+import Battery from '@/components/rosCompoent/rosStatus/Battery.vue'
+import VueNipple from '@/components/rosCompoent/RosCtrl/Nipple.vue'
 import RosPanel from '@/views/rosPanel/index'
 export default {
   components: {
@@ -52,12 +51,7 @@ export default {
 </script>
 
 <style lang="scss">
-* {
-  margin: 0;
-  padding: 0;
-}
-
-.app-container {
+.test-container {
   width: 100%;
   height: 100%;
 }

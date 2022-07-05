@@ -19,7 +19,7 @@ export default {
     color: {
       type: [Number, String],
       require: false,
-      default: 0xcc00ff
+      default: '#c21414'
     },
     length: {
       type: Number,
@@ -56,6 +56,7 @@ export default {
       this.rootObject.remove(this.sns[i])
       this.sns.shift()
     }
+    this.object.unsubscribe()
   },
   methods: {
     createObject() {
@@ -71,7 +72,6 @@ export default {
         shaftDiameter: this.shaftDiameter,
         headDiameter: this.headDiameter
       })
-      this.object.name = this._uid
     }
   }
 }

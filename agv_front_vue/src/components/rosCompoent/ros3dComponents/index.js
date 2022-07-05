@@ -1,3 +1,4 @@
+
 export { default as Ros3dArrow } from './Ros3dArrow.vue'
 export { default as Ros3dAxes } from './Ros3dAxes.vue'
 export { default as Ros3dGrid } from './Ros3dGrid.vue'
@@ -11,4 +12,6 @@ export { default as Ros3dPoseArrow } from './Ros3dPoseArrow.vue'
 export { default as Ros3dSceneNode } from './Ros3dSceneNode.vue'
 export { default as Ros3dViewer } from './Ros3dViewer.vue'
 export { default as Ros3dUrdfClient } from './Ros3dUrdfClient.vue'
+export { default as Ros3dPoseArray } from './Ros3dPoseArray.vue'
 export { default as Ros3dOdom } from './Ros3dOdom.vue'
+export { default as Ros3dPoseWithCovariance } from './Ros3dPoseWithCovariance.vue'

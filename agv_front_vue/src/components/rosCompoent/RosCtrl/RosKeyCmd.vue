@@ -1,11 +1,9 @@
 <template>
   <div class="keycmd-container">
     <button
-      @keydown.stop="handleKeyDown($event)"
-      @keyup.stop="handleKeyUp($event)"
-    >
-      键盘控制区
-    </button>
+      @keydown.stop.prevent="handleKeyDown($event)"
+      @keyup.stop.prevent="handleKeyUp($event)"
+    >键盘控制区</button>
   </div>
 </template>
 
@@ -62,6 +60,11 @@ export default {
       require: false,
       default: '/cmd_vel',
       type: String
+    },
+    ros: {
+      type: Object,
+      default: null,
+      require: true
     }
     // initros:{
     //   require:true
@@ -75,7 +78,7 @@ export default {
   },
   created() {
     this.teleop = new KEYBOARDTELEOP({
-      ros: this.$parent.ros,
+      ros: this.ros,
       topic: this.topicName,
       max_vel_x: this.max_vel_x,
       max_vel_y: this.max_vel_y,
@@ -101,11 +104,16 @@ export default {
 
 <style lang="scss" scoped>
 .keycmd-container {
-  background-color: pink;
-  // position: absolute;
   button {
-    width: 300px;
-    height: 500px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #6c60b4;
+    opacity: 0.3;
+    color: #19e113;
+    cursor: pointer;
   }
 }
 </style>

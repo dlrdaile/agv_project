@@ -48,7 +48,7 @@ export default {
             name: '内部进度条',
             type: 'gauge',
             // center: ['20%', '50%'],
-            radius: '72%',
+            radius: '85%',
             max: this.vmax,
             splitNumber: 10,
             axisLine: {

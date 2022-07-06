@@ -75,7 +75,7 @@ class DeviceTypeLink(SQLModel,table=True) :
     imu_link: Optional[Imu] = Relationship(back_populates="device")
     battery_link: Optional[Battery] = Relationship(back_populates="device")
     press_link: Optional[Press] = Relationship(back_populates="device")
-    car_link: Optional["Cars"] = Relationship(back_populates="device")
+    car_link: Optional["Cars"] = Relationship(back_populates="devices")
     device_datas: List["DeviceData"] = Relationship(back_populates="device")
 
 

@@ -18,7 +18,9 @@ from models.user import Users
 from .fake import create_fake
 from .session import get_session
 from utils.random_choose import choose_process
+
 fake = Faker(locale='zh_CN')
+
 
 def init_user() :
     with get_session() as session :
@@ -101,7 +103,6 @@ def init_equipment() :
             logger.info('设备数据初始化成功')
 
 
-
 def init_items() :
     init_item_num = 5
     item_ls = []
@@ -117,14 +118,14 @@ def init_items() :
                 #     json_data = req.json()
                 #     image_path = json_data['imgurl']
                 image_path = 'https://picsum.photos/200'
-                admin_user:Users = session.query(Users).get(1)
+                admin_user: Users = session.query(Users).get(1)
                 fake_time = admin_user.create_time
                 item = Items(name=f'商品{i + 1}',
                              description=fake.text(max_nb_chars=100,ext_word_list=None),
                              image_path=image_path,
                              price=random.randint(100,500),
                              weight=random.randint(1,10),
-                             create_time= fake_time,
+                             create_time=fake_time,
                              user_id=1)
                 process_queue_ls = choose_process(min_process_num,max_process_num,process_num)
                 for order,process_id in enumerate(process_queue_ls) :
@@ -165,8 +166,9 @@ def init_device() :
     with get_session() as session :
         try :
             device_type = []
-            for device_type_name in device_type_names :
-                device_type.append(DeviceType(name=device_type_name,
+            for i,device_type_name in enumerate(device_type_names) :
+                device_type.append(DeviceType(id=i + 1,
+                                              name=device_type_name,
                                               description=fake.paragraph(nb_sentences=3,
                                                                          variable_nb_sentences=True,
                                                                          ext_word_list=None)))
@@ -189,19 +191,39 @@ def init_carInfo() :
                                                        ext_word_list=None),
                             status=CarStatus.INACTIVATE,
                             ip="192.168.10.47",
-                            port="9090"
+                            port="9090",
+                            weight=20
                             )
                 car = Cars(**data)
-                odom = Odom(**dict(name=f"里程计{i}",topicName="/odom",topicType="nav_msgs/Odometry"))
-                # odom_link = DeviceTypeLink(type_id=)
+                odom = Odom(**dict(name="里程计",topicName="/odom",topicType="nav_msgs/Odometry"))
                 laser = Laser(**dict(name="激光雷达",topicName="/scan",topicType="sensor_msgs/LaserScan"))
                 imu = Imu(**dict(name="倾角传感器",topicName="/imu",topicType="sensor_msgs/Imu"))
-                battery = Battery(**dict(name="电池",topicName="/battery",topicType="communicate_with_stm32/BatteryInfo",currentBattery=11))
-                press = Press(**dict(name="压力传感器",topicName="/press", topicType="communicate_with_stm32/Pressinfo"))
+                battery = Battery(**dict(name="电池",topicName="/battery",topicType="communicate_with_stm32/BatteryInfo",
+                                         currentBattery=11))
+                press = Press(**dict(name="压力传感器",topicName="/press",topicType="communicate_with_stm32/Pressinfo"))
                 cameraLeft = Camera(**dict(name="双目相机左",topicName="/multisense_sl/camera/left/image_raw/compressed",
-                                   topicType="sensor_msgs/CompressedImage"))
+                                           topicType="sensor_msgs/CompressedImage"))
                 cameraRight = Camera(**dict(name="双目相机右",topicName="/multisense_sl/camera/right/image_raw/compressed",
-                                    topicType="sensor_msgs/CompressedImage"))
+                                            topicType="sensor_msgs/CompressedImage"))
+                odom_link = DeviceTypeLink(type_id=3)
+                laser_link = DeviceTypeLink(type_id=1)
+                imu_link = DeviceTypeLink(type_id=4)
+                battery_link = DeviceTypeLink(type_id=5)
+                press_link = DeviceTypeLink(type_id=6)
+                cameraR_link = DeviceTypeLink(type_id=2)
+                cameraL_link = DeviceTypeLink(type_id=2)
+                odom_link.odom_link = odom
+                laser_link.laser_link = laser
+                imu_link.imu_link = imu
+                battery_link.battery_link = battery
+                press_link.press_link = press
+                cameraR_link.camera_link = cameraRight
+                cameraL_link.camera_link = cameraLeft
+                device_link = [battery_link,imu_link,press_link,cameraR_link,cameraL_link,odom_link,laser_link]
+                car.devices.extend(device_link)
+                session.add(car)
+                session.add_all([odom,battery,press,laser,imu,cameraRight,cameraLeft])
+                session.add_all(device_link)
             session.commit()
         except Exception as e :
             session.rollback()
@@ -217,4 +239,6 @@ async def init_data() :
     init_process()
     init_equipment()
     init_items()
+    init_device()
+    init_carInfo()
     await create_fake()

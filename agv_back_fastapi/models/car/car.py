@@ -27,5 +27,6 @@ class Cars(SQLModel,table=True) :
     status: CarStatus = CarStatus.INACTIVATE
     ip: str
     port: str
+    weight: float
     tasks: List["Tasks"] = Relationship(back_populates="car")
-    device: List["DeviceTypeLink"] = Relationship(back_populates="car_link")
+    devices: List["DeviceTypeLink"] = Relationship(back_populates="car_link")

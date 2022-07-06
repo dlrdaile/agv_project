@@ -1,5 +1,5 @@
 <template>
-  <div class="speed-chart" ref="chartFieldRef"/>
+  <div ref="chartFieldRef" class="speed-chart" />
 </template>
 <script>
 export default {
@@ -7,12 +7,12 @@ export default {
   props: {
     title: {
       type: String,
-      default: '12'
+      default: ''
     },
     formatFunction: {
       type: Function,
       default: function(value) {
-        return value
+        return parseFloat(value).toFixed(2)
       }
     },
     dataArr: {
@@ -40,7 +40,6 @@ export default {
   computed: {
     option() {
       return {
-        backgroundColor: '#0E1327',
         tooltip: {
           formatter: '{a} <br/>{b} : {c}%'
         },
@@ -88,7 +87,7 @@ export default {
               show: true,
               offsetCenter: [0, 70], // x, y，单位px
               textStyle: {
-                color: '#fff',
+                color: '#eec152',
                 fontSize: 14, // 表盘上的标题文字大小
                 fontWeight: 400,
                 fontFamily: 'PingFangSC'
@@ -106,7 +105,7 @@ export default {
               radius: '20%',
               width: 4 // 指针粗细
             },
-            animationDuration: 4000
+            animationDuration: 2000
           },
           {
             name: '外部刻度',
@@ -128,7 +127,10 @@ export default {
             axisLabel: {
               show: true,
               color: '#4d5bd1',
-              distance: 25
+              distance: 20,
+              formatter: function(value) {
+                return parseFloat(value).toFixed(1)
+              }
             }, // 刻度标签。
             axisTick: {
               show: true,
@@ -151,7 +153,8 @@ export default {
             },
             pointer: {
               show: false
-            }
+            },
+            animationDuration: 2000
           }
         ]
       }
@@ -162,14 +165,12 @@ export default {
       handler: function(n, o) {
         this.chart.setOption(n)
       },
-      deep: true,
-      immediate: true
+      deep: true
     }
   },
   mounted() {
     // const chartField = document.getElementById('chartField')
     this.chart = this.$echarts.init(this.$refs.chartFieldRef)
-    window.onresize = this.chart.resize
     this.chart.setOption(this.option)
   }
 }

@@ -28,6 +28,8 @@ class Tasks(SQLModel,table=True) :
     status: TaskStatus = TaskStatus.WAITING
     start_time: datetime = datetime.now()
     end_time: Optional[datetime] = None
+    car_id: Optional[int] = Field(default=None,foreign_key="cars.id")
+    car: Optional["Cars"] = Relationship(back_populates="tasks")
     UserOrder: Optional["UserOrder"] = Relationship(back_populates="task")
     equipment_links: List["TaskEquipmentLink"] = Relationship(back_populates="task",
                                                               sa_relationship_kwargs=dict(cascade="save-update, merge, "

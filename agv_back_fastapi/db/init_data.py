@@ -9,6 +9,7 @@ from faker import Faker
 from core.logger import logger
 from core.security import get_password_hash
 from crud.user import userCrud
+from models import CarStatus,Cars,Odom,Laser,Imu,Battery,Press,Camera,DeviceTypeLink,DeviceType,DeviceStatus
 from models.item.equipment import Equipment
 from models.item.items import Items
 from models.item.links import ItemProcessLink
@@ -157,6 +158,56 @@ def init_map_data() :
                 logger.error(f'地理信息初始化失败,因为：{e}')
             else :
                 logger.info('地理信息初始化成功')
+
+
+def init_device() :
+    device_type_names = ["激光雷达","双目相机","里程计","倾角传感器","电池","压力传感器"]
+    with get_session() as session :
+        try :
+            device_type = []
+            for device_type_name in device_type_names :
+                device_type.append(DeviceType(name=device_type_name,
+                                              description=fake.paragraph(nb_sentences=3,
+                                                                         variable_nb_sentences=True,
+                                                                         ext_word_list=None)))
+            session.add_all(device_type)
+            session.commit()
+        except Exception as e :
+            session.rollback()
+            logger.error(f'小车设备数据初始化失败,因为：{e}')
+        else :
+            logger.info('小车设备数据初始化成功')
+
+
+def init_carInfo() :
+    with get_session() as session :
+        try :
+            for i in range(2) :
+                data = dict(name=f"雷速登{i + 1}",productor="戴乐",isSimulation=True,
+                            description=fake.paragraph(nb_sentences=3,
+                                                       variable_nb_sentences=True,
+                                                       ext_word_list=None),
+                            status=CarStatus.INACTIVATE,
+                            ip="192.168.10.47",
+                            port="9090"
+                            )
+                car = Cars(**data)
+                odom = Odom(**dict(name=f"里程计{i}",topicName="/odom",topicType="nav_msgs/Odometry"))
+                # odom_link = DeviceTypeLink(type_id=)
+                laser = Laser(**dict(name="激光雷达",topicName="/scan",topicType="sensor_msgs/LaserScan"))
+                imu = Imu(**dict(name="倾角传感器",topicName="/imu",topicType="sensor_msgs/Imu"))
+                battery = Battery(**dict(name="电池",topicName="/battery",topicType="communicate_with_stm32/BatteryInfo",currentBattery=11))
+                press = Press(**dict(name="压力传感器",topicName="/press", topicType="communicate_with_stm32/Pressinfo"))
+                cameraLeft = Camera(**dict(name="双目相机左",topicName="/multisense_sl/camera/left/image_raw/compressed",
+                                   topicType="sensor_msgs/CompressedImage"))
+                cameraRight = Camera(**dict(name="双目相机右",topicName="/multisense_sl/camera/right/image_raw/compressed",
+                                    topicType="sensor_msgs/CompressedImage"))
+            session.commit()
+        except Exception as e :
+            session.rollback()
+            logger.error(f'小车数据初始化失败,因为：{e}')
+        else :
+            logger.info('小车数据初始化成功')
 
 
 async def init_data() :

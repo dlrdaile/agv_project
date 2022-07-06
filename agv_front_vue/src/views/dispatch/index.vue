@@ -277,13 +277,11 @@ export default {
     font-size: 20px;
    }
    .el-header, .el-footer {
-    background-color: rgb(121, 113, 113);
     color: #333;
     text-align: center;
     line-height: 20px;
   }
   .el-main {
-    background-color: rgb(149, 143, 143);
     color: #333;
   }
   .eqname {

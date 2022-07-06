@@ -66,14 +66,30 @@ export default {
       default: null,
       require: true
     }
-    // initros:{
-    //   require:true
-    // }
   },
   data() {
     return {
       teleop: () => {}
       // ros:this.initros
+    }
+  },
+  watch: {
+    max_vel_x(newValue, oldValue) {
+      this.teleop.max_vel_x = newValue
+    },
+    max_vel_y(newValue, oldValue) {
+      this.teleop.max_vel_y = newValue
+    },
+    max_vel_theta(newValue, oldValue) {
+      this.teleop.max_vel_theta = newValue
+    },
+    acc_lim_x(newValue, oldValue) {
+      this.teleop.acc_lim_x = newValue
+    }, acc_lim_y(newValue, oldValue) {
+      this.teleop.acc_lim_x = newValue
+    },
+    acc_lim_theta(newValue, oldValue) {
+      this.teleop.acc_lim_theta = newValue
     }
   },
   created() {
@@ -110,8 +126,7 @@ export default {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #6c60b4;
-    opacity: 0.3;
+    background-color: rgba(108, 96, 180, 0.5);
     color: #19e113;
     cursor: pointer;
   }

@@ -56,7 +56,6 @@ export default {
       this.rootObject.remove(this.sns[i])
       this.sns.shift()
     }
-    this.object.unsubscribe()
   },
   methods: {
     createObject() {

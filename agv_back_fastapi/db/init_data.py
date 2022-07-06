@@ -3,6 +3,7 @@ author:dlr123
 date:2022年06月12日
 """
 import datetime
+import os.path
 import random
 
 from faker import Faker
@@ -145,7 +146,7 @@ def init_items() :
 
 
 def init_map_data() :
-    with open(r'D:\Code\WEB\project_dir\agv_project\agv_back_fastapi\mapData.sql','rt',encoding='utf-8') as f :
+    with open(os.path.join(os.getcwd(),'mapData.sql'),'rt',encoding='utf-8') as f :
         with get_session() as session :
             try :
                 for line in f :

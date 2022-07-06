@@ -151,7 +151,7 @@ export default class SocketService {
     if (!window.WebSocket) {
       return console.log('您的浏览器不支持WebSocket')
     }
-    this.ws = new WebSocket('ws://localhost:9998')
+    this.ws = new WebSocket('ws://localhost:8000/ws/order')
 
     // 连接成功的事件
     this.ws.onopen = () => {
@@ -186,7 +186,7 @@ export default class SocketService {
       if (this.callBackMapping[socketType]) {
         const action = recvData.action
         if (action === 'getData') {
-          const realData = JSON.parse(recvData.data)
+          const realData = recvData.data
           this.callBackMapping[socketType].call(this, realData)
         } else if (action === 'fullScreen') {
           this.callBackMapping[socketType].call(this, recvData)

@@ -17,6 +17,20 @@ export default {
       mapData: {} // 所获取的省份的地图矢量数据
     }
   },
+  computed: {
+    theme() {
+      return this.$store.getters.orderPanelTheme
+    }
+  },
+  watch: {
+    theme() {
+      console.log('主题切换了')
+      this.chartInstance.dispose() // 销毁当前的图表
+      this.initChart() // 重新以最新的主题名称初始化图表对象
+      this.screenAdapter() // 完成屏幕的适配
+      this.updateChart() // 更新图表的展示
+    }
+  },
   created() {
     // 在组件创建完成之后 进行回调函数的注册
     this.$socket.registerCallBack('mapData', this.getData)
@@ -91,7 +105,6 @@ export default {
       // 获取服务器的数据, 对this.allData进行赋值之后, 调用updateChart方法更新图表
       // const { data: ret } = await this.$http.get('map')
       this.allData = ret
-      console.log(this.allData)
       this.updateChart()
     },
     updateChart() {
@@ -150,20 +163,6 @@ export default {
         }
       }
       this.chartInstance.setOption(revertOption)
-    }
-  },
-  computed: {
-    theme() {
-      return this.$store.getters.orderPanelTheme
-    }
-  },
-  watch: {
-    theme() {
-      console.log('主题切换了')
-      this.chartInstance.dispose() // 销毁当前的图表
-      this.initChart() // 重新以最新的主题名称初始化图表对象
-      this.screenAdapter() // 完成屏幕的适配
-      this.updateChart() // 更新图表的展示
     }
   }
 }

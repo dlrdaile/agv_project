@@ -19,10 +19,6 @@ export default {
       titleFontSize: 0
     }
   },
-  created() {
-    // 在组件创建完成之后 进行回调函数的注册
-    this.$socket.registerCallBack('hotData', this.getData)
-  },
   computed: {
     catName() {
       if (!this.allData) {
@@ -49,6 +45,10 @@ export default {
       this.screenAdapter() // 完成屏幕的适配
       this.updateChart() // 更新图表的展示
     }
+  },
+  created() {
+    // 在组件创建完成之后 进行回调函数的注册
+    this.$socket.registerCallBack('hotData', this.getData)
   },
   mounted() {
     this.initChart()
@@ -121,7 +121,6 @@ export default {
     getData(ret) {
       // 获取服务器的数据, 对this.allData进行赋值之后, 调用updateChart方法更新图表
       this.allData = ret
-      console.log(this.allData)
       this.updateChart()
     },
     updateChart() {

@@ -16,6 +16,20 @@ export default {
       timerId: null // 定时器的标识
     }
   },
+  computed: {
+    theme() {
+      return this.$store.getters.orderPanelTheme
+    }
+  },
+  watch: {
+    theme() {
+      console.log('主题切换了')
+      this.chartInstance.dispose() // 销毁当前的图表
+      this.initChart() // 重新以最新的主题名称初始化图表对象
+      this.screenAdapter() // 完成屏幕的适配
+      this.updateChart() // 更新图表的展示
+    }
+  },
   created() {
     // 在组件创建完成之后 进行回调函数的注册
     this.$socket.registerCallBack('stockData', this.getData)
@@ -59,7 +73,6 @@ export default {
       // 获取服务器的数据, 对this.allData进行赋值之后, 调用updateChart方法更新图表
       // const { data: ret } = await this.$http.get('stock')
       this.allData = ret
-      console.log(this.allData)
       this.updateChart()
       this.startInterval()
     },
@@ -187,20 +200,6 @@ export default {
         }
         this.updateChart() // 在更改完currentIndex之后 , 需要更新界面
       }, 5000)
-    }
-  },
-  computed: {
-    theme() {
-      return this.$store.getters.orderPanelTheme
-    }
-  },
-  watch: {
-    theme() {
-      console.log('主题切换了')
-      this.chartInstance.dispose() // 销毁当前的图表
-      this.initChart() // 重新以最新的主题名称初始化图表对象
-      this.screenAdapter() // 完成屏幕的适配
-      this.updateChart() // 更新图表的展示
     }
   }
 }

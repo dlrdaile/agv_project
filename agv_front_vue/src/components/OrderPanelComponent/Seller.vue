@@ -17,6 +17,20 @@ export default {
       timerId: null // 定时器的标识
     }
   },
+  computed: {
+    theme() {
+      return this.$store.getters.orderPanelTheme
+    }
+  },
+  watch: {
+    theme() {
+      console.log('主题切换了')
+      this.chartInstance.dispose() // 销毁当前的图表
+      this.initChart() // 重新以最新的主题名称初始化图表对象
+      this.screenAdapter() // 完成屏幕的适配
+      this.updateChart() // 更新图表的展示
+    }
+  },
   created() {
     // 在组件创建完成之后 进行回调函数的注册
     this.$socket.registerCallBack('sellerData', this.getData)
@@ -190,20 +204,6 @@ export default {
       this.chartInstance.setOption(adapterOption)
       // 手动的调用图表对象的resize 才能产生效果
       this.chartInstance.resize()
-    }
-  },
-  computed: {
-    theme() {
-      return this.$store.getters.orderPanelTheme
-    }
-  },
-  watch: {
-    theme() {
-      console.log('主题切换了')
-      this.chartInstance.dispose() // 销毁当前的图表
-      this.initChart() // 重新以最新的主题名称初始化图表对象
-      this.screenAdapter() // 完成屏幕的适配
-      this.updateChart() // 更新图表的展示
     }
   }
 }

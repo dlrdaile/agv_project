@@ -25,29 +25,6 @@ export default {
       titleFontSize: 0 // 指明标题的字体大小
     }
   },
-  created() {
-    // 在组件创建完成之后 进行回调函数的注册
-    this.$socket.registerCallBack('trendData', this.getData)
-  },
-  mounted() {
-    this.initChart()
-    console.log(123)
-    // this.getData()
-    // 发送数据给服务器, 告诉服务器, 我现在需要数据
-    this.$socket.send({
-      action: 'getData',
-      socketType: 'trendData',
-      chartName: 'trend',
-      value: ''
-    })
-    window.addEventListener('resize', this.screenAdapter)
-    this.screenAdapter()
-  },
-  destroyed() {
-    window.removeEventListener('resize', this.screenAdapter)
-    // 在组件销毁的时候, 进行回调函数的取消
-    this.$socket.unRegisterCallBack('trendData')
-  },
   computed: {
     selectTypes() {
       if (!this.allData) {
@@ -80,6 +57,38 @@ export default {
     theme() {
       return this.$store.getters.orderPanelTheme
     }
+  },
+  watch: {
+    theme() {
+      console.log('主题切换了')
+      this.chartInstane.dispose() // 销毁当前的图表
+      this.initChart() // 重新以最新的主题名称初始化图表对象
+      this.screenAdapter() // 完成屏幕的适配
+      this.updateChart() // 更新图表的展示
+    }
+  },
+  created() {
+    // 在组件创建完成之后 进行回调函数的注册
+    this.$socket.registerCallBack('trendData', this.getData)
+  },
+  mounted() {
+    this.initChart()
+    console.log(123)
+    // this.getData()
+    // 发送数据给服务器, 告诉服务器, 我现在需要数据
+    this.$socket.send({
+      action: 'getData',
+      socketType: 'trendData',
+      chartName: 'trend',
+      value: ''
+    })
+    window.addEventListener('resize', this.screenAdapter)
+    this.screenAdapter()
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.screenAdapter)
+    // 在组件销毁的时候, 进行回调函数的取消
+    this.$socket.unRegisterCallBack('trendData')
   },
   methods: {
     initChart() {
@@ -116,7 +125,6 @@ export default {
       // 对allData进行赋值
       // const { data: ret } = await this.$http.get('trend')
       this.allData = ret
-      console.log(this.allData)
       this.updateChart()
     },
     updateChart() {
@@ -195,15 +203,6 @@ export default {
       this.choiceType = currentType
       this.updateChart()
       this.showChoice = false
-    }
-  },
-  watch: {
-    theme() {
-      console.log('主题切换了')
-      this.chartInstane.dispose() // 销毁当前的图表
-      this.initChart() // 重新以最新的主题名称初始化图表对象
-      this.screenAdapter() // 完成屏幕的适配
-      this.updateChart() // 更新图表的展示
     }
   }
 }

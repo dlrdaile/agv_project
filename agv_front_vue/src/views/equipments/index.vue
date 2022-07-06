@@ -5,8 +5,8 @@
     </el-header>
     <el-main>
       <!-- <div class="mainarea"> -->
-      <el-row>
-        <el-col v-for="o in 4" :key="o" :span="5" :offset="1">
+      <el-row :gutter="20">
+        <el-col v-for="(item,index) in deviceList1" :key="index" :span="6">
           <div style="margin-top:15px">
             <el-card style="background: #fff" :body-style="{ padding: '10px' }">
               <img
@@ -14,14 +14,40 @@
                 class="image"
               >
               <div style="padding: 20px;">
-                <!-- <span class="eqname">好吃的汉堡</span> -->
                 <div class="bottom clearfix">
-                  <!-- <time class="time">{{ currentDate }}</time>
-                <el-button size="mini" type="primary" class="button">操作按钮</el-button> -->
                   <el-descriptions :column="1" border>
-                    <el-descriptions-item label="序号" class="id">22</el-descriptions-item>
-                    <el-descriptions-item label="描述">这是一个大机床</el-descriptions-item>
-                    <el-descriptions-item label="状态">正在执行</el-descriptions-item>
+                    <el-descriptions-item label="序号" class="id">{{ item.id }}</el-descriptions-item>
+                    <el-descriptions-item label="描述">{{ item.des }}</el-descriptions-item>
+                    <el-descriptions-item label="状态">{{ item.status }}</el-descriptions-item>
+                  </el-descriptions>
+                </div>
+              </div>
+            </el-card>
+          </div>
+        </el-col>
+      </el-row>
+      <!-- </div> -->
+    </el-main>
+    <el-divider direction="vertical" content-position="center" />
+    <el-header>
+      <h1>铣床</h1>
+    </el-header>
+    <el-main>
+      <!-- <div class="mainarea"> -->
+      <el-row :gutter="20">
+        <el-col v-for="(item,index) in deviceList2" :key="index" :span="6">
+          <div style="margin-top:15px">
+            <el-card style="background: #fff" :body-style="{ padding: '10px' }">
+              <img
+                src="https://ts1.cn.mm.bing.net/th/id/R-C.c26b05d524de18c873a2d51872530dd9?rik=2%2boyNSarU%2ftsgA&riu=http%3a%2f%2fwww.luzhongmc.com%2fdata%2fupload%2f20191012%2f5da16d747c0e0.jpg&ehk=%2feXzzblnJHlnthSxb8AqWXm3qtlr7ER9o4HS%2bc6MqtA%3d&risl=&pid=ImgRaw&r=0"
+                class="image"
+              >
+              <div style="padding: 20px;">
+                <div class="bottom clearfix">
+                  <el-descriptions :column="1" border>
+                    <el-descriptions-item label="序号" class="id">{{ item.id }}</el-descriptions-item>
+                    <el-descriptions-item label="描述">{{ item.des }}</el-descriptions-item>
+                    <el-descriptions-item label="状态">{{ item.status }}</el-descriptions-item>
                   </el-descriptions>
                 </div>
               </div>
@@ -39,7 +65,45 @@
 export default {
   data() {
     return {
-      currentDate: new Date()
+      currentDate: new Date(),
+      deviceList1: [
+        { id: '1',
+          des: '大零件',
+          status: '正在运行'
+        },
+        { id: '2',
+          des: '小零件',
+          status: '未运行'
+        },
+        { id: '3',
+          des: '精密零件',
+          status: '未运行'
+        },
+        { id: '4',
+          des: '小零件',
+          status: '正在运行'
+        }
+
+      ],
+      deviceList2: [
+        { id: '1',
+          des: '大零件',
+          status: '未运行'
+        },
+        { id: '2',
+          des: '小零件',
+          status: '正在运行'
+        },
+        { id: '3',
+          des: '精密零件',
+          status: '未运行'
+        },
+        { id: '4',
+          des: '小零件',
+          status: '正在运行'
+        }
+
+      ]
     }
   }
 }
@@ -50,13 +114,13 @@ export default {
     text-align: center;
    }
    .el-header, .el-footer {
-    background-color: #468be6;
+    background-color: rgb(128, 126, 126);
     color: #333;
     text-align: center;
     line-height: 20px;
   }
   .el-main {
-    background-color: #84b5e7;
+    background-color: #999;
     color: #333;
   }
   .eqname {

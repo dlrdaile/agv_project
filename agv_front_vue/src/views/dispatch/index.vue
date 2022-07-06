@@ -20,7 +20,7 @@
                     <div class="bottom clearfix">
                       <el-descriptions :column="1" border>
                         <el-descriptions-item label="序号" class="id">{{ item.id }}</el-descriptions-item>
-                        <el-descriptions-item label="所在机床">{{ item.status }}</el-descriptions-item>
+                        <el-descriptions-item label="所在机床">{{ item.equi }}</el-descriptions-item>
                         <!-- <el-descriptions-item label="指导意见">{{ item.reject_or_fail_reason }}</el-descriptions-item> -->
                         <!-- <el-descriptions-item label="所有工序"><el-button type="primary">查看</el-button></el-descriptions-item> -->
                         <!-- <el-descriptions-item label="指导意见"><el-button type="primary">查看</el-button></el-descriptions-item> -->
@@ -68,11 +68,11 @@
                       <div class="bottom clearfix">
                         <el-descriptions :column="1" border>
                           <el-descriptions-item label="序号" class="id">{{ item.id }}</el-descriptions-item>
-                          <el-descriptions-item label="所在工序">{{ item.des }}</el-descriptions-item>
-                          <el-descriptions-item label="所在机床">{{ item.status }}</el-descriptions-item>
-                          <el-descriptions-item label="指导意见">{{ item.status }}</el-descriptions-item>
-                          <el-descriptions-item label="时间轴">
-                            <el-button type="primary">查看</el-button>
+                          <!-- <el-descriptions-item label="指导意见">{{ item.reject_or_fail_reason }}</el-descriptions-item> -->
+                          <!-- <el-descriptions-item label="所有工序"><el-button type="primary">查看</el-button></el-descriptions-item> -->
+                          <!-- <el-descriptions-item label="指导意见"><el-button type="primary">查看</el-button></el-descriptions-item> -->
+                          <el-descriptions-item label="任务信息">
+                            <el-button type="primary" @click="handlelook(item.item_id,item.reject_or_fail_reason,item.activities)">查看</el-button>
                           </el-descriptions-item>
                         </el-descriptions>
                       </div>
@@ -103,14 +103,16 @@
       <el-tabs :tab-position="tabPosition">
         <el-tab-pane label="制造工序">
 
-          <el-descriptions>
+          <el-descriptions :column="1">
             <!--注意是Processes-->
             <el-descriptions-item
               v-for="(item,index) in showProcessList"
               :key="index"
               :label="'工序' + (index+1)"
             >
-              {{ item }}
+              <el-tooltip class="item" effect="dark" :content="item.name" placement="bottom-start">
+                <div>{{ item.label }}</div>
+              </el-tooltip>
             </el-descriptions-item>
           </el-descriptions>
 
@@ -144,8 +146,6 @@
 <script>
 // import { getItemProcess } from '@/api/items'
 
-import { getItemProcess } from '@/api/items'
-
 export default {
   data() {
     return {
@@ -159,77 +159,154 @@ export default {
       total: 10,
       dialogVisible: false,
       tabPosition: 'left',
-      showProcessList: [],
+      showProcessList: [
+        { label: '车', name: '机床1' },
+        { label: '铣', name: '机床2' },
+        { label: '刨', name: '机床3' }
+      ],
       advice: '暂无意见',
       showActivities: [],
       reverse: true,
       orderList1: [
         { id: '0',
-          des: '大傻子',
-          status: '正在进行',
+          equi: '车床1',
           name: '订单1',
           // 制造建议用reject_or_fail_reason代替，存储在advice中
           reject_or_fail_reason: '继续加工',
           // activities的数组数据存储在showActivities中
           activities: [{
             content: '活动按期开始',
-            timestamp: '2018-04-15'
+            timestamp: '2022-07-5'
           }, {
             content: '通过审核',
-            timestamp: '2018-04-13'
+            timestamp: '2022-07-6'
           }, {
             content: '创建成功',
             timestamp: '2018-04-11'
           }]
         },
         { id: '2',
-          des: '二傻子',
-          status: '没进行',
+          equi: '铣床1',
           name: '订单2',
-          reject_or_fail_reason: 'wanchengliangjian'
+          reject_or_fail_reason: '无',
+          activities: [{
+            content: '活动按期开始',
+            timestamp: '2022-07-5'
+          }, {
+            content: '通过审核',
+            timestamp: '2022-07-6'
+          }, {
+            content: '创建成功',
+            timestamp: '2018-04-11'
+          }]
         },
         { id: '4',
-          des: '三傻子',
-          status: '正在进行',
-          name: '订单3'
+          equi: '车床2',
+          name: '订单3',
+          reject_or_fail_reason: '无',
+          activities: [{
+            content: '活动按期开始',
+            timestamp: '2022-07-5'
+          }, {
+            content: '通过审核',
+            timestamp: '2022-07-6'
+          }, {
+            content: '创建成功',
+            timestamp: '2018-04-11'
+          }]
         },
         { id: '6',
-          des: '四傻子',
-          status: '正在进行',
-          name: '订单4'
+          equi: '铣床2',
+          name: '订单4',
+          reject_or_fail_reason: '无',
+          activities: [{
+            content: '活动按期开始',
+            timestamp: '2022-07-5'
+          }, {
+            content: '通过审核',
+            timestamp: '2022-07-6'
+          }, {
+            content: '创建成功',
+            timestamp: '2018-04-11'
+          }]
         },
         { id: '4',
-          des: '三傻子',
-          status: '正在进行',
-          name: '订单5'
+          equi: '车床1',
+          name: '订单5',
+          reject_or_fail_reason: '无',
+          activities: [{
+            content: '活动按期开始',
+            timestamp: '2022-07-5'
+          }, {
+            content: '通过审核',
+            timestamp: '2022-07-6'
+          }, {
+            content: '创建成功',
+            timestamp: '2018-04-11'
+          }]
         }
 
       ],
       orderList2: [
         { id: '5',
-          des: '15',
-          status: 'sdf',
-          name: '大会'
-        },
-        { id: 'sadf',
-          des: 'sdf',
-          status: 'gfg',
-          name: '啊啊的a'
-        },
-        { id: 'gdfgh',
-          des: 'werwer',
-          status: 'ghgh',
-          name: 'fs嘿嘿'
+          equi: '车床2',
+          name: '订单6',
+          reject_or_fail_reason: '无',
+          activities: [{
+            content: '活动按期开始',
+            timestamp: '2022-07-5'
+          }, {
+            content: '通过审核',
+            timestamp: '2022-07-6'
+          }, {
+            content: '创建成功',
+            timestamp: '2018-04-11'
+          }]
         },
         { id: '6',
-          des: '四傻子',
-          status: 'jhj',
-          name: 'f范德萨发生da'
+          equi: '车床1',
+          name: '订单7',
+          reject_or_fail_reason: '无',
+          activities: [{
+            content: '活动按期开始',
+            timestamp: '2022-07-5'
+          }, {
+            content: '通过审核',
+            timestamp: '2022-07-6'
+          }, {
+            content: '创建成功',
+            timestamp: '2018-04-11'
+          }]
         },
-        { id: '4',
-          des: '三傻子',
-          status: 'nvbn',
-          name: 'fsa阿斯顿是a'
+        { id: '7',
+          equi: 'ghgh',
+          name: '订单8',
+          reject_or_fail_reason: '无',
+          activities: [{
+            content: '活动按期开始',
+            timestamp: '2022-07-5'
+          }, {
+            content: '通过审核',
+            timestamp: '2022-07-6'
+          }, {
+            content: '创建成功',
+            timestamp: '2018-04-11'
+          }]
+        },
+        { id: '8',
+          equi: 'jhj',
+          name: '订单9',
+          reject_or_fail_reason: '无',
+          activities: [{
+            content: '活动按期开始',
+            timestamp: '2022-07-5'
+          }, {
+            content: '通过审核',
+            timestamp: '2022-07-6'
+          }, {
+            content: '创建成功',
+            timestamp: '2018-04-11'
+          }]
         }
 
       ]
@@ -277,11 +354,13 @@ export default {
     font-size: 20px;
    }
    .el-header, .el-footer {
+    background-color: rgb(121, 113, 113);
     color: #333;
     text-align: center;
     line-height: 20px;
   }
   .el-main {
+    background-color: rgb(149, 143, 143);
     color: #333;
   }
   .eqname {

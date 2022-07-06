@@ -22,8 +22,11 @@ import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 
 import dataV from '@jiaminghi/data-view'
-import * as echarts from 'echarts'
 import geoJson from '@/assets/json/china.json'
+
+// 导入订单的监控仪表盘
+import '@/assets/font/iconfont.css'
+import SocketService from '@/utils/socket_service'
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -43,10 +46,10 @@ if (process.env.NODE_ENV === 'production') {
 Vue.use(ElementUI)
 Vue.use(VueQuillEditor)
 Vue.use(dataV)
-echarts.registerMap('china', geoJson)
 Vue.config.productionTip = false
-Vue.prototype.$echarts = echarts
-
+Vue.prototype.$echarts = window.echarts
+// 其他的组件  this.$socket
+Vue.prototype.$socket = SocketService.Instance
 new Vue({
   el: '#app',
   router,

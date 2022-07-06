@@ -27,7 +27,7 @@ export default {
             center: ['50%', '50%'], // 仪表的位置
             name: '压力表', // 仪表的名字
             type: 'gauge', // 统计图类型为仪表
-            radius: '82%', // 统计图的半径大小
+            radius: '75%', // 统计图的半径大小
             min: 0, // 最小刻度
             max: this.vmax, // 最大刻度
             splitNumber: 5, // 刻度数量

@@ -32,7 +32,7 @@ Vue.use(Router)
 export const constantRoutes = [
   {
     path: '/test',
-    component: () => import('@/views/test/index')
+    component: () => import('@/views/orderPanel/ScreenPage')
   },
   {
     path: '/login',
@@ -43,6 +43,22 @@ export const constantRoutes = [
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
+  }
+  // 404 page must be placed at the end !!!
+]
+
+export const asyncRoutes = [
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/dashboard',
+    children: [{
+      path: 'dashboard',
+      name: 'Dashboard',
+      // component: () => import('@/views/dashboard/index'),
+      component: () => import('@/views/orderPanel/ScreenPage'),
+      meta: { title: '主页面', icon: 'dashboard', roles: ['admin'] }
+    }]
   },
   {
     path: '/',
@@ -52,13 +68,10 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '主页面', icon: 'dashboard' }
+      // component: () => import('@/views/orderPanel/ScreenPage'),
+      meta: { title: '主页面', icon: 'dashboard', roles: ['client'] }
     }]
-  }
-  // 404 page must be placed at the end !!!
-]
-
-export const asyncRoutes = [
+  },
   {
     path: '/goodsList',
     component: Layout,

@@ -26,7 +26,8 @@ class Tasks(SQLModel,table=True) :
     description: Optional[str] = None
     fail_reason:Optional[str] = None
     status: TaskStatus = TaskStatus.WAITING
-    start_time: datetime = datetime.now()
+    create_time: datetime = Field(default=datetime.now())  # 商品创建时间
+    start_time: Optional[datetime] = None
     end_time: Optional[datetime] = None
     car_id: Optional[int] = Field(default=None,foreign_key="cars.id")
     car: Optional["Cars"] = Relationship(back_populates="tasks")

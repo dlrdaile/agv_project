@@ -170,7 +170,7 @@
       </el-table-column>
       <el-table-column label="处理" align="center" min-width="260px" class-name="small-padding fixed-width">
         <template v-slot="{row}">
-          <el-button :disabled="row.status !== 0" type="primary" size="mini" @click="handleAccept(row)">
+          <el-button :disabled="row.status !== 0" type="primary" size="mini" @click="setAcceptId(row)">
             接受
           </el-button>
           <el-button :disabled="row.status !== 0" size="mini" type="danger" @click="setRejectId(row)">
@@ -213,6 +213,23 @@
         <el-button type="primary" @click="handleReject">确 定</el-button>
       </span>
     </el-dialog>
+    <!--接收对话框-->
+    <el-dialog
+      title="接收的任务建议"
+      :visible.sync="dialogAcceptVisible"
+      width="30%"
+    >
+      <el-input
+        v-model="acceptReason"
+        type="textarea"
+        :rows="2"
+        placeholder="请输入任务建议"
+      />
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogAcceptVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleAccept">确 定</el-button>
+      </span>
+    </el-dialog>
     <!--用户信息对话框-->
     <el-dialog :visible.sync="dialogUserVisible" title="用户信息">
       <el-descriptions>
@@ -246,12 +263,14 @@ export default {
   data() {
     return {
       rejectId: null,
+      acceptId: null,
       tableKey: 0,
       userOrderList: null,
       total: 0,
       listLoading: true,
       activeName: 'first',
       rejectReason: null,
+      acceptReason: null,
       listQuery: {
         page: 1,
         limit: 10,
@@ -277,6 +296,7 @@ export default {
         item_id: null
       },
       dialogRejectVisible: false,
+      dialogAcceptVisible: false,
       dialogFormVisible: false,
       dialogUserVisible: false,
       dialogStatus: '',
@@ -347,11 +367,14 @@ export default {
     // 后台接受订单
     async handleAccept(row) {
       const update_data = {
-        id: row.id
+        id: this.acceptId
       }
       update_data.status = 1
+      update_data.task_description = this.acceptReason
       await updateOrder(update_data)
       await this.getOrderList()
+      this.dialogAcceptVisible = false
+      this.acceptId = null
     },
     // 后台拒绝订单
     async handleReject() {
@@ -437,6 +460,10 @@ export default {
     setRejectId(row) {
       this.dialogRejectVisible = true
       this.rejectId = row.id
+    },
+    setAcceptId(row) {
+      this.dialogAcceptVisible = true
+      this.acceptId = row.id
     }
   }
 }

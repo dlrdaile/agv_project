@@ -173,11 +173,16 @@ def create_fake_tasks() :
             sql = select(UserOrder).where(or_(UserOrder.status == OrderStatus.Finished,UserOrder.status == OrderStatus.Fail))  # 获得状态会完成和失败的数据
             orders = session.exec(sql).all()
             for order in orders :
-                task = Tasks(start_time=order.start_time,
+                description = fake_ch.text(max_nb_chars=100,ext_word_list=None)
+                task = Tasks(create_time=order.start_time,
                              end_time=order.end_time,
-                             description=fake_ch.text(max_nb_chars=100,ext_word_list=None),
+                             description=description,
                              )
+                # task.start_time = fa
+                time_delta = order.end_time - order.start_time
+                task.start_time = order.start_time + fake_ch.time_delta(time_delta)
                 order.task = task
+                order.task_description = description
                 process_links = order.item.process_links
                 if order.status == OrderStatus.Finished :
                     task.status = TaskStatus.SUCCEEDED

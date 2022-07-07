@@ -35,6 +35,7 @@ class UpdateOrder(SQLModel) :
     start_time: Optional[datetime] = None
     end_time: Optional[datetime] = None
     description: Optional[str] = None
+    task_description: Optional[str] = None  # 对该订单进行描述
     reject_or_fail_reason: Optional[str] = None
     IsShowToClient: Optional[bool] = None
     task_id: Optional[int] = None

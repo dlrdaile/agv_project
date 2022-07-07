@@ -23,8 +23,8 @@ class ItemProcessLink(SQLModel,table=True) :
         default=None,foreign_key="process.id",primary_key=True
     )
     order: int = Field(default=None,primary_key=True)
-    item: "Items" = Relationship(back_populates="process_links")
-    process: "Process" = Relationship(back_populates="item_links")
+    item: Optional["Items"] = Relationship(back_populates="process_links")
+    process: Optional["Process"] = Relationship(back_populates="item_links")
 
 
 class ProcessEquipmentLink(SQLModel,table=True) :
@@ -45,5 +45,5 @@ class TaskEquipmentLink(SQLModel,table=True) :
     )
     order: int = Field(default=None,primary_key=True)
     status:SubTaskStatus = SubTaskStatus.WAITING
-    task: "Tasks" = Relationship(back_populates="equipment_links")
-    equipment: "Equipment" = Relationship(back_populates="tasks_links")
+    task: Optional["Tasks"] = Relationship(back_populates="equipment_links")
+    equipment: Optional["Equipment"] = Relationship(back_populates="tasks_links")

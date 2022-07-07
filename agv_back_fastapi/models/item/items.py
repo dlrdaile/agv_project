@@ -57,8 +57,8 @@ class UserOrder(SQLModel,table=True) :
     create_time: datetime = Field(default=datetime.now())  # 表单提交时间
     start_time: Optional[datetime] = Field(default=None)  # 表单开始调度时间
     end_time: Optional[datetime] = Field(default=None)  # 表单结束时间
-
     description: Optional[str] = None  # 对该订单进行描述
+    task_description: Optional[str] = None  # 对该订单进行描述
     reject_or_fail_reason: Optional[str] = None
     IsShowToClient: bool = True
     user_id: Optional[int] = Field(default=None,foreign_key="users.id")

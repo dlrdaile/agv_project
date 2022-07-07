@@ -4,9 +4,9 @@ from fastapi import FastAPI
 from core import settings
 from core.logger import logger
 from db import init_db,init_data
-from register import register_mount,register_exception,register_cors,register_middleware,register_router,register_timer
+from register import register_mount,register_exception,register_cors,register_process,register_middleware,register_router,register_timer
 from sqlmodel.sql.expression import Select,SelectOfScalar
-
+import rospy
 SelectOfScalar.inherit_cache = True  # type: ignore
 Select.inherit_cache = True  # type: ignore
 app = FastAPI(description=settings.PROJECT_DESC,version=settings.PROJECT_VERSION)
@@ -26,6 +26,8 @@ def create_app() :
 
     register_timer(app)  # 注册定时器
 
+    register_process(app)  #
+
     logger.info("日志初始化成功！！！")  # 初始化日志
 
 
@@ -34,6 +36,7 @@ async def startup() :
     app.state.engine = init_db()  # 初始化表
     # app.state.engine = init_db(isdrop=True)  # 初始化表
     # await init_data()  # 初始化数据
+    rospy.init_node("fastapi_ros")
     create_app()  # 加载注册中心
 
 

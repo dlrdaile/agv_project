@@ -185,8 +185,8 @@ def init_device() :
 def init_carInfo() :
     with get_session() as session :
         try :
-            for i in range(2) :
-                data = dict(name=f"雷速登{i + 1}",productor="戴乐",isSimulation=True,
+            for i in range(1) :
+                data = dict(name=f"dl_agv",productor="戴乐",isSimulation=True,
                             description=fake.paragraph(nb_sentences=3,
                                                        variable_nb_sentences=True,
                                                        ext_word_list=None),

@@ -8,7 +8,7 @@ from models.car.tasks import Tasks,TaskStatus
 from models.item.links import TaskEquipmentLink
 from fastapi import FastAPI
 from db.session import get_session
-from sqlmodel import not_,and_,select
+from sqlmodel import not_,and_,select,func
 from datetime import datetime,timedelta
 from core.logger import logger
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -36,10 +36,7 @@ def detectOrderStatus() :
         try :
             sql = select(UserOrder).where(UserOrder.status == OrderStatus.Processing).where(
                 UserOrder.task_id == None).order_by(UserOrder.create_time)
-            result = session.exec(sql)
-            if len(result.rowcount) >= 100:
-                logger.warning("忽然屯聚了超过一百个订单了！")
-            order = result.first()
+            order = session.exec(sql).first()
             if order is not None :
                 task = Tasks(
                     description = order.task_description,
@@ -63,7 +60,7 @@ def detectOrderStatus() :
                 logger.info(f"第{order.id}号订单任务分配成功,分配后的任务编号为{task.id}")
         except Exception as e :
             session.rollback()
-            logger.error(f"第{order.id}号订单调度失败,因为:{e}")
+            logger.error(f"订单调度失败,因为:{e}")
 
 
 def register_timer(app: FastAPI) :

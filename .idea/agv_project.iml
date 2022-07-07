@@ -5,7 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/agv_back_fastapi" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/agv_front_vue" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.9 (FastApi) (2)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.10 (fastapi)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">

@@ -32,7 +32,7 @@ Vue.use(Router)
 export const constantRoutes = [
   {
     path: '/test',
-    component: () => import('@/views/orderPanel/ScreenPage')
+    component: () => import('@/views/rosPanel/index')
   },
   {
     path: '/login',

@@ -91,7 +91,7 @@
         prop="id"
         sortable="custom"
         align="center"
-        width="80"
+        width="40"
       >
         <!--        <template v-slot="{$index}">-->
         <!--          <span>{{ getOrderId($index) }}</span>-->

@@ -58,6 +58,7 @@
         <el-table-column
           label="零件ID"
           prop="id"
+          :width="40"
         />
         <el-table-column
           label="零件名称"
@@ -170,7 +171,7 @@ export default {
       return parseTime(Date.parse(value), '{y}-{m}-{d} {h}:{i}')
     },
     showImage(img_path) {
-      this.dialogImageUrl = 'https://www.dmoe.cc/random.php'
+      this.dialogImageUrl = img_path || 'https://www.dmoe.cc/random.php'
       this.dialogVisible = true
     },
     async getgoodsList() {

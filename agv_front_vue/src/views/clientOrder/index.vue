@@ -96,7 +96,7 @@
         prop="id"
         sortable="custom"
         align="center"
-        width="80"
+        width="40"
       >
         <template v-slot="{row}">
           <span>{{ row.id }}</span>

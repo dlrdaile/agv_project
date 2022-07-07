@@ -162,7 +162,7 @@ export default {
       messageType: 'geometry_msgs/Twist'
     })
     // Then we add a callback to be called every time a message is published on this topic.
-    this.cameraRight.subscribe(this.receiveRightImage)
+    // this.cameraRight.subscribe(this.receiveRightImage)
     this.cameraLeft.subscribe(this.receiveLeftImage)
     this.cmdVelTopic.subscribe(this.receiveCmdVelMessage)
   },

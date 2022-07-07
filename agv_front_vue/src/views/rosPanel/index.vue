@@ -39,7 +39,8 @@ export default {
   },
   created() {
     this.ros = new ROSLIB.Ros({
-      url: 'ws://192.168.10.47:9090'
+      // url: 'ws://192.168.10.47:9090'
+      url: 'ws://202.81.231.27:22963'
     })
     // url: "ws://202.81.231.27:22963",
     this.ros.on('connection', () => {

@@ -133,7 +133,7 @@ export default {
             email: 'sdafsdfsdfas',
             phone: 121212121212,
             address: 'sdfdasfasd',
-            nickname: '我是大傻子',
+            nickname: '我是大帅逼',
             create_time: '1335205592410',
             last_active_time: 'sadfsdaf',
             isActive: false
@@ -142,7 +142,7 @@ export default {
             email: 'sdafsdfsdfas',
             phone: 121212121212,
             address: 'sdfdasfasd',
-            nickname: '我是大傻子',
+            nickname: '我是大帅逼',
             create_time: 'asdfsdaf',
             last_active_time: 'sadfsdaf',
             isActive: true

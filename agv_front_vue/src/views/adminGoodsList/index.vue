@@ -58,6 +58,7 @@
         <el-table-column
           label="零件ID"
           prop="id"
+          :width="40"
         />
         <el-table-column
           label="零件名称"

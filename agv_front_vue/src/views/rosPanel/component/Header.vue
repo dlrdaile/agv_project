@@ -6,6 +6,33 @@
       <el-col
         :span="6"
       >
+        <div class="left-items">
+          <el-dropdown class="task-control" @command="handleCarStatus">
+            <span class="el-dropdown-link">
+              任务控制<i class="el-icon-arrow-down el-icon--right" />
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="0">激活小车</el-dropdown-item>
+              <el-dropdown-item command="2">继续作业</el-dropdown-item>
+              <el-dropdown-item command="1">暂停作业</el-dropdown-item>
+              <el-dropdown-item command="3">取消作业</el-dropdown-item>
+              <el-dropdown-item command="4">小车失活</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+          <el-dropdown class="move-demo" @command="handleRunDemo">
+            <span class="el-dropdown-link">
+              运动示例<i class="el-icon-arrow-down el-icon--right" />
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="1">载物(车)</el-dropdown-item>
+              <el-dropdown-item command="2">旋转(钻)</el-dropdown-item>
+              <el-dropdown-item command="3">前进(磨)</el-dropdown-item>
+              <el-dropdown-item command="4">横行(车)</el-dropdown-item>
+              <el-dropdown-item command="5">折线(洗)</el-dropdown-item>
+              <el-dropdown-item command="0">取消动作</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
         <dv-decoration-10
           class="title_left"
           :color="['#008CFF', '#00ADDD']"
@@ -36,7 +63,7 @@
               type="primary"
               :underline="false"
               icon="el-icon-s-opportunity"
-            >正常
+            >{{ carStatus }}}
             </el-link>
           </el-badge>
           <flash-icon v-if="isCharge" class="flash-icon" />
@@ -55,15 +82,20 @@
 
 <script>
 import FlashIcon from '@/views/rosPanel/component/FlashIcon'
+import { runDemoMove, setCarStatus } from '@/api/cars'
 export default {
   name: 'RosPanelHeader',
   components: {
     FlashIcon
   },
+  props: {
+    ros: {
+      type: Object,
+      default: null
+    }
+  },
   data() {
     return {
-      activeIndex: '1',
-      activeIndex2: '1',
       isCharge: true,
       // 时分秒
       dateDay: null,
@@ -73,32 +105,80 @@ export default {
       dateWeek: null,
       timing: null,
       weekday: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+      batteryStatus: false,
+      batteryNode: null,
       config: {
         value: 0,
         lineDash: [10, 2],
-        // localGradient: true,
         colors: ['#d2142a', '#dc8717', '#67d20e'],
         formatter: '未 连 接'
-      }
+      },
+      carStatus: '正常'
     }
   },
   watch: {
-    isCharge: function(n, o) {
+    batteryStatus: function(n, o) {
       if (n) {
         this.config.formatter = '{value}%'
-        this.config.value = 50
+        this.batteryNode.subscribe(this.receiveBattery)
+      } else {
+        this.config.formatter = '未 连 接'
+        this.config.value = 0
+        if (this.batteryNode !== null) {
+          this.batteryNode.unsubscribe(this.receiveBattery)
+        }
       }
+      this.config = { ...this.config }
     }
   },
   beforeDestroy() {
     // 离开时删除计时器
     clearInterval(this.timing)
+    if (this.batteryNode !== null) {
+      this.batteryNode.unsubscribe(this.receiveBattery)
+    }
   },
   mounted() {
     // 获取实时时间
     this.timeFn()
+    this.$bus.$on('batteryStatus', (value) => {
+      this.batteryStatus = value
+    })
+    this.$bus.$on('carStatus', (value) => {
+      switch (value) {
+        case 0:
+          this.carStatus = '未使能'
+          break
+        case 1:
+          this.carStatus = '空闲'
+          break
+        case 2:
+          this.carStatus = '工作'
+
+          break
+        case 3:
+          this.carStatus = '暂停'
+          break
+        case 4:
+          this.carStatus = '充电'
+          break
+        case 5:
+          this.carStatus = '故障'
+          break
+        default:
+          break
+      }
+    })
+    this.batteryNode = new ROSLIB.Topic({
+      ros: this.ros,
+      name: '/batteryInfo',
+      messageType: 'communicate_with_stm32/BatteryInfo'
+    })
   },
   methods: {
+    async handleCarStatus(command) {
+      const { data: res } = await setCarStatus(command)
+    },
     click() {
       console.log(1)
     },
@@ -151,6 +231,15 @@ export default {
         }
         return fmt
       }
+    },
+    receiveBattery(message) {
+      const max_volatile = 12500
+      const min_volatile = 9500
+      this.config.value = Math.ceil((message.mVoltage - min_volatile) / (max_volatile - min_volatile) * 100)
+      this.config = { ...this.config }
+    },
+    async handleRunDemo(command) {
+      await runDemoMove(parseInt(command))
     }
   }
 }
@@ -190,12 +279,31 @@ export default {
     }
 
     .left-items {
-      position: absolute;
-      height: 40px;
-      background-color: transparent;
-
-      li {
-        height: 100%;
+      position: relative;
+      ::v-deep.move-demo{
+        position: absolute;
+        padding-top: 10px;
+        left: 32%;
+        padding-left: 10px;
+        .el-dropdown-link {
+        cursor: pointer;
+        color: #409EFF;
+      }
+      .el-icon-arrow-down {
+        font-size: 12px;
+      }
+      }
+      ::v-deep.task-control{
+        position: absolute;
+        padding-top: 10px;
+        left: 7%;
+        .el-dropdown-link {
+        cursor: pointer;
+        color: #409EFF;
+      }
+      .el-icon-arrow-down {
+        font-size: 12px;
+      }
       }
     }
 
@@ -224,7 +332,7 @@ export default {
 
       .flash-icon {
         position: absolute;
-        transform: translateX(1800%);
+        transform: translateX(1700%);
         width: 10px;
         height: 40px;
         margin-top: 20px;

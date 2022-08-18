@@ -21,13 +21,13 @@ a {
     color: #343440;
     text-decoration: none;
 }
-html, body, #app {
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  overflow: hidden;
-}
+/*html, body, #app {*/
+/*  width: 100%;*/
+/*  height: 100%;*/
+/*  padding: 0;*/
+/*  margin: 0;*/
+/*  overflow: hidden;*/
+/*}*/
 
 .com-page {
   width: 100%;

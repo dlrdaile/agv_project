@@ -17,6 +17,7 @@ class TaskStatus(int, Enum):
     ACTIVE = 1
     SUCCEEDED = 2
     FAIL = 3
+    PAUSE = 4
 
 
 class Tasks(SQLModel, table=True):

@@ -47,10 +47,11 @@ def init_user() :
 
 
 def init_process() :
-    datas = [(1,'车',fake.paragraph(nb_sentences=3,variable_nb_sentences=True,ext_word_list=None)),
-             (2,'洗',fake.paragraph(nb_sentences=3,variable_nb_sentences=True,ext_word_list=None)),
+    datas = [(1,'载物',fake.paragraph(nb_sentences=3,variable_nb_sentences=True,ext_word_list=None)),
+             (2,'钻',fake.paragraph(nb_sentences=3,variable_nb_sentences=True,ext_word_list=None)),
              (3,'磨',fake.paragraph(nb_sentences=3,variable_nb_sentences=True,ext_word_list=None)),
-             (4,'钻',fake.paragraph(nb_sentences=3,variable_nb_sentences=True,ext_word_list=None))]
+             (4,'车',fake.paragraph(nb_sentences=3,variable_nb_sentences=True,ext_word_list=None)),
+             (5,'洗',fake.paragraph(nb_sentences=3,variable_nb_sentences=True,ext_word_list=None))]
     process_ls = []
     with get_session() as session :
         try :
@@ -74,11 +75,15 @@ def init_equipment() :
              (2,'长沙机床1号',fake.paragraph(nb_sentences=3,variable_nb_sentences=True,ext_word_list=None)),
              (3,'武汉激光加工3号',fake.paragraph(nb_sentences=3,variable_nb_sentences=True,ext_word_list=None)),
              (4,'德国机床5号',fake.paragraph(nb_sentences=3,variable_nb_sentences=True,ext_word_list=None))]
-    relationship = [(1,2),(2,),(4,),(1,3)]
-    coordinate = [(-0.75,-2.97,-171.42),
-                  (-6.48,-2.21,88.83),
-                  (-4.83,2.12,-7.38),
-                  (0.33,2.14,-86.06)]
+    relationship = [(2,5),(2,),(4,),(1,3)]
+    # coordinate = [(-0.75,-2.97,-171.42),
+    #               (-6.48,-2.21,88.83),
+    #               (-4.83,2.12,-7.38),
+    #               (0.33,2.14,-86.06)]
+    coordinate = [(-3.69,0.38,106.10),
+                  (4.16,-0.41,25.8),
+                  (12.21,-0.33,102.52),
+                  (7.20,3.63,173.72)]
     equipment_ls = []
     with get_session() as session :
         try :

@@ -48,7 +48,7 @@ def TaskExecution(name: str, car_name: str):
                         session.refresh(task)
                         taskClient.start_work(task, car, session)
                         while not taskClient.finished:
-                            pass
+                            continue
             except Exception as e:
                 session.rollback()
                 logger.warning(f"because: {e}")

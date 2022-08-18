@@ -13,6 +13,7 @@ class SubTaskStatus(int,Enum) :
     ACTIVE = 1
     SUCCEEDED = 2
     FAIL = 3
+    PAUSE = 4
 
 
 class ItemProcessLink(SQLModel,table=True) :
@@ -45,5 +46,6 @@ class TaskEquipmentLink(SQLModel,table=True) :
     )
     order: int = Field(default=None,primary_key=True)
     status:SubTaskStatus = SubTaskStatus.WAITING
+    current_task_iswork:bool = False
     task: Optional["Tasks"] = Relationship(back_populates="equipment_links")
     equipment: Optional["Equipment"] = Relationship(back_populates="tasks_links")

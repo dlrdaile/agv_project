@@ -2,12 +2,15 @@
   <div class="rospanel-container">
     <el-container>
       <el-header style="padding-left: 0">
-        <ros-heade />
+        <ros-heade
+          :ros="ros"
+        ></ros-heade>
       </el-header>
       <el-main>
         <ros-main
           :ros="ros"
           :connected="connected"
+          ref="rosMainRef"
         />
       </el-main>
     </el-container>
@@ -33,14 +36,13 @@ export default {
       rosActionInfo: {},
       rosServerInfo: {},
       rosDynamicParam: {},
-      rosParam: {},
       temp: null
     }
   },
   created() {
     this.ros = new ROSLIB.Ros({
-      // url: 'ws://192.168.10.47:9090'
-      url: 'ws://202.81.231.27:22963'
+      url: 'ws://10.178.61.24:9090'
+      // url: 'ws://202.81.231.27:22963'
     })
     // url: "ws://202.81.231.27:22963",
     this.ros.on('connection', () => {
@@ -49,7 +51,7 @@ export default {
       // this.getNodeInfo()
       // this.getParamInfo()
       // this.getTopicInfo()
-      // this.getMessageDetails('geometry_msgs/Twist')
+      this.getMessageDetails('actionlib_msgs/GoalStatus')
       // this.getServerInfo()
     })
     this.ros.on('error', () => {
@@ -113,15 +115,6 @@ export default {
         console.log('getActionServers error,because', error)
       })
     },
-    getParamInfo() {
-      var that = this
-      that.rosParam = {}
-      this.ros.getParams(result => {
-        that.rosParam = result
-      }, error => {
-        console.log('getParams error,because', error)
-      })
-    },
     getServerInfo() {
       var that = this
       that.rosServerInfo = {}
@@ -154,7 +147,7 @@ export default {
         console.log('getServiceResponseDetails error,because', error)
       })
     },
-    getServiceRequestDreetails(serviceTypeName) {
+    getServiceRequestDetails(serviceTypeName) {
       this.ros.getServiceRequestDetails(serviceTypeName, result => {
         console.log(result)
       }, error => {

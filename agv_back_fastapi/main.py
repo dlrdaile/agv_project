@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 
-from core import settings
+from core import settings,FastAPiNode
 from core.logger import logger
 from db import init_db,init_data
 from register import register_mount,register_exception,register_cors,register_process,register_middleware,register_router,register_timer
@@ -37,6 +37,7 @@ async def startup() :
     # app.state.engine = init_db(isdrop=True)  # 初始化表
     # await init_data()  # 初始化数据
     rospy.init_node("fastapi_ros")
+    app.state.rosnode = FastAPiNode()
     create_app()  # 加载注册中心
 
 

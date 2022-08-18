@@ -50,6 +50,8 @@ Vue.config.productionTip = false
 Vue.prototype.$echarts = window.echarts
 // 其他的组件  this.$socket
 Vue.prototype.$socket = SocketService.Instance
+Vue.prototype.$bus = new Vue()
+Vue.prototype.$localUrl = 'http://10.178.61.24:9528'
 new Vue({
   el: '#app',
   router,

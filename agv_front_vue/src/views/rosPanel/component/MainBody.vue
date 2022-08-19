@@ -1,7 +1,8 @@
 <template>
   <div class="main-container" style="margin:0">
     <div class="task fill">
-      <dv-decoration-7 style="width:150px;height:30px;position: relative;left: 26%;color: whitesmoke">任务序列</dv-decoration-7>
+      <dv-decoration-7 style="width:150px;height:30px;position: relative;left: 26%;color: whitesmoke">任务序列
+      </dv-decoration-7>
       <div class="taskMain" style="position:relative;height: 100%">
         <dv-scroll-board :config="config" class="fill" />
       </div>
@@ -9,7 +10,7 @@
     <div class="history">
       <div class="digital-flop">
         <div
-          v-for="item in digitalFlopData"
+          v-for="item in digitalFlopDataUp"
           :key="item.title"
           class="digital-flop-item"
         >
@@ -25,7 +26,7 @@
       </div>
       <div class="digital-flop">
         <div
-          v-for="item in digitalFlopData"
+          v-for="item in digitalFlopDataBelow"
           :key="item.title"
           class="digital-flop-item"
         >
@@ -33,7 +34,6 @@
           <div class="digital-flop">
             <dv-digital-flop
               :config="item.number"
-              style="width:60px;height:50px;"
             />
             <div class="unit">{{ item.unit }}</div>
           </div>
@@ -55,7 +55,11 @@
           min-width="120"
         >
           <template v-slot="scope">
-            <el-image style="width: 60px; height: 40px" :src="scope.row.imgPath" :preview-src-list="[scope.row.imgPath]">
+            <el-image
+              style="width: 60px; height: 40px"
+              :src="scope.row.imgPath"
+              :preview-src-list="[scope.row.imgPath]"
+            >
               <div slot="error" class="image-slot">
                 <i class="el-icon-picture-outline" />
               </div>
@@ -211,6 +215,7 @@ export default {
       cameraLeft: null,
       sensorStatus: null,
       TaskStatus: null,
+      TaskStatic: null,
       acc_lim_theta: Math.PI / 10,
       acc_lim_x: 0.1,
       acc_lim_y: 0.1,
@@ -250,7 +255,8 @@ export default {
         status: false
       }],
       batteryIsOpen: false,
-      digitalFlopData: [],
+      digitalFlopDataUp: [],
+      digitalFlopDataBelow: [],
       config: {
         header: ['工艺', '作业设备', '当前状态'],
         data: [],
@@ -263,11 +269,36 @@ export default {
         ['行2列1', '<span style="color:#32c5e9;">行2列2</span>', '行2列3'],
         ['行3列1', '行3列2', '<span style="color:#67e0e3;">行3列3</span>'],
         ['行4列1', '<span style="color:#9fe6b8;">行4列2</span>', '行4列3']
-      ]
+      ],
+      carXPosition: 0,
+      carYPosition: 0,
+      currentTaskID: -1,
+      nextTaskID: -1,
+      completeTaskNum: 0,
+      readyTaskNum: 0,
+      oneDay: 24 * 3600 * 1000,
+      value: Math.random() * 1000,
+      now: new Date(1997, 9, 3),
+      chartData: [],
+      timeId: null
     }
   },
   mounted() {
+    var that = this
     this.create_chart()
+    this.timeId = setInterval(function() {
+      for (var i = 0; i < 5; i++) {
+        that.chartData.shift()
+        that.chartData.push(that.randomData())
+      }
+      that.myChart.setOption({
+        series: [
+          {
+            data: that.chartData
+          }
+        ]
+      })
+    }, 1000)
     this.cameraRight = new ROSLIB.Topic({
       ros: this.ros,
       name: '/camera/right/image_raw/compressed',
@@ -299,15 +330,18 @@ export default {
       name: '/car_task_status',
       messageType: 'agv_nav/carTaskStatus'
     })
+    this.TaskStatic = new ROSLIB.Topic({
+      ros: this.ros,
+      name: '/car_task_static',
+      messageType: 'agv_nav/carStaticMsg'
+    })
     // Then we add a callback to be called every time a message is published on this topic.
     this.cameraRight.subscribe(this.receiveRightImage)
     this.cameraLeft.subscribe(this.receiveLeftImage)
     this.cmdVelTopic.subscribe(this.receiveCmdVelMessage)
     this.sensorStatus.subscribe(this.receiveSensorStatus)
     this.TaskStatus.subscribe(this.receiveTaskStatus)
-    const { createData } = this
-    createData()
-    setInterval(createData, 30000)
+    this.TaskStatic.subscribe(this.receiveTaskStatic)
     this.config.data = this.defaultTaskStatusData
   },
   beforeDestroy() {
@@ -326,41 +360,54 @@ export default {
     if (this.TaskStatus !== null) {
       this.TaskStatus.unsubscribe(this.receiveTaskStatus)
     }
+    if (this.TaskStatic !== null) {
+      this.TaskStatic.unsubscribe(this.receiveTaskStatic)
+    }
+    if (this.timeId !== null) {
+      clearInterval(this.timeId)
+    }
   },
   methods: {
+    randomData() {
+      this.now = new Date(+this.now + this.oneDay)
+      this.value = this.value + Math.random() * 21 - 10
+      return {
+        name: this.now.toString(),
+        value: [
+          [this.now.getFullYear(), this.now.getMonth() + 1, this.now.getDate()].join('/'),
+          Math.round(this.value)
+        ]
+      }
+    },
     createData() {
-      const { randomExtend } = this
-      this.digitalFlopData = [
+      this.digitalFlopDataUp = [
         {
-          title: 'aaaaa',
+          title: '已完成任务',
           number: {
-            number: [randomExtend(5, 10)],
+            number: [this.completeTaskNum],
             content: '{nt}',
-            textAlign: 'right',
             style: {
               fill: '#4d99fc',
               fontWeight: 'bold'
             }
           },
-          unit: 's'
+          unit: '个'
         },
         {
-          title: 'bbbb',
+          title: '当前任务号',
           number: {
-            number: [randomExtend(5, 10)],
+            number: [this.currentTaskID],
             content: '{nt}',
-            textAlign: 'right',
             style: {
               fill: '#f46827',
               fontWeight: 'bold'
             }
-          },
-          unit: 's'
+          }
         },
         {
-          title: 'ccccc',
+          title: '当前楼层',
           number: {
-            number: [randomExtend(5, 10)],
+            number: [1],
             content: '{nt}',
             textAlign: 'right',
             style: {
@@ -368,16 +415,47 @@ export default {
               fontWeight: 'bold'
             }
           },
-          unit: 's'
+          unit: '层'
         }
       ]
-    },
-    randomExtend(minNum, maxNum) {
-      if (arguments.length === 1) {
-        return parseInt(Math.random() * minNum + 1, 10)
-      } else {
-        return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10)
-      }
+      this.digitalFlopDataBelow = [
+        {
+          title: '待完成任务',
+          number: {
+            number: [this.readyTaskNum],
+            content: '{nt}',
+            style: {
+              fill: '#4d99fc',
+              fontWeight: 'bold'
+            }
+          },
+          unit: '个'
+        },
+        {
+          title: '下一任务号',
+          number: {
+            number: [this.nextTaskID],
+            content: '{nt}',
+            style: {
+              fill: '#f46827',
+              fontWeight: 'bold'
+            }
+          }
+        },
+        {
+          title: '当前坐标',
+          number: {
+            number: [this.carXPosition, this.carXPosition],
+            content: '({nt},{nt})',
+            toFixed: 2,
+            style: {
+              fill: '#40faee',
+              fontWeight: 'bold',
+              fontSize: 13
+            }
+          }
+        }
+      ]
     },
     receiveSensorStatus(message) {
       this.sensorStatusData.forEach((item) => {
@@ -445,25 +523,57 @@ export default {
     },
     create_chart() {
       const status = document.querySelector('.status')
+      for (var i = 0; i < 1000; i++) {
+        this.chartData.push(this.randomData())
+      }
       this.myChart = this.$echarts.init(status)
       window.onresize = this.myChart.resize
-      this.myChart.setOption({
+      const option = {
         title: {
-          text: 'ECharts 入门示例'
+          text: 'Dynamic Data & Time Axis'
         },
-        tooltip: {},
+        tooltip: {
+          trigger: 'axis',
+          formatter: function(params) {
+            params = params[0]
+            var date = new Date(params.name)
+            return (
+              date.getDate() +
+              '/' +
+              (date.getMonth() + 1) +
+              '/' +
+              date.getFullYear() +
+              ' : ' +
+              params.value[1]
+            )
+          },
+          axisPointer: {
+            animation: false
+          }
+        },
         xAxis: {
-          data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+          type: 'time',
+          splitLine: {
+            show: false
+          }
         },
-        yAxis: {},
+        yAxis: {
+          type: 'value',
+          boundaryGap: [0, '100%'],
+          splitLine: {
+            show: false
+          }
+        },
         series: [
           {
-            name: '销量',
-            type: 'bar',
-            data: [5, 20, 36, 10, 10, 20]
+            name: 'Fake Data',
+            type: 'line',
+            showSymbol: false,
+            data: this.chartData
           }
         ]
-      })
+      }
+      this.myChart.setOption(option)
     },
     xSpeedFormatFunction(value) {
       return parseFloat(value).toFixed(2)
@@ -534,6 +644,15 @@ export default {
         })
       }
       this.config = { ...this.config } // 用以使datav变化
+    },
+    receiveTaskStatic(msg) {
+      this.carXPosition = msg.current_x
+      this.carYPosition = msg.current_y
+      this.readyTaskNum = msg.ready_task_num
+      this.completeTaskNum = msg.all_complete_task_num
+      this.currentTaskID = msg.current_task_id
+      this.nextTaskID = msg.next_task_id
+      this.createData()
     }
   }
 }
@@ -556,52 +675,59 @@ export default {
 .task {
   position: absolute;
   grid-area: task;
+
   .taskMain {
-  display: grid;
-  grid-area: taskMain;
+    display: grid;
+    grid-area: taskMain;
+  }
 }
-}
- .history {
+
+.history {
   grid-area: history;
   position: absolute;
   width: 100%;
   height: 100%;
-   .digital-flop {
-  position: relative;
-  height: 50%;
-  flex-shrink: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: rgba(6, 30, 93, 0.5);
-  .digital-flop-item {
-    width: 30%;
-    height: 70%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border-left: 3px solid rgb(6, 30, 93);
-    border-right: 3px solid rgb(6, 30, 93);
-  }
-  .digital-flop-title {
-    font-size: 20px;
-    color: #a76b6b;
-    margin-bottom: 8px;
-  }
+
   .digital-flop {
+    position: relative;
+    height: 50%;
+    flex-shrink: 0;
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(6, 30, 93, 0.5);
+
+    .digital-flop-item {
+      width: 30%;
+      height: 70%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-left: 3px solid rgb(6, 30, 93);
+      border-right: 3px solid rgb(6, 30, 93);
+    }
+
+    .digital-flop-title {
+      font-size: 16px;
+      color: #a76b6b;
+      margin-bottom: 8px;
+    }
+
+    .digital-flop {
+      display: flex;
+    }
+
+    .unit {
+      color: white;
+      margin-left: 5px;
+      font-size: 18px;
+      display: flex;
+      align-items: flex-end;
+      box-sizing: border-box;
+      padding-bottom: 3px;
+    }
   }
-  .unit {
-    color: white;
-    margin-left: 5px;
-    font-size: 25px;
-    display: flex;
-    align-items: flex-end;
-    box-sizing: border-box;
-    padding-bottom: 3px;
-  }
-}
 }
 
 ::v-deep.logger {
@@ -609,43 +735,52 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-    .el-table .el-table__cell{
+
+  .el-table .el-table__cell {
     padding: 1px;
     padding-top: 9px;
   }
-   .el-table__body-wrapper {
-            height: 200px; /* ¹ö¶¯ÌõÕûÌå¸ß ±ØÐëÏî */
-            border-right: none;
-            overflow-y: scroll;/* overflow-yÎªÁË²»³öÏÖË®Æ½¹ö¶¯Ìõ*/
-        }
-   .el-table__body-wrapper::-webkit-scrollbar {
-              width: 5px;/* ¹ö¶¯ÌõµÄ¿í¸ß ±ØÐëÏî */
-              height: 5px;
-          }
 
-   .el-table__body-wrapper::-webkit-scrollbar-thumb {
-              background-color: #bfcbd9;/* ¹ö¶¯ÌõµÄ¿í */
-              border-radius: 3px;
-          }
-   .el-table th{
-            background: rgba(1, 11, 30, 0.2);
-            .gutter{
-              width: 2px;
-            }
-          }
-   .el-table thead {
+  .el-table__body-wrapper {
+    height: 200px; /* ¹ö¶¯ÌõÕûÌå¸ß ±ØÐëÏî */
+    border-right: none;
+    overflow-y: scroll; /* overflow-yÎªÁË²»³öÏÖË®Æ½¹ö¶¯Ìõ*/
+  }
+
+  .el-table__body-wrapper::-webkit-scrollbar {
+    width: 5px; /* ¹ö¶¯ÌõµÄ¿í¸ß ±ØÐëÏî */
+    height: 5px;
+  }
+
+  .el-table__body-wrapper::-webkit-scrollbar-thumb {
+    background-color: #bfcbd9; /* ¹ö¶¯ÌõµÄ¿í */
+    border-radius: 3px;
+  }
+
+  .el-table th {
+    background: rgba(1, 11, 30, 0.2);
+
+    .gutter {
+      width: 2px;
+    }
+  }
+
+  .el-table thead {
     color: #d2d8e1;
     font-weight: 500;
   }
-   .el-table{
+
+  .el-table {
     color: #e1d9d9;
     font-size: 14px;
   }
-   .el-table td,.building-top .el-table th.is-leaf {
-    border-bottom:  1px solid #d2d8e1;
+
+  .el-table td, .building-top .el-table th.is-leaf {
+    border-bottom: 1px solid #d2d8e1;
   }
-   .el-table tr{
-   background: rgb(7, 14, 31);
+
+  .el-table tr {
+    background: rgb(7, 14, 31);
   }
 }
 

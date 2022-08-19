@@ -30,10 +30,10 @@ Vue.use(Router)
  * all roles can be accessed
  */
 export const constantRoutes = [
-  {
-    path: '/test',
-    component: () => import('@/views/rosPanel/index')
-  },
+  // {
+  //   path: '/test',
+  //   component: () => import('@/views/rosPanel/index')
+  // },
   {
     path: '/login',
     component: () => import('@/views/login/index'),
@@ -176,6 +176,18 @@ export const asyncRoutes = [
         meta: { title: '用户管理', icon: 'el-icon-s-custom', roles: ['admin'] }
       }
     ]
+  },
+  {
+    path: '/rosPanel',
+    component: Layout,
+    redirect: '/rosPanel/index',
+    children: [{
+      path: 'index',
+      name: 'rosPanel',
+      // component: () => import('@/views/dashboard/index'),
+      component: () => import('@/views/rosPanel/index'),
+      meta: { title: 'agv监控', icon: 'dashboard', roles: ['admin'] }
+    }]
   },
   { path: '*', redirect: '/404', hidden: true }
 ]

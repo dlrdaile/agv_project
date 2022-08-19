@@ -3,8 +3,11 @@ import uuid
 from pathlib import Path
 from typing import Optional
 
+import cv2
+import numpy as np
 from fastapi import APIRouter, Request, UploadFile, Depends
-
+from starlette.responses import StreamingResponse
+from utils import detect_surface
 from core.config import settings
 from core.logger import logger
 from core.security import get_current_user
@@ -132,9 +135,41 @@ async def setStatus(taskId: int, req: Request, car_id: int = 1,
                 session.commit()
                 started = req.state.rosnode.callDemo(taskId)
                 if not started:
-                   res = resp_400(msg="the server is not start!")
+                    res = resp_400(msg="the server is not start!")
         except Exception as e:
             session.rollback()
             logger.warning(f"demo run error! because: {e}")
             res = resp_400(msg="demo run fail")
     return res
+
+
+async def gen_frames(frame):
+    ret, buffer = cv2.imencode('.jpg', frame)
+    frame = buffer.tobytes()
+    yield (b'--frame\r\n'
+           b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+
+@car_api.post('/processImage')
+async def process_image(req: Request, uploadImage: Optional[UploadFile] = None,
+                        user: Users = Depends(get_current_user)):
+    res = resp_200(msg="sucess!")
+    img = None
+    sucess = True
+    if uploadImage is None:
+        img = req.state.rosnode.callForImage()
+        if img is None:
+            res = resp_400(msg="can not get the camera frame")
+            sucess = False
+    else:
+        try:
+            content = uploadImage.file.read()
+            img = cv2.imdecode(np.frombuffer(content, np.uint8), cv2.IMREAD_COLOR)
+        except:
+            res = resp_400(msg="the image upload has something error!")
+            sucess = False
+    if sucess:
+        img = detect_surface(img)
+        return StreamingResponse(gen_frames(img), media_type='multipart/x-mixed-replace; boundary=frame')
+    else:
+        return res

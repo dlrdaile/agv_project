@@ -63,7 +63,7 @@
               type="primary"
               :underline="false"
               icon="el-icon-s-opportunity"
-            >{{ carStatus }}}
+            >{{ carStatus }}
             </el-link>
           </el-badge>
           <flash-icon v-if="isCharge" class="flash-icon" />
@@ -332,7 +332,7 @@ export default {
 
       .flash-icon {
         position: absolute;
-        transform: translateX(1700%);
+        transform: translateX(1620%);
         width: 10px;
         height: 40px;
         margin-top: 20px;

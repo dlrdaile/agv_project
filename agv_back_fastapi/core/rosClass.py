@@ -5,6 +5,9 @@ import actionlib
 import rospy
 from agv_nav.msg import *
 from geometry_msgs.msg import Pose
+from sensor_msgs.msg import Image
+from sqlalchemy import func
+from sqlmodel import select
 from tf.transformations import quaternion_from_euler
 from actionlib_msgs.msg import GoalID
 from core.logger import logger
@@ -14,6 +17,12 @@ from models.car.tasks import Tasks, TaskStatus
 from models.item.items import OrderStatus, UserOrder
 from models.item.links import TaskEquipmentLink, SubTaskStatus, ItemProcessLink
 from models.item.equipment import EquipmentStatus
+import tf2_ros
+import cv2
+from cv_bridge import CvBridge, CvBridgeError
+from sensor_msgs.msg import Image
+import numpy as np
+
 
 
 class TaskExecutionNode():
@@ -171,11 +180,15 @@ class FastAPiNode():
         # self.sub = rospy.Subscriber("chatter",String,self.callback,queue_size=10)
         self.TaskCancelPub = rospy.Publisher("/dl_agv/cancel", GoalID, queue_size=10)
         self.CarTaskStatusPub = rospy.Publisher("/car_task_status", carTaskStatus, queue_size=10)
+        self.carStaticPub = rospy.Publisher("/car_task_static", carStaticMsg, queue_size=10)
         self.carTaskStatusTimer = rospy.Timer(rospy.Duration(2), self.TastStatusCallback)
+        self.carTaskStaticTimer = rospy.Timer(rospy.Duration(1), self.TastStaticCallback)
         self.demoClient = actionlib.SimpleActionClient("move_set_action", MoveSetAction)
-        self.moveset_cancel_pub_ = rospy.Publisher("/move_set_action/cancel", GoalID,queue_size=10)
-
+        self.moveset_cancel_pub_ = rospy.Publisher("/move_set_action/cancel", GoalID, queue_size=10)
         self.goalid = GoalID()
+        self.buffer = tf2_ros.Buffer()
+        self.listener = tf2_ros.TransformListener(self.buffer)
+        self.bridge = CvBridge()
 
     def cancelGoal(self):
         self.TaskCancelPub.publish(self.goalid)
@@ -186,7 +199,7 @@ class FastAPiNode():
     def demoDoneCallback(self, state: actionlib_msgs.msg.GoalStatus, result: MoveSetActionResult):
         with get_session() as session:
             try:
-                car:Cars = session.query(Cars).get(1)
+                car: Cars = session.query(Cars).get(1)
                 if car.status == CarStatus.WORKING:
                     car.status = CarStatus.FREE
                     session.add(car)
@@ -201,6 +214,37 @@ class FastAPiNode():
             goal.taskId = taskId
             self.demoClient.send_goal(goal, self.demoDoneCallback)
         return started
+
+    # todo:comlete static
+    def TastStaticCallback(self, event):
+        with get_session() as session:
+            try:
+                carTaskStaticData = carStaticMsg()
+                carTaskStaticData.current_floor = 1
+                car: Cars = session.query(Cars).get(1)
+                carTaskStaticData.current_task_id = car.current_task_id if car.current_task_id is not None else -1
+                sql = select(Tasks).where(Tasks.status == TaskStatus.WAITING).order_by(Tasks.create_time)
+                task = session.exec(sql).first()
+                if task is not None:
+                    carTaskStaticData.next_task_id = task.id
+                else:
+                    carTaskStaticData.next_task_id = -1
+                sql = select(func.count(Tasks.id)).where(Tasks.status == TaskStatus.SUCCEEDED)
+                carTaskStaticData.all_complete_task_num = session.exec(sql).first()
+                sql = select(func.count(Tasks.id)).where(Tasks.status == TaskStatus.WAITING)
+                carTaskStaticData.ready_task_num = session.exec(sql).first()
+                try:
+                    trans = self.buffer.lookup_transform("map", "base_footprint", rospy.Time(0))
+                    carTaskStaticData.current_x = trans.transform.translation.x
+                    carTaskStaticData.current_y = trans.transform.translation.y
+                except:
+                    carTaskStaticData.current_x = -1
+                    carTaskStaticData.current_y = -1
+                self.carStaticPub.publish(carTaskStaticData)
+            except Exception as e:
+                logger.warning(f"the task static pub has something error:{e}")
+                pass
+
     def TastStatusCallback(self, event):
         with get_session() as session:
             try:
@@ -226,6 +270,22 @@ class FastAPiNode():
             except Exception as e:
                 logger.warning(f"the task status pub has something error:{e}")
                 pass
+
+    def callForImage(self):
+        try:
+            message = rospy.wait_for_message('/camera/left/image_raw', Image, rospy.Duration(5))
+        except rospy.exceptions.ROSException as e:
+            return None
+        try:
+            cv_image = self.bridge.imgmsg_to_cv2(message, "bgr8")
+        except CvBridgeError as e:
+            return None
+        return cv_image
+        # try:
+        #     self.image_pub.publish(self.bridge.cv2_to_imgmsg(cv_image, "bgr8"))
+        # except CvBridgeError as e:
+        #     print(e)
+        # pass
 
 
 if __name__ == "__main__":

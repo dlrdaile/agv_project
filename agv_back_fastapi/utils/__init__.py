@@ -8,3 +8,4 @@ from .check_enum import check_or_enum
 from .obj_dict import obj_as_dict, list_obj_as_dict
 from .resp_code import resp_200, resp_400, resp_401, resp_403, resp_404, resp_422, resp_500
 from .custom_exc import IdNotExist, SetRedis, UserNotExist, AccessTokenFail, ErrorUser, IpError, PermissionNotEnough
+from .cv_func import detect_surface

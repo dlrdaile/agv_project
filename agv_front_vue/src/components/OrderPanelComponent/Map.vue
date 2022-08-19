@@ -57,7 +57,8 @@ export default {
       // 获取中国地图的矢量数据
       // http://localhost:8999/static/map/china.json
       // 由于我们现在获取的地图矢量数据并不是位于KOA2的后台, 所以咱们不能使用this.$http
-      const ret = await axios.get('http://10.178.61.24:9528/static/map/china.json')
+      // const ret = await axios.get('http://10.178.61.24:9528/static/map/china.json')
+      const ret = await axios.get('http://192.168.25.106:9528/static/map/china.json')
       // const ret = await axios.get('http://202.81.231.27:14065/static/map/china.json')
       this.$echarts.registerMap('china', ret.data)
       const initOption = {
@@ -90,7 +91,8 @@ export default {
         // 需要获取这个省份的地图矢量数据
         // 判断当前所点击的这个省份的地图矢量数据在mapData中是否存在
         if (!this.mapData[provinceInfo.key]) {
-          const ret = await axios.get('http://10.178.61.24:9528' + provinceInfo.path)
+          const ret = await axios.get('http://192.168.25.106:9528' + provinceInfo.path)
+          // const ret = await axios.get('http://10.178.61.24:9528' + provinceInfo.path)
           // const ret = await axios.get('http://202.81.231.27:14065' + provinceInfo.path)
           this.mapData[provinceInfo.key] = ret.data
           this.$echarts.registerMap(provinceInfo.key, ret.data)

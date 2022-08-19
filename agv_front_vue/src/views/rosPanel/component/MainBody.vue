@@ -342,6 +342,7 @@ export default {
     this.sensorStatus.subscribe(this.receiveSensorStatus)
     this.TaskStatus.subscribe(this.receiveTaskStatus)
     this.TaskStatic.subscribe(this.receiveTaskStatic)
+    this.createData()
     this.config.data = this.defaultTaskStatusData
   },
   beforeDestroy() {
@@ -445,7 +446,7 @@ export default {
         {
           title: '当前坐标',
           number: {
-            number: [this.carXPosition, this.carXPosition],
+            number: [this.carXPosition, this.carYPosition],
             content: '({nt},{nt})',
             toFixed: 2,
             style: {

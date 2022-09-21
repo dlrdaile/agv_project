@@ -32,7 +32,7 @@ Vue.use(Router)
 export const constantRoutes = [
   // {
   //   path: '/test',
-  //   component: () => import('@/views/rosPanel/index')
+  //   component: () => import('@/views/adminProcessImage/index')
   // },
   {
     path: '/login',

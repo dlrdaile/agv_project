@@ -78,15 +78,22 @@ def init_equipment():
              (4, '德国机床5号', fake.paragraph(nb_sentences=3, variable_nb_sentences=True, ext_word_list=None)),
              (0, '电梯', fake.paragraph(nb_sentences=3, variable_nb_sentences=True, ext_word_list=None))]
     relationship = [(2, 5), (2,), (4,), (1, 3), (0,)]
+    # simu
     # coordinate = [(-0.75,-2.97,-171.42),
     #               (-6.48,-2.21,88.83),
     #               (-4.83,2.12,-7.38),
     #               (0.33,2.14,-86.06)]
-    coordinate = [(-3.69, 0.38, 106.10),
-                  (4.16, -0.41, 25.8),
-                  (12.21, -0.33, 102.52),
-                  (7.20, 3.63, 173.72),
-                  (16.05, 2.74, -7.58)]
+    # 306
+    # coordinate = [(-3.69, 0.38, 106.10),
+    #               (4.16, -0.41, 25.8),
+    #               (12.21, -0.33, 102.52),
+    #               (7.20, 3.63, 173.72),
+    #               (16.05, 2.74, -7.58)]
+    coordinate = [(-6.52, -23.70, -95.58),
+                  (-7.59, -19.23, -96.43),
+                  (-15.48, -9.69, -97.88),
+                  (-6.23, -11.20, 90.90),
+                  (24.00, 12.65, -89.40)]
 
     equipment_ls = []
     with get_session() as session:

@@ -4,7 +4,7 @@
       <dv-decoration-7 style="width:150px;height:30px;position: relative;left: 26%;color: whitesmoke">任务序列
       </dv-decoration-7>
       <div class="taskMain" style="position:relative;height: 100%">
-        <dv-scroll-board :config="config" class="fill" />
+        <dv-scroll-board :config="config" class="fill" style="height: 155px;"/>
       </div>
     </div>
     <div class="history">
@@ -260,9 +260,13 @@ export default {
       config: {
         header: ['工艺', '作业设备', '当前状态'],
         data: [],
+        rowNum: 3,
         index: true,
         columnWidth: [40, 60, 100],
-        align: ['center']
+        align: ['center'],
+        waitTime: 2500,
+        headerHeight: 30
+        // carousel: 'page'
       },
       defaultTaskStatusData: [
         ['<span style="color:#37a2da;">行1列1</span>', '行1列2', '行1列3'],
@@ -712,7 +716,7 @@ export default {
     .digital-flop-title {
       font-size: 16px;
       color: #a76b6b;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .digital-flop {

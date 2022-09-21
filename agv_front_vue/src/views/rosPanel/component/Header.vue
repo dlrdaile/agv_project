@@ -24,11 +24,13 @@
               运动示例<i class="el-icon-arrow-down el-icon--right" />
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="1">载物(车)</el-dropdown-item>
+              <el-dropdown-item command="1">载物</el-dropdown-item>
               <el-dropdown-item command="2">旋转(钻)</el-dropdown-item>
               <el-dropdown-item command="3">前进(磨)</el-dropdown-item>
               <el-dropdown-item command="4">横行(车)</el-dropdown-item>
               <el-dropdown-item command="5">折线(洗)</el-dropdown-item>
+              <el-dropdown-item command="6">进电梯</el-dropdown-item>
+              <el-dropdown-item command="7">出电梯</el-dropdown-item>
               <el-dropdown-item command="0">取消动作</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -147,7 +149,7 @@ export default {
     this.$bus.$on('carStatus', (value) => {
       switch (value) {
         case 0:
-          this.carStatus = '未使能'
+          this.carStatus = '断开'
           break
         case 1:
           this.carStatus = '空闲'

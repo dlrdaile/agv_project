@@ -27,6 +27,7 @@ import geoJson from '@/assets/json/china.json'
 // 导入订单的监控仪表盘
 import '@/assets/font/iconfont.css'
 import SocketService from '@/utils/socket_service'
+import VueCropper from 'vue-cropper'
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -46,6 +47,7 @@ if (process.env.NODE_ENV === 'production') {
 Vue.use(ElementUI)
 Vue.use(VueQuillEditor)
 Vue.use(dataV)
+Vue.use(VueCropper)
 Vue.config.productionTip = false
 Vue.prototype.$echarts = window.echarts
 // 其他的组件  this.$socket

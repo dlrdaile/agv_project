@@ -28,6 +28,7 @@
     "v-fit-columns": "^0.2.0",
     "vue": "2.6.10",
     "vue-beautiful-chat": "^2.5.0",
+    "vue-cropper": "^0.5.8",
     "vue-nipple": "^0.1.1",
     "vue-quill-editor": "^3.0.6",
     "vue-ros3djs": "^1.1.1",

@@ -8,4 +8,4 @@ from .router import register_router
 from .middleware import register_middleware
 from .mount import register_mount
 from .timer import register_timer
-# from .process import register_process
+from .process import register_process

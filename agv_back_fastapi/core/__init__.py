@@ -5,4 +5,4 @@
 # @desc : 核心文件
 from .config import settings
 from .security import create_access_token,check_jwt_token,get_password_hash,verify_password
-# from .rosClass import FastAPiNode
+from .rosClass import FastAPiNode

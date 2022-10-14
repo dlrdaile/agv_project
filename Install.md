@@ -28,4 +28,4 @@ username: admin
 
 password: 123456
 
-客户端账号可以自性注册
+客户端账号可以自行注册

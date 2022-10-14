@@ -2,5 +2,5 @@
 /agv_back_fastapi/logs/
 /agv_back_fastapi/sql_app.db
 /agv_back_fastapi/test/
+/.idea
 */__pycache__
-.idea/

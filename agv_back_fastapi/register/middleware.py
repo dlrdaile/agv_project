@@ -20,7 +20,7 @@ def register_middleware(app: FastAPI):
     async def intercept(request: Request, call_next):
         logger.info(f"访问记录:IP:{request.client.host}-method:{request.method}-url:{request.url}")
         try:
-            request.state.rosnode = app.state.rosnode
+            # request.state.rosnode = app.state.rosnode
             return await call_next(request)  # 返回请求(跳过token)
         except OperationalError as e:
             logger.error(f'数据库连接失败！-- {e}')

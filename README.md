@@ -6,7 +6,7 @@
 >
 > * [订单管理与agv任务调度检测软件前后端代码](https://github.com/dlrdaile/agv_project)
 > * [STM32电机驱动与片上资源调度代码](https://github.com/dlrdaile/agv_stm32)
-> * ROS自主导航系统的仿真与实体机代码
+> * [ROS自主导航系统的仿真与实体机代码](https://github.com/dlrdaile/agv_ros)
 >
 > <a id="video">**演示视频**</a>
 >

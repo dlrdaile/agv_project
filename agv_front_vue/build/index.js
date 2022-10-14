@@ -24,11 +24,10 @@ if (process.env.npm_config_preview || rawArgv.includes('--preview')) {
   )
 
   app.listen(port, function () {
-    console.log(chalk.green(`> Preview at  http://192.168.25.106:${port}${publicPath}`))
+    console.log(chalk.green(`> Preview at  ${process.env.VUE_APP_BASE_IP}:${port}${publicPath}`))
     if (report) {
-      console.log(chalk.green(`> Report at  http://192.168.25.106:${port}${publicPath}report.html`))
+      console.log(chalk.green(`> Report at  ${process.env.VUE_APP_BASE_IP}:${port}${publicPath}report.html`))
     }
-
   })
 } else {
   run(`vue-cli-service build ${args}`)

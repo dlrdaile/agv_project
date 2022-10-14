@@ -15,14 +15,13 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
-
+import config from '@/config'
 import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 
 import dataV from '@jiaminghi/data-view'
-import geoJson from '@/assets/json/china.json'
 
 // 导入订单的监控仪表盘
 import '@/assets/font/iconfont.css'
@@ -53,7 +52,7 @@ Vue.prototype.$echarts = window.echarts
 // 其他的组件  this.$socket
 Vue.prototype.$socket = SocketService.Instance
 Vue.prototype.$bus = new Vue()
-Vue.prototype.$localUrl = 'http://192.168.25.106:9528'
+Vue.prototype.$localUrl = `http://${config.baseUrl}:${config.basePort}`
 new Vue({
   el: '#app',
   router,

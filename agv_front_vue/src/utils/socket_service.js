@@ -118,6 +118,8 @@
 //     }
 //   }
 // }
+import config from "@/config";
+
 export default class SocketService {
   /**
    * 单例
@@ -151,7 +153,7 @@ export default class SocketService {
     if (!window.WebSocket) {
       return console.log('您的浏览器不支持WebSocket')
     }
-    this.ws = new WebSocket('ws://192.168.25.106:8001/ws/order')
+    this.ws = new WebSocket(`ws://${config.baseUrl}:8001/ws/order`)
     // this.ws = new WebSocket('ws://202.81.231.27:47064/ws/order')
 
     // 连接成功的事件

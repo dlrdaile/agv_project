@@ -20,6 +20,7 @@
 <script>
 import RosHeade from '@/views/rosPanel/component/Header'
 import RosMain from '@/views/rosPanel/component/MainBody'
+import config from '@/config'
 
 export default {
   name: 'RosPanel',
@@ -41,7 +42,7 @@ export default {
   },
   created() {
     this.ros = new ROSLIB.Ros({
-      url: 'ws://192.168.25.106:9090'
+      url: `ws://${config.baseUrl}:9090`
       // url: 'ws://202.81.231.27:22963'
     })
     // url: "ws://202.81.231.27:22963",
@@ -71,7 +72,7 @@ export default {
         for (const node in result) {
           const nodeName = result[node]
           that.ros.getNodeDetails(nodeName, (nodeDetail) => {
-            that.rosNode[nodeName] = { ...nodeDetail }
+            that.rosNode[nodeName] = {...nodeDetail}
           })
         }
       }, (error) => {

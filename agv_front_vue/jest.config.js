@@ -20,5 +20,5 @@ module.exports = {
     'lcov',
     'text-summary'
   ],
-  testURL: 'http://192.168.25.106/'
+  testURL: `${process.env.VUE_APP_BASE_IP}`
 }

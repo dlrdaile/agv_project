@@ -1,0 +1,2 @@
+# agv_project
+该仓库为agv系统调度软件的前后端实现。项目基于fastapi(python后端框架)和vue2实现了RESTful风格的前后端分离

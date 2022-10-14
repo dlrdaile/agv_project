@@ -13,8 +13,11 @@
 > [基于仿真系统的演示视频](https://www.bilibili.com/video/BV1jr4y1776G/?spm_id_from=333.999.0.0)：该视频是疫情提前回家剪的，所以页面功能相对不完整
 >
 > 基于实体机器人的演示：(正在剪辑)
+<<<<<<< HEAD
 
 [TOC]
+=======
+>>>>>>> 416754447bf5748e16de7c51eee9ed5d38db1f06
 
 ## 项目介绍
 
@@ -30,7 +33,7 @@
 
 当需求下发过后，作品的**场景定义、技术选型、物资采购与管理(BOM表等)，项目规划与推进(甘特图等)，工程架构与实现**等实际工程或产品开发所涉及的环节学生皆亲身经历并定期答辩和交付
 
-<img src=".\image\image-20221014130100674.png" alt="image-20221014130100674" style="zoom: 25%;" /><img src="image/image-20221014130342889.png" alt="image-20221014130342889" style="zoom:25%;" />
+![image-20221014183840351](.\image\image-20221014183840351.png)
 
 #### **多功能模块**
 
@@ -71,7 +74,7 @@
 
 ### 硬件与模型
 
-<img src="image/image-20221014142725566.png" alt="image/image-20221014142725566.png" style="zoom: 70%;" /><img src="image/image-20221014142613199.png" alt="image-20221014142613199" style="zoom: 25%;" /><img src="image/image-20221014142655238.png" alt="image/image-20221014142655238.png" style="zoom:70%;" />
+![image-20221014183802006](image/image-20221014183802006.png)
 
 ### 单片机驱动
 
@@ -107,7 +110,7 @@
 
 > 对麦克纳姆进行正逆运动学转换，用以将编码器信息转化为欧式坐标系下的运动信息，从而构建小车的里程计信息
 
-![在这里插入图片描述](image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAbTBfNTI0MzQ0NTc=,size_11,color_FFFFFF,t_70,g_se,x_16.png)         <img src="image/image-20221014152151453.png" alt="image-20221014152151453" style="zoom:30%;" />    
+![image-20221014183738573](image/image-20221014183738573.png)
 
 **问题**：麦轮的运动学分析首先需要计算出由编码器测量所得的轮子运动线速度，由于麦轮**易于磨损**且基于尺度工具的测量必然存在**测量误差**，所以基于物理模型的编码器——轮速转换无法满足精度要求，故我们采取基于**统计回归模型的动态解算**
 

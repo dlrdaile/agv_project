@@ -12,7 +12,7 @@
 >
 > [基于仿真系统的演示视频](https://www.bilibili.com/video/BV1jr4y1776G/?spm_id_from=333.999.0.0)：该视频是疫情提前回家剪的，所以页面功能相对不完整
 >
-> 基于实体机器人的演示：(正在剪辑)
+> [基于实体机器人的演示视频](https://www.bilibili.com/video/BV1QV4y137dL/?vd_source=1e9f3ab7bc33f857677c924c47ff9604)
 ## 项目介绍
 
 ![image-20221014183005446](image/image-20221014183005446.png)
